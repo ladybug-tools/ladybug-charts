@@ -1,7 +1,7 @@
-ladybug_chart
+ladybug_charts
 ===========
 
 .. toctree::
    :maxdepth: 4
 
-   ladybug_chart
+   ladybug_charts
