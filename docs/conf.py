@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'ladybug-chart'
+project = 'ladybug-charts'
 copyright = '{}, Ladybug Tools'.format(str(now.year))
 author = 'Ladybug Tools'
 
@@ -169,7 +169,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ladybug-chart.tex', 'ladybug-chart Documentation',
+    (master_doc, 'ladybug-charts.tex', 'ladybug-charts Documentation',
      'Ladybug Tools', 'manual'),
 ]
 
@@ -179,7 +179,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'ladybug-chart', 'ladybug-chart Documentation',
+    (master_doc, 'ladybug-charts', 'ladybug-charts Documentation',
      [author], 1)
 ]
 
@@ -190,8 +190,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'ladybug-chart', 'ladybug-chart Documentation',
-     author, 'ladybug-chart', 'One line description of project.',
+    (master_doc, 'ladybug-charts', 'ladybug-charts Documentation',
+     author, 'ladybug-charts', 'One line description of project.',
      'Miscellaneous'),
 ]
 

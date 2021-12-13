@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setuptools.setup(
-    name="ladybug-chart",
+    name="ladybug-charts",
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     author="Ladybug Tools",
@@ -15,7 +15,7 @@ setuptools.setup(
     description="Ladybug extension to generate 2D charts.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/ladybug-tools/ladybug-chart",
+    url="https://github.com/ladybug-tools/ladybug-charts",
     packages=setuptools.find_packages(exclude=["tests*"]),
     install_requires=requirements,
     classifiers=[
