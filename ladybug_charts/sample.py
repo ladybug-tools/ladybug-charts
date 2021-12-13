@@ -1,6 +1,6 @@
 """Sample."""
 
 
-def sample():
-    """Sample."""
-    return 'sample'
+def add(a, b):
+    """Add two numbers."""
+    return a + b
