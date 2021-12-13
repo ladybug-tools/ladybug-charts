@@ -1,6 +1,7 @@
 Welcome to ladybug-charts's documentation!
 ===================================
 
+.. image:: https://raw.githubusercontent.com/ladybug-tools/ladybug-charts/master/images/charts.png
 
 Ladybug extension for generating 2D charts.
 
