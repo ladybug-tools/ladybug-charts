@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from pandas import DataFrame as Df
 from plotly.graph_objects import Figure
 from ._schema import mapping_dictionary, template, tight_margins
-from .create_df import DataPoint
+from .to_df import DataPoint
 from math import ceil, floor
 
 
