@@ -1,17 +1,111 @@
+"""Schema to control visualization of Ladybug charts."""
 
 import plotly.io as pio
+
+blue_red_yellow = ["#00b3ff", "#000082", "#ff0000", "#ffff00"]
+dry_humid = ["#ffe600", "#00c8ff", "#0000ff"]
+sun_colors = [
+    "#293a59",
+    "#960c2c",
+    "#ff0000",
+    "#ff7b00",
+    "#fffc00",
+    "#ffff7b",
+    "#ffffff",
+]
+light_colors = ["#4d6daa", "#a0beed", "#f1e969", "#eb7d05", "#d81600"]
+bright_colors = ["#730a8c", "#0d0db3", "#0f85be", "#0f85be", "#b11421", "#fdf130"]
+wind_speed_color = [
+    "#ffffff",
+    "#b2f2ff",
+    "#33ddff",
+    "#00aaff",
+    "#0055ff",
+    "#0000ff",
+    "#aa00ff",
+    "#ff00ff",
+    "#cc0000",
+    "#ffaa00",
+]
+wind_dir_color = ["#0072dd", "#00c420", "#eded00", "#be00d5", "#0072dd"]
+cloud_colors = ["#00aaff", "#ffffff", "#c2c2c2"]
+utci_categories_color = [
+    # Let first 10% (0.1) of the values have color rgb(0, 0, 0)
+    [0, "#2B2977"],
+    [0.0555, "#2B2977"],
+    [0.0555, "#38429B"],
+    [0.0555 + 0.111 * 1, "#38429B"],
+    [0.0555 + 0.111 * 1, "#4253A4"],
+    [0.0555 + 0.111 * 2, "#4253A4"],
+    [0.0555 + 0.111 * 2, "#4B62AD"],
+    [0.0555 + 0.111 * 3, "#4B62AD"],
+    [0.0555 + 0.111 * 3, "#68B8E7"],
+    [0.0555 + 0.111 * 4, "#68B8E7"],
+    [0.0555 + 0.111 * 4, "#53B848"],
+    [0.0555 + 0.111 * 5, "#53B848"],
+    [0.0555 + 0.111 * 5, "#EE8522"],
+    [0.0555 + 0.111 * 6, "#EE8522"],
+    [0.0555 + 0.111 * 6, "#EA2C24"],
+    [0.0555 + 0.111 * 7, "#EA2C24"],
+    [0.0555 + 0.111 * 7, "#B12224"],
+    [0.0555 + 0.111 * 8, "#B12224"],
+    [0.0555 + 0.111 * 8, "#751613"],
+    [1.0, "#751613"],
+]
+
+# containers
+container_row_center_full = "container-row row-center"
+container_col_center_one_of_three = (
+    "container-col justify-center one-of-three-container"
+)
+
+# Misc
+month_lst = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+]
+
+
+clima_template = "plotly_white"
+
+pio.templates.default = clima_template
+template = clima_template
+
+fig_config = {
+    "modeBarButtonsToRemove": [
+        "toggleSpikelines",
+        "hoverCompareCartesian",
+        "select2d",
+        "zoom2d",
+        "autoScale2d",
+        "pan2d",
+        "lasso2d",
+        "zoomIn2d",
+        "zoomOut2d",
+        "hoverClosestCartesian",
+    ],
+    "displaylogo": False,
+    "displayModeBar": "hover",
+    "toImageButtonOptions": {"format": "svg", "filename": "Clima tool graph"},
+}
+
+tight_margins = dict(l=20, r=20, t=33, b=20)
 
 # Units Dictionary
 degrees_unit = "\u00B0deg"
 temperature_unit = "\u00B0C"
 radiation_unit = "Wh/m<sup>2</sup>"
 thermal_stress_label = "Thermal stress"
-
-
-clima_template = "plotly_white"
-pio.templates.default = clima_template
-template = clima_template
-tight_margins = dict(l=20, r=20, t=33, b=20)
 
 mapping_dictionary = {
     "None": {"name": "None"},
@@ -454,4 +548,101 @@ mapping_dictionary = {
         "unit": "J/kg dry air",
         "range": [0, 110000],
     },
+}
+
+# Dropdown Names
+variables_sun_cloud_tab_dropdown = [
+    "None",
+    "DBT",
+    "DPT",
+    "RH",
+    "p_atm",
+    "extr_hor_rad",
+    "hor_ir_rad",
+    "glob_hor_rad",
+    "dir_nor_rad",
+    "dif_hor_rad",
+    "glob_hor_ill",
+    "dir_nor_ill",
+    "dif_hor_ill",
+    "Zlumi",
+    "wind_dir",
+    "wind_speed",
+    "tot_sky_cover",
+    "Oskycover",
+    "Vis",
+]
+variables_dropdown = [
+    "DBT",
+    "DPT",
+    "RH",
+    "p_atm",
+    "extr_hor_rad",
+    "hor_ir_rad",
+    "glob_hor_rad",
+    "dir_nor_rad",
+    "dif_hor_rad",
+    "glob_hor_ill",
+    "dir_nor_ill",
+    "dif_hor_ill",
+    "Zlumi",
+    "wind_dir",
+    "wind_speed",
+    "tot_sky_cover",
+    "Oskycover",
+    "Vis",
+]
+variables_more_variables_dropdown = [
+    "utci_Sun_Wind",
+    "utci_noSun_Wind",
+    "utci_Sun_noWind",
+    "utci_noSun_noWind",
+    "utci_Sun_Wind_categories",
+    "utci_noSun_Wind_categories",
+    "utci_Sun_noWind_categories",
+    "utci_noSun_noWind_categories",
+    "p_vap",
+    "hr",
+    "t_wb",
+    "t_dp",
+    "elevation",
+    "azimuth",
+    "p_sat",
+]
+variables_sun_cloud_tab_explore_dropdown = [
+    "extr_hor_rad",
+    "hor_ir_rad",
+    "glob_hor_rad",
+    "dir_nor_rad",
+    "dif_hor_rad",
+    "glob_hor_ill",
+    "dir_nor_ill",
+    "dif_hor_ill",
+    "Zlumi",
+    "Oskycover",
+]
+variables_outdoor_dropdown = [
+    "utci_Sun_Wind",
+    "utci_Sun_noWind",
+    "utci_noSun_Wind",
+    "utci_noSun_noWind",
+]
+
+sun_cloud_tab_dropdown_names = {
+    mapping_dictionary[key]["name"]: key for key in variables_sun_cloud_tab_dropdown
+}
+
+dropdown_names = {mapping_dictionary[key]["name"]: key for key in variables_dropdown}
+
+more_variables_dropdown = {
+    mapping_dictionary[key]["name"]: key for key in variables_more_variables_dropdown
+}
+
+sun_cloud_tab_explore_dropdown_names = {
+    mapping_dictionary[key]["name"]: key
+    for key in variables_sun_cloud_tab_explore_dropdown
+}
+
+outdoor_dropdown_names = {
+    mapping_dictionary[key]["name"]: key for key in variables_outdoor_dropdown
 }
