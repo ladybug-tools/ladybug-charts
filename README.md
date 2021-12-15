@@ -45,3 +45,6 @@ python -m pytest tests/
 sphinx-apidoc -f -e -d 4 -o ./docs ./ladybug_charts
 sphinx-build -b html ./docs ./docs/_build/docs
 ```
+
+## Credits:
+This project is a derivative work of [Clima](https://clima.cbe.berkeley.edu/). We are grateful to the developers of the original work.
