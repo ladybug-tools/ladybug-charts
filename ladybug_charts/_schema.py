@@ -1,4 +1,9 @@
-"""Schema to control visualization of Ladybug charts."""
+"""Schema to control visualization of Ladybug charts.
+
+This code is part of the CBE Clima Tool https://clima.cbe.berkeley.edu/.
+You can check the source code at:
+    https://github.com/CenterForTheBuiltEnvironment/clima/blob/main/my_project/global_scheme.py
+"""
 
 import plotly.io as pio
 
@@ -178,7 +183,7 @@ mapping_dictionary = {
         "range": [0, 1200],
     },
     "hor_ir_rad": {
-        "name": "´Horizontal infrared radiation",
+        "name": "Horizontal infrared radiation",
         "color": [
             "#293a59",
             "#960c2c",
