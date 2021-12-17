@@ -1,4 +1,9 @@
-"""Create a Pandas DataFrame from an EPW file."""
+"""Create a Pandas DataFrame from an EPW file.
+
+This code is part of the CBE Clima Tool https://clima.cbe.berkeley.edu/.
+You can check the source code at:
+    https://github.com/CenterForTheBuiltEnvironment/clima/blob/main/my_project/extract_df.py
+"""
 
 import re
 import pathlib
@@ -63,7 +68,7 @@ def _read_epw(epw: str) -> Tuple[List[str], str]:
     return lines, pathlib.Path(epw).stem
 
 
-def create_df(epw: str) -> Tuple[pd.DataFrame, dict]:
+def create_dataframe(epw: str) -> Tuple[pd.DataFrame, dict]:
     """Create a Pandas Dataframe object from an EPW file.
 
     Args:
