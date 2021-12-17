@@ -3,34 +3,35 @@ import plotly.graph_objects as go
 from pandas import DataFrame as Df
 from plotly.graph_objects import Figure
 from ._schema import mapping_dictionary, template, tight_margins
-from .to_df import DataPoint
+from .to_dataframe import DataPoint
 from math import ceil, floor
 
 
-def heatmap(df: Df, var: DataPoint, global_local: str = "global") -> Figure:
+def heatmap(df: Df, var: DataPoint, min: float = None, max: float = None) -> Figure:
     """Create a plotly heatmap figure.
 
     Args:
         df: A pandas dataframe.
-        var: A string with the name of the variable to be plotted. Choose from one of the
-        global_local: A string with the name of the global or local time.
+        var: A Datapoint object.
+        min: The minimum value for the legend of the heatmap. Defaults to None.
+        max: The maximum value for the legend of the heatmap. Defaults to None.
 
     Returns:
         A plotly figure.
     """
     var = var.value
     var_unit = mapping_dictionary[var]["unit"]
-    var_range = mapping_dictionary[var]["range"]
     var_color = mapping_dictionary[var]["color"]
 
-    if global_local == "global":
-        # Set Global values for Max and minimum
-        range_z = var_range
+    if min != None and max != None:
+        range_z = [min, max]
+    elif min != None and max == None:
+        range_z = [min, 5 * ceil(df[var].max() / 5)]
+    elif min == None and max != None:
+        range_z = [5 * floor(df[var].min() / 5), max]
     else:
         # Set maximum and minimum according to data
-        data_max = 5 * ceil(df[var].max() / 5)
-        data_min = 5 * floor(df[var].min() / 5)
-        range_z = [data_min, data_max]
+        range_z = [5 * floor(df[var].min() / 5), 5 * ceil(df[var].max() / 5)]
 
     fig = go.Figure(
         data=go.Heatmap(
