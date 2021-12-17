@@ -3,61 +3,31 @@
 import numpy as np
 import plotly.io as pio
 import plotly.graph_objects as go
-from enum import Enum
-from pandas import DataFrame as Df
 from plotly.graph_objects import Figure
-from ._update_dataframe import update_dataframe_for_heatmap
+from ._to_dataframe import heatmap_dataframe
 from math import ceil, floor
+from ladybug.datacollection import HourlyContinuousCollection
+from ladybug_pandas.series import Series
 
 
-class DataPoint(Enum):
-    """Variable names for the EPW data."""
-    dry_bulb_temperature = 'Dry Bulb Temperature'
-    dew_point_temperature = 'Dew Point Temperature'
-    relative_humidity = 'Relative Humidity'
-    atmospheric_station_pressure = 'Atmospheric Station Pressure'
-    extraterrestrial_horizontal_radiation = 'Extraterrestrial Horizontal Radiation'
-    extraterrestrial_direct_normal_radiation = 'Extraterrestrial Direct Normal Radiation'
-    horizontal_infrared_radiation_intensity = 'Horizontal Infrared Radiation Intensity'
-    global_horizontal_radiation = 'Global Horizontal Radiation'
-    direct_normal_radiation = 'Direct Normal Radiation'
-    diffuse_horizontal_radiation = 'Diffuse Horizontal Radiation'
-    global_horizontal_illuminance = 'Global Horizontal Illuminance'
-    direct_normal_illuminance = 'Direct Normal Illuminance'
-    diffuse_horizontal_illuminance = 'Diffuse Horizontal Illuminance'
-    zenith_luminance = 'Zenith Luminance'
-    wind_direction = 'Wind Direction'
-    wind_speed = 'Wind Speed'
-    total_sky_cover = 'Total Sky Cover'
-    opaque_sky_cover = 'Opaque Sky Cover'
-    visibility = 'Visibility'
-    ceiling_height = 'Ceiling Height'
-    precipitation_weather_observation = 'Precipitation Weather Observation'
-    precipitation_weather_codes = 'Precipitation Weather Codes'
-    precipitable_water = 'Precipitable Water'
-    aerosol_optical_depth = 'Aerosol Optical Depth'
-    snow_depth = 'Snow Depth'
-    days_since_last_snowfall = 'Days Since Last Snowfall'
-    albedo = 'Albedo'
-    liquid_precipitation_depth = 'Liquid Precipitation Depth'
-    liquid_precipitation_quantity = 'Liquid Precipitation Quantity'
-
-
-def heatmap(df: Df, var: DataPoint,
+def heatmap(hourly_data: HourlyContinuousCollection,
             min_range: float = None, max_range: float = None) -> Figure:
-    """Create a plotly heatmap figure.
+    """Create a plotly heatmap figure from Ladybug HourlyContinuousCollection.
 
     Args:
-        df: A ladybug-pandas dataframe.
-        var: A Datapoint object.
-        min_range: The minimum value for the legend of the heatmap. Defaults to None.
-        max_range: The maximum value for the legend of the heatmap. Defaults to None.
+        hourly_data: A Ladybug HourlyContinuousCollection object.
+        min_range: The minimum value for the legend of the heatmap. If not set, value
+            will be calculated based on data. Defaults to None.
+        max_range: The maximum value for the legend of the heatmap. If not set, value
+            will be calculated based on data. Defaults to None.
 
     Returns:
         A plotly figure.
     """
-    df = update_dataframe_for_heatmap(df)
-    var = var.value
+    df = heatmap_dataframe()
+    var = hourly_data.header.data_type.name
+    series = Series(hourly_data)
+    df[var] = series.values
     var_unit = df[var].dtype.name.split('(')[-1].split(')')[0]
 
     if min_range != None and max_range != None:
