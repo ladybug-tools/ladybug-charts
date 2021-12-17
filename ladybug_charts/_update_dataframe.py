@@ -2,26 +2,11 @@
 
 
 import pandas as pd
-
-
-MONTHS = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-]
+from calendar import month_name
 
 
 def update_dataframe_for_heatmap(data_frame) -> pd.DataFrame:
-    """Create a dataframe for the heatmap."""
+    """Add columns to the ladybug-pandas dataframe for heatmap."""
 
     # add years, month, day and hour columns
     data_frame.insert(loc=0, column="year", value=data_frame.index.year)
@@ -30,7 +15,9 @@ def update_dataframe_for_heatmap(data_frame) -> pd.DataFrame:
     data_frame.insert(loc=3, column="hour", value=data_frame.index.hour)
 
     # add month name column
-    month_number_name_dict = {count + 1: month for count, month in enumerate(MONTHS)}
+    months_abbreviated = [month[:3] for month in month_name[1:]]
+    month_number_name_dict = {count + 1: month for count,
+                              month in enumerate(months_abbreviated)}
     data_frame.insert(loc=4, column="month_names", value=data_frame["month"].astype(
         'int').map(month_number_name_dict))
 
