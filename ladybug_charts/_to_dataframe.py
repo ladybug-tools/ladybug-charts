@@ -5,8 +5,18 @@ import pandas as pd
 from calendar import month_name
 
 
-def update_dataframe_for_heatmap(data_frame) -> pd.DataFrame:
-    """Add columns to the ladybug-pandas dataframe for heatmap."""
+def heatmap_dataframe() -> pd.DataFrame:
+    """Create a Dataframe object for a heatmap figure."""
+
+    data_frame = pd.DataFrame()
+
+    # add time to create an index
+    times = pd.date_range(
+        "2019-01-01 00:00:00", "2020-01-01", closed="left", freq="H", tz="UTC"
+    )
+    data_frame['times'] = times
+    data_frame.set_index(
+        "times", drop=False, append=False, inplace=True, verify_integrity=False)
 
     # add years, month, day and hour columns
     data_frame.insert(loc=0, column="year", value=data_frame.index.year)
@@ -21,10 +31,6 @@ def update_dataframe_for_heatmap(data_frame) -> pd.DataFrame:
     data_frame.insert(loc=4, column="month_names", value=data_frame["month"].astype(
         'int').map(month_number_name_dict))
 
-    # add UTC_time
-    times = pd.date_range(
-        "2019-01-01 00:00:00", "2020-01-01", closed="left", freq="H", tz="UTC"
-    )
     data_frame['UTC_time'] = pd.to_datetime(times)
 
     return data_frame
