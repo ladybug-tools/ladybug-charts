@@ -1,10 +1,5 @@
-"""Create plotly figures from Dataframes.
+"""Create plotly figures from pandas Dataframe."""
 
-This code is part of the CBE Clima Tool;
-Betti, G., Tartarini, F., Schiavon, S., Nguyen, C. (2021). CBE Clima Tool. 
-Version 0.4.6. Center for the Built Environment, University of California Berkeley. 
-https://clima.cbe.berkeley.edu
-"""
 import numpy as np
 import plotly.io as pio
 import plotly.graph_objects as go
@@ -48,7 +43,8 @@ class DataPoint(Enum):
     liquid_precipitation_quantity = 'Liquid Precipitation Quantity'
 
 
-def heatmap(df: Df, var: DataPoint, min_range: float = None, max_range: float = None) -> Figure:
+def heatmap(df: Df, var: DataPoint,
+            min_range: float = None, max_range: float = None) -> Figure:
     """Create a plotly heatmap figure.
 
     Args:
