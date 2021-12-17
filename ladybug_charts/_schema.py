@@ -1,6 +1,10 @@
 """Schema to control visualization of Ladybug charts.
 
-This code is part of the CBE Clima Tool https://clima.cbe.berkeley.edu/.
+This code is part of the CBE Clima Tool;
+Betti, G., Tartarini, F., Schiavon, S., Nguyen, C. (2021). CBE Clima Tool. 
+Version 0.4.6. Center for the Built Environment, University of California Berkeley. 
+https://clima.cbe.berkeley.edu
+
 You can check the source code at:
     https://github.com/CenterForTheBuiltEnvironment/clima/blob/main/my_project/global_scheme.py
 """
