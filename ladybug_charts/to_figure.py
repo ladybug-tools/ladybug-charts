@@ -66,7 +66,7 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
             hovertemplate=(
                 "<b>"
                 + var
-                + ": %{z:.2f} "
+                + ": %{z} "
                 + var_unit
                 + "</b><br>Month: %{customdata[0]}<br>Day: %{customdata[1]}<br>Hour: %{y}:00<br>"
             ),
