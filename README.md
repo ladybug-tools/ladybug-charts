@@ -47,4 +47,4 @@ sphinx-build -b html ./docs ./docs/_build/docs
 ```
 
 ## Credits:
-This project is a derivative work of [Clima](https://clima.cbe.berkeley.edu/). We are grateful to the developers of the original work.
+This project is a derivative work of [Clima](https://clima.cbe.berkeley.edu/) which is available under an MIT license. We are grateful to the developers of the original work.
