@@ -9,15 +9,17 @@ from plotly.graph_objects import Figure
 from typing import Union
 
 from ._to_dataframe import heatmap_dataframe
-from ._helper import discontinuous_to_continuous
+from ._helper import discontinuous_to_continuous, rgb_to_hex
 
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, MonthlyCollection
+    HourlyDiscontinuousCollection
 from ladybug_pandas.series import Series
+from ladybug.color import Colorset
 
 
 def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
-            min_range: float = None, max_range: float = None) -> Figure:
+            min_range: float = None, max_range: float = None,
+            colorset: Colorset = Colorset.original()) -> Figure:
     """Create a plotly heatmap figure from Ladybug Hourly data.
 
     Args:
@@ -27,6 +29,7 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
             will be calculated based on data. Defaults to None.
         max_range: The maximum value for the legend of the heatmap. If not set, value
             will be calculated based on data. Defaults to None.
+        colorset: A Ladybug Colorset object. Defaults to Original Ladybug Colorset.
 
     Returns:
         A plotly figure.
@@ -62,6 +65,7 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
             z=df[var],
             zmin=range_z[0],
             zmax=range_z[1],
+            colorscale=rgb_to_hex(colorset),
             customdata=np.stack((df["month_names"], df["day"]), axis=-1),
             hovertemplate=(
                 "<b>"
