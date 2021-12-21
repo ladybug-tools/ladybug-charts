@@ -1,5 +1,8 @@
 """Helper functions to create Ladybug charts."""
+
+from typing import List
 from ladybug.datacollection import HourlyContinuousCollection, HourlyDiscontinuousCollection
+from ladybug.color import Colorset
 
 
 def discontinuous_to_continuous(
@@ -20,3 +23,9 @@ def discontinuous_to_continuous(
             values.append(None)
 
     return HourlyContinuousCollection(data.header, values)
+
+
+def rgb_to_hex(colorset: Colorset) -> List[str]:
+    """Convert a RGB colors to Hex colors"""
+
+    return [f'#{c.r:02X}{c.g:02X}{c.b:02X}' for c in colorset]
