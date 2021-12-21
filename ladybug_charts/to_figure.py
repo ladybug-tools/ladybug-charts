@@ -5,8 +5,10 @@ import plotly.io as pio
 import plotly.graph_objects as go
 from plotly.graph_objects import Figure
 from ._to_dataframe import heatmap_dataframe
+from ._helper import discontinuous_to_continuous
 from math import ceil, floor
-from ladybug.datacollection import HourlyContinuousCollection
+from ladybug.datacollection import HourlyContinuousCollection, \
+    HourlyDiscontinuousCollection, MonthlyCollection
 from ladybug_pandas.series import Series
 
 
@@ -24,8 +26,16 @@ def heatmap(hourly_data: HourlyContinuousCollection,
     Returns:
         A plotly figure.
     """
-    df = heatmap_dataframe()
+    assert isinstance(hourly_data, (HourlyContinuousCollection,
+                      HourlyDiscontinuousCollection)), 'Only'
+    ' Ladybug HourlyContinuousCollection and HourlyDiscontinuousCollection are supported.'
+    f' Instead got {type(hourly_data)}'
+
+    if isinstance(hourly_data, HourlyDiscontinuousCollection):
+        hourly_data = discontinuous_to_continuous(hourly_data)
+
     var = hourly_data.header.data_type.name
+    df = heatmap_dataframe()
     series = Series(hourly_data)
     df[var] = series.values
     var_unit = df[var].dtype.name.split('(')[-1].split(')')[0]
