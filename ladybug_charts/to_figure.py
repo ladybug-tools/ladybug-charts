@@ -1,23 +1,28 @@
 """Create plotly figures from pandas Dataframe."""
 
+
 import numpy as np
 import plotly.io as pio
 import plotly.graph_objects as go
+from math import ceil, floor
 from plotly.graph_objects import Figure
+from typing import Union
+
 from ._to_dataframe import heatmap_dataframe
 from ._helper import discontinuous_to_continuous
-from math import ceil, floor
+
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection
 from ladybug_pandas.series import Series
 
 
-def heatmap(hourly_data: HourlyContinuousCollection,
+def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
             min_range: float = None, max_range: float = None) -> Figure:
-    """Create a plotly heatmap figure from Ladybug HourlyContinuousCollection.
+    """Create a plotly heatmap figure from Ladybug Hourly data.
 
     Args:
-        hourly_data: A Ladybug HourlyContinuousCollection object.
+        hourly_data: A Ladybug HourlyContinuousCollection object or a Ladybug
+            HourlyDiscontinuousCollection object.
         min_range: The minimum value for the legend of the heatmap. If not set, value
             will be calculated based on data. Defaults to None.
         max_range: The maximum value for the legend of the heatmap. If not set, value
