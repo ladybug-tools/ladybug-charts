@@ -6,7 +6,7 @@ import plotly.io as pio
 import plotly.graph_objects as go
 from math import ceil, floor
 from plotly.graph_objects import Figure
-from typing import Union
+from typing import Union, List
 from calendar import month_name
 from random import randint
 
@@ -17,6 +17,9 @@ from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
 from ladybug.color import Color
 from ladybug_pandas.series import Series
+
+# set white background in all charts
+pio.templates.default = 'plotly_white'
 
 
 def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
@@ -82,13 +85,15 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
     )
 
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
-
-    fig.update_yaxes(title_text="Hours of the day")
     fig.update_xaxes(title_text="Days of the year")
+    fig.update_yaxes(title_text="Hours of the day")
 
-    pio.templates.default = 'plotly_white'
-    fig.update_layout(template='plotly_white', margin=dict(
-        l=20, r=20, t=33, b=20), yaxis_nticks=13)
+    fig.update_layout(
+        template='plotly_white',
+        margin=dict(
+            l=20, r=20, t=33, b=20),
+        yaxis_nticks=13
+    )
     fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
 
@@ -96,29 +101,28 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
 
 
 def monthly_barchart(data: MonthlyCollection,
-                     chart_title: str = 'Unnamed',
-                     color: Color = Color(
-                         randint(0, 255), randint(0, 255), randint(0, 255))
-                     ) -> Figure:
-    """Create a plotly barchart figure from Ladybug monthly data.
-
-    Only continuous data is supported.
+                     chart_title: str = None,
+                     color: Color = None) -> Figure:
+    """Create a plotly barchart figure from a ladybug monthly data object.
 
     Args:
-        data: A Ladybug MonthlyCollection.
-        chart_title: A string to be used as the title of the plot. Defaults to 'Unnamed'.
-        color: A Ladybug color object. Defaults to a random color.
+        data: A ladybug MonthlyCollection object.
+        chart_title: A string to be used as the title of the plot. If not set, the name
+            of the data will be used. Defaults to None.
+        color: A Ladybug color object. If not set, a random color will be used. Defaults 
+            to None.
 
     Returns:
         A plotly figure.
     """
-    assert isinstance(data, MonthlyCollection), 'Only continuous collections'\
-        ' of monthly data is'\
+    assert isinstance(data, MonthlyCollection), 'Only ladybug monthly data is'\
         f' supported. Instead got {type(data)}'
 
     # name and unit
     var = data.header.data_type.name
     var_unit = data.header.unit
+    chart_title = chart_title if chart_title else var
+    color = color if color else Color(randint(0, 255), randint(0, 255), randint(0, 255))
 
     fig_data = go.Bar(
         x=[month[:3] for month in month_name[1:]],
@@ -130,12 +134,8 @@ def monthly_barchart(data: MonthlyCollection,
     )
 
     fig = go.Figure(fig_data)
-    fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
+
     fig.update_yaxes(title_text=var + " (" + var_unit + ")")
-    fig.update_xaxes(title_text="Months of the year")
-
-    pio.templates.default = 'plotly_white'
-
     fig.update_layout(
         barmode='stack',
         template='plotly_white',
