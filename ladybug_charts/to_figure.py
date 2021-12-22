@@ -7,12 +7,15 @@ import plotly.graph_objects as go
 from math import ceil, floor
 from plotly.graph_objects import Figure
 from typing import Union
+from calendar import month_name
+from random import randint
 
 from ._to_dataframe import heatmap_dataframe
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
 
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection
+    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
+from ladybug.color import Color
 from ladybug_pandas.series import Series
 
 
@@ -86,6 +89,66 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
     pio.templates.default = 'plotly_white'
     fig.update_layout(template='plotly_white', margin=dict(
         l=20, r=20, t=33, b=20), yaxis_nticks=13)
+    fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
+    fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
+
+    return fig
+
+
+def monthly_barchart(data: MonthlyCollection,
+                     chart_title: str = 'Unnamed',
+                     color: Color = Color(
+                         randint(0, 255), randint(0, 255), randint(0, 255))
+                     ) -> Figure:
+    """Create a plotly barchart figure from Ladybug monthly data.
+
+    Only continuous data is supported.
+
+    Args:
+        data: A Ladybug MonthlyCollection.
+        chart_title: A string to be used as the title of the plot. Defaults to 'Unnamed'.
+        color: A Ladybug color object. Defaults to a random color.
+
+    Returns:
+        A plotly figure.
+    """
+    assert isinstance(data, MonthlyCollection), 'Only continuous collections'\
+        ' of monthly data is'\
+        f' supported. Instead got {type(data)}'
+
+    # name and unit
+    var = data.header.data_type.name
+    var_unit = data.header.unit
+
+    fig_data = go.Bar(
+        x=[month[:3] for month in month_name[1:]],
+        y=[round(val, 2) for val in data.values],
+        text=[f'{round(val, 2)} {var_unit}' for val in data.values],
+        textposition='auto',
+        hovertemplate='<br>%{y} ' + var_unit + '<br>' + '<extra></extra>',
+        marker_color=rgb_to_hex(color)
+    )
+
+    fig = go.Figure(fig_data)
+    fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
+    fig.update_yaxes(title_text=var + " (" + var_unit + ")")
+    fig.update_xaxes(title_text="Months of the year")
+
+    pio.templates.default = 'plotly_white'
+
+    fig.update_layout(
+        barmode='stack',
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=33, b=20),
+        yaxis_nticks=13,
+        title={
+            'text': chart_title,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'}
+    )
+
     fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
 
