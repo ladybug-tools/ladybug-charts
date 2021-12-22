@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 from enum import Enum
-from typing import List
-from ladybug.datacollection import HourlyContinuousCollection, HourlyDiscontinuousCollection
-from ladybug.color import Colorset
+from typing import List, Tuple
+from ladybug.datacollection import HourlyContinuousCollection, \
+    HourlyDiscontinuousCollection, BaseCollection
+from ladybug.color import Color, Colorset
 
 
 def discontinuous_to_continuous(
@@ -27,10 +28,10 @@ def discontinuous_to_continuous(
     return HourlyContinuousCollection(data.header, values)
 
 
-def rgb_to_hex(colorset: ColorSet) -> List[str]:
-    """Convert a RGB colors to Hex colors"""
+def rgb_to_hex(color: Color) -> str:
+    """Convert a RGB color to Hex color."""
 
-    return [f'#{c.r:02X}{c.g:02X}{c.b:02X}' for c in color_set[colorset.value]]
+    return f'#{color.r:02X}{color.g:02X}{color.b:02X}'
 
 
 class ColorSet(Enum):
