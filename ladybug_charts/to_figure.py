@@ -67,7 +67,7 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
             z=df[var],
             zmin=range_z[0],
             zmax=range_z[1],
-            colorscale=rgb_to_hex(colorset),
+            colorscale=[rgb_to_hex(color) for color in color_set[colorset.value]],
             customdata=np.stack((df["month_names"], df["day"]), axis=-1),
             hovertemplate=(
                 "<b>"
