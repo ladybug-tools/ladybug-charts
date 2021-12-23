@@ -6,11 +6,12 @@ import plotly.io as pio
 import plotly.graph_objects as go
 from math import ceil, floor
 from plotly.graph_objects import Figure
+from pandas import DataFrame as pd_DataFrame
 from typing import Union, List
 from calendar import month_name
 from random import randint
 
-from ._to_dataframe import heatmap_dataframe
+from ._to_dataframe import dataframe, Frequency
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
 
 from ladybug.datacollection import HourlyContinuousCollection, \
@@ -48,7 +49,7 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
         hourly_data = discontinuous_to_continuous(hourly_data)
 
     var = hourly_data.header.data_type.name
-    df = heatmap_dataframe()
+    df = dataframe()
     series = Series(hourly_data)
     df[var] = series.values
     var_unit = df[var].dtype.name.split('(')[-1].split(')')[0]
@@ -175,8 +176,78 @@ def bar_chart(data: List[MonthlyCollection],
     return fig
 
 
-def _bar_chart(data: Union[MonthlyCollection, DailyCollection], chart_title: str = None,
-               color: Color = None) -> Figure:
+def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
+                           chart_type: str = 'monthly', chart_title: str = None,
+                           color: Color = None) -> Figure:
+    """Create a plotly barchart figure from a ladybug monthly or daily data object.
+
+    Args:
+        data: A ladybug monthly or daily data object.
+        chart_type: A string to determine the type of chart to be created.
+            Accepted values are 'monthly' and 'daily'. Defaults to 'monthly'.
+        chart_title: A string to be used as the title of the plot. If not set, the
+            names of data will be used to create a title for the chart. Defaults to None.
+        color: A ladybug color object. If not set, random colors will be used.
+
+    Returns:
+        A plotly figure.
+    """
+
+    df = dataframe(Frequency.MONTHLY) if chart_type == 'monthly' else dataframe(
+        Frequency.DAILY)
+    var = data.header.data_type.name
+    var_unit = data.header.unit
+    chart_title = chart_title if chart_title else var
+    color = color if color else Color(randint(0, 255), randint(0, 255), randint(0, 255))
+
+    if chart_type == 'monthly':
+        fig_data = go.Bar(
+            x=df["month_names"],
+            y=[round(val, 2) for val in data.values],
+            text=[f'{round(val, 2)} {var_unit}' for val in data.values],
+            textposition='auto',
+            customdata=np.stack((df["month_names"],), axis=-1),
+            hovertemplate=(
+                '<br>%{y} '
+                + var_unit
+                + ' in %{customdata[0]}'
+                + '<extra></extra>'),
+            marker_color=rgb_to_hex(color)
+        )
+    else:
+        fig_data = go.Bar(
+            x=df["UTC_time"].dt.date,
+            y=[round(val, 2) for val in data.values],
+            text=[f'{round(val, 2)} {var_unit}' for val in data.values],
+            textposition='auto',
+            customdata=np.stack((df["month_names"], df["day"]), axis=-1),
+            hovertemplate=(
+                '<br>%{y} '
+                + var_unit
+                + ' on %{customdata[0]}'
+                + ' %{customdata[1]} <br>'
+                + '<extra></extra>'),
+            marker_color=rgb_to_hex(color)
+        )
+
+    fig = go.Figure(fig_data)
+    fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
+    fig.update_yaxes(title_text='('+var_unit+')')
+    fig.update_layout(
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=33, b=20),
+        yaxis_nticks=13,
+        title={
+            'text': chart_title,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'}
+    )
+    fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
+    fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
+
+    return fig
 
 
 def monthly_bar_chart(data: MonthlyCollection,
@@ -197,112 +268,25 @@ def monthly_bar_chart(data: MonthlyCollection,
     assert isinstance(data, MonthlyCollection), 'Only ladybug monthly data is'\
         f' supported. Instead got {type(data)}'
 
-    # name and unit
-    var = data.header.data_type.name
-    var_unit = data.header.unit
-    chart_title = chart_title if chart_title else var
-    color = color if color else Color(randint(0, 255), randint(0, 255), randint(0, 255))
-
-    fig_data = go.Bar(
-        x=[month[:3] for month in month_name[1:]],
-        y=[round(val, 2) for val in data.values],
-        text=[f'{round(val, 2)} {var_unit}' for val in data.values],
-        textposition='auto',
-        hovertemplate='<br>%{y} ' + var_unit + '<br>' + '<extra></extra>',
-        marker_color=rgb_to_hex(color)
-    )
-
-    fig = go.Figure(fig_data)
-
-    fig.update_yaxes(title_text=var + " (" + var_unit + ")")
-    fig.update_layout(
-        barmode='stack',
-        template='plotly_white',
-        margin=dict(l=20, r=20, t=33, b=20),
-        yaxis_nticks=13,
-        title={
-            'text': chart_title,
-            'y': 1,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'}
-    )
-    fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
-    fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
-
-    return fig
+    return _bar_chart_single_data(data, 'monthly', chart_title=chart_title, color=color)
 
 
-def bar_chart(data: List[MonthlyCollection],
-              chart_title: str = None,
-              colors: List[Color] = None,
-              stack: bool = False) -> Figure:
-    """Create a plotly barchart figure from multiple ladybug monthly data objects.
+def daily_bar_chart(data: DailyCollection,
+                    chart_title: str = None,
+                    color: Color = None) -> Figure:
+    """Create a plotly barchart figure from a ladybug daily data object.
 
     Args:
-        data: A list of ladybug monthly data objects.
-        chart_title: A string to be used as the title of the plot. If not set, the 
-            names of data will be used to create a title for the chart. Defaults to None.
-        colors: A list of ladybug color objects. The length of this list needs to match
-            the length of data argument. If not set, random colors will be used.
-            Defaults to None.
-        stack: A boolean to determine whether to stack the data. Defaults to False which
-            will show data side by side.
+        data: A ladybug DailyCollection object.
+        chart_title: A string to be used as the title of the plot. If not set, the name
+            of the data will be used. Defaults to None.
+        color: A Ladybug color object. If not set, a random color will be used. Defaults 
+            to None.
 
     Returns:
         A plotly figure.
     """
-    assert len(data) > 0 and all([isinstance(item, MonthlyCollection) for item in data]), \
-        f'Only a list of ladybug monthly data is supported. Instead got {type(data)}'
+    assert isinstance(data, DailyCollection), 'Only ladybug daily data is'\
+        f' supported. Instead got {type(data)}'
 
-    if colors:
-        assert len(colors) == len(data), 'Length of colors argument needs to match'\
-            f' the length of data argument. Instead got {len(colors)} and {len(data)}'
-
-    fig = go.Figure()
-    names = []
-
-    for count, item in enumerate(data):
-
-        # find name unit and color
-        var = item.header.data_type.name
-        var_unit = item.header.unit
-        color = colors[count] if colors else Color(
-            randint(0, 255), randint(0, 255), randint(0, 255))
-
-        fig_data = go.Bar(
-            x=[month[:3] for month in month_name[1:]],
-            y=[round(val, 2) for val in item.values],
-            text=[f'{round(val, 2)} {var_unit}' for val in item.values],
-            textposition='auto',
-            hovertemplate='<br>%{y} ' + var_unit + '<br>' + '<extra></extra>',
-            marker_color=rgb_to_hex(color),
-            name=var
-        )
-        fig.add_trace(fig_data)
-        names.append(var)
-
-    # use chart title if set or join names
-    chart_title = chart_title if chart_title else ' - '.join(names)
-
-    fig.update_layout(
-        barmode='relative' if stack else 'group',
-        template='plotly_white',
-        margin=dict(l=20, r=20, t=33, b=20),
-        yaxis_nticks=13,
-        title={
-            'text': chart_title,
-            'y': 1,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
-        legend={
-            'x': 0,
-            'y': 1.2,
-        }
-    )
-    fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
-    fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
-
-    return fig
+    return _bar_chart_single_data(data, 'daily', chart_title=chart_title, color=color)
