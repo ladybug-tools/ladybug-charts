@@ -2,7 +2,7 @@ from plotly.graph_objects import Figure
 from ladybug_comfort.degreetime import heating_degree_time, cooling_degree_time
 from ladybug.datacollection import HourlyContinuousCollection
 from ladybug.datatype.temperaturetime import HeatingDegreeTime, CoolingDegreeTime
-from ladybug_charts.to_figure import barchart
+from ladybug_charts.to_figure import bar_chart
 from ladybug.color import Color
 
 
@@ -37,8 +37,8 @@ def test_barchart(epw):
         CoolingDegreeTime(), 'degC-hours')
     hourly_cool.convert_to_unit('degC-days')
 
-    fig = barchart([hourly_heat.total_monthly(),
+    fig = bar_chart([hourly_heat.total_monthly(),
                     hourly_cool.total_monthly()],
-                   chart_title='Degree-days',
-                   colors=[Color(255, 0, 0), Color(0, 0, 255)], stack=True)
+                    chart_title='Degree-days',
+                    colors=[Color(255, 0, 0), Color(0, 0, 255)], stack=True)
     assert isinstance(fig, Figure)
