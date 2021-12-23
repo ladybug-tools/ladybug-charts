@@ -26,7 +26,7 @@ def test_daily_bar_chart(epw):
     assert isinstance(fig, Figure)
 
 
-def test_barc_hart(epw):
+def test_bar_chart_multiple_monthly_data(epw):
     dbt = epw.dry_bulb_temperature
 
     _heat_base_ = 18
@@ -46,4 +46,11 @@ def test_barc_hart(epw):
                     hourly_cool.total_monthly()],
                     chart_title='Degree-days',
                     colors=[Color(255, 0, 0), Color(0, 0, 255)], stack=True)
+    assert isinstance(fig, Figure)
+
+
+def test_bar_chart_multiple_daily_data(epw):
+    dbt = epw.dry_bulb_temperature.average_daily()
+    rh = epw.relative_humidity.average_daily()
+    fig = bar_chart([dbt, rh])
     assert isinstance(fig, Figure)
