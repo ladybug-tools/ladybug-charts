@@ -100,9 +100,9 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
     return fig
 
 
-def monthly_barchart(data: MonthlyCollection,
-                     chart_title: str = None,
-                     color: Color = None) -> Figure:
+def monthly_bar_chart(data: MonthlyCollection,
+                      chart_title: str = None,
+                      color: Color = None) -> Figure:
     """Create a plotly barchart figure from a ladybug monthly data object.
 
     Args:
@@ -154,10 +154,10 @@ def monthly_barchart(data: MonthlyCollection,
     return fig
 
 
-def barchart(data: List[MonthlyCollection],
-             chart_title: str = None,
-             colors: List[Color] = None,
-             stack: bool = False) -> Figure:
+def bar_chart(data: List[MonthlyCollection],
+              chart_title: str = None,
+              colors: List[Color] = None,
+              stack: bool = False) -> Figure:
     """Create a plotly barchart figure from multiple ladybug monthly data objects.
 
     Args:
