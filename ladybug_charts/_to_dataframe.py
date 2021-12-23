@@ -3,16 +3,36 @@
 
 import pandas as pd
 from calendar import month_name
+from enum import Enum
 
 
-def heatmap_dataframe() -> pd.DataFrame:
-    """Create a Dataframe object for a heatmap figure."""
+class Frequency(Enum):
+    """Time interval of data."""
+
+    HOURLY = "H"
+    DAILY = "D"
+    MONTHLY = "M"
+
+
+def dataframe(frequency: Frequency = Frequency.HOURLY) -> pd.DataFrame:
+    """Create a sample dataframe to be used in charts.
+
+    Args:
+        frequency: The frequency of the dataframe. Defaults to Hourly frequency.
+
+    Returns
+        A pandas dataframe.
+    """
 
     data_frame = pd.DataFrame()
 
     # add time to create an index
     times = pd.date_range(
-        "2019-01-01 00:00:00", "2020-01-01", closed="left", freq="H", tz="UTC"
+        "2019-01-01 00:00:00",
+        "2020-01-01",
+        closed="left",
+        freq=frequency.value,
+        tz="UTC"
     )
     data_frame['times'] = times
     data_frame.set_index(
