@@ -6,8 +6,8 @@ import plotly.io as pio
 import plotly.graph_objects as go
 from math import ceil, floor
 from plotly.graph_objects import Figure
-from pandas import DataFrame as pd_DataFrame
-from typing import Union, List
+from plotly.graph_objects import Bar
+from typing import Union, List, Tuple
 from calendar import month_name
 from random import randint
 
@@ -41,9 +41,9 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
         A plotly figure.
     """
     assert isinstance(hourly_data, (HourlyContinuousCollection,
-                      HourlyDiscontinuousCollection)), 'Only'
-    ' Ladybug HourlyContinuousCollection and HourlyDiscontinuousCollection are supported.'
-    f' Instead got {type(hourly_data)}'
+                      HourlyDiscontinuousCollection)), 'Only Ladybug'\
+        ' HourlyContinuousCollection and HourlyDiscontinuousCollection are supported.'\
+        f' Instead got {type(hourly_data)}'
 
     if isinstance(hourly_data, HourlyDiscontinuousCollection):
         hourly_data = discontinuous_to_continuous(hourly_data)
@@ -101,15 +101,82 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
     return fig
 
 
-def bar_chart(data: List[MonthlyCollection],
+def _monthly_bar_chart_figure(data: MonthlyCollection, var: str, var_unit: str,
+                              color: Color = None) -> Bar:
+    """Create a monthly chart figure data from Ladybug Monthly data.
+
+    Args:
+        data: A Ladybug MonthlyCollection object.
+        var: A Ladybug variable name.
+        var_unit: A Ladybug variable unit.
+        color: A Ladybug Color object. Defaults to None.
+
+    Returns:
+        A plotly Bar object.
+    """
+
+    df = dataframe(Frequency.MONTHLY)
+    color = color if color else Color(
+        randint(0, 255), randint(0, 255), randint(0, 255))
+
+    return go.Bar(
+        x=df['month_names'],
+        y=[round(val, 2) for val in data.values],
+        text=[f'{round(val, 2)} {var_unit}' for val in data.values],
+        textposition='auto',
+        customdata=np.stack((df["month_names"],), axis=-1),
+        hovertemplate=(
+            '<br>%{y} '
+            + var_unit
+            + ' in %{customdata[0]}'
+            + '<extra></extra>'),
+        marker_color=rgb_to_hex(color),
+        name=var
+    )
+
+
+def _daily_bar_chart_figure(data: DailyCollection, var: str, var_unit: str,
+                            color: Color = None) -> Bar:
+    """Create a daily chart figure data from Ladybug Daily data.
+
+    Args:
+        data: A Ladybug DailyCollection object.
+        var: A Ladybug variable name.
+        var_unit: A Ladybug variable unit.
+        color: A Ladybug Color object. Defaults to None.
+
+    Returns:
+        A plotly Bar object.
+    """
+
+    df = dataframe(Frequency.DAILY)
+    color = color if color else Color(
+        randint(0, 255), randint(0, 255), randint(0, 255))
+
+    return go.Bar(
+        x=df["UTC_time"].dt.date,
+        y=[round(val, 2) for val in data.values],
+        customdata=np.stack((df["month_names"], df["day"]), axis=-1),
+        hovertemplate=(
+            '<br>%{y} '
+            + var_unit
+            + ' on %{customdata[0]}'
+            + ' %{customdata[1]} <br>'
+            + '<extra></extra>'),
+        marker_color=rgb_to_hex(color),
+        name=var
+    )
+
+
+def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
               chart_title: str = None,
               colors: List[Color] = None,
               stack: bool = False) -> Figure:
-    """Create a plotly barchart figure from multiple ladybug monthly data objects.
+    """Create a plotly barchart figure from multiple ladybug monthly or daily data.
 
     Args:
-        data: A list of ladybug monthly data objects.
-        chart_title: A string to be used as the title of the plot. If not set, the 
+        data: A list of ladybug monthly data or a list of ladybug daily data.
+        chart_title: A string to be used as the title of the plot. If not set, the
             names of data will be used to create a title for the chart. Defaults to None.
         colors: A list of ladybug color objects. The length of this list needs to match
             the length of data argument. If not set, random colors will be used.
@@ -120,8 +187,9 @@ def bar_chart(data: List[MonthlyCollection],
     Returns:
         A plotly figure.
     """
-    assert len(data) > 0 and all([isinstance(item, MonthlyCollection) for item in data]), \
-        f'Only a list of ladybug monthly data is supported. Instead got {type(data)}'
+    assert len(data) > 0 and all([isinstance(item, (MonthlyCollection, DailyCollection))
+                                  for item in data]), 'Only a list of ladybug '\
+        f' monthly data or ladybug daily data is supported. Instead got {type(data)}'
 
     if colors:
         assert len(colors) == len(data), 'Length of colors argument needs to match'\
@@ -132,27 +200,24 @@ def bar_chart(data: List[MonthlyCollection],
 
     for count, item in enumerate(data):
 
-        # find name unit and color
-        var = item.header.data_type.name
-        var_unit = item.header.unit
-        color = colors[count] if colors else Color(
-            randint(0, 255), randint(0, 255), randint(0, 255))
+        if isinstance(item, MonthlyCollection):
+            var = item.header.data_type.name
+            var_unit = item.header.unit
+            color = colors[count] if colors else None
+            bar = _monthly_bar_chart_figure(item, var, var_unit, color)
+            fig.add_trace(bar)
+            names.append(var)
+        else:
+            var = item.header.data_type.name
+            var_unit = item.header.unit
+            color = colors[count] if colors else None
+            bar = _daily_bar_chart_figure(item, var, var_unit, color)
+            fig.add_trace(bar)
+            names.append(var)
 
-        fig_data = go.Bar(
-            x=[month[:3] for month in month_name[1:]],
-            y=[round(val, 2) for val in item.values],
-            text=[f'{round(val, 2)} {var_unit}' for val in item.values],
-            textposition='auto',
-            hovertemplate='<br>%{y} ' + var_unit + '<br>' + '<extra></extra>',
-            marker_color=rgb_to_hex(color),
-            name=var
-        )
-        fig.add_trace(fig_data)
-        names.append(var)
-
-    # use chart title if set or join names
     chart_title = chart_title if chart_title else ' - '.join(names)
 
+    fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
     fig.update_layout(
         barmode='relative' if stack else 'group',
         template='plotly_white',
@@ -193,44 +258,18 @@ def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
         A plotly figure.
     """
 
-    df = dataframe(Frequency.MONTHLY) if chart_type == 'monthly' else dataframe(
-        Frequency.DAILY)
-    var = data.header.data_type.name
-    var_unit = data.header.unit
-    chart_title = chart_title if chart_title else var
-    color = color if color else Color(randint(0, 255), randint(0, 255), randint(0, 255))
-
     if chart_type == 'monthly':
-        fig_data = go.Bar(
-            x=df["month_names"],
-            y=[round(val, 2) for val in data.values],
-            text=[f'{round(val, 2)} {var_unit}' for val in data.values],
-            textposition='auto',
-            customdata=np.stack((df["month_names"],), axis=-1),
-            hovertemplate=(
-                '<br>%{y} '
-                + var_unit
-                + ' in %{customdata[0]}'
-                + '<extra></extra>'),
-            marker_color=rgb_to_hex(color)
-        )
+        var = data.header.data_type.name
+        var_unit = data.header.unit
+        bar = _monthly_bar_chart_figure(data, var, var_unit, color)
     else:
-        fig_data = go.Bar(
-            x=df["UTC_time"].dt.date,
-            y=[round(val, 2) for val in data.values],
-            text=[f'{round(val, 2)} {var_unit}' for val in data.values],
-            textposition='auto',
-            customdata=np.stack((df["month_names"], df["day"]), axis=-1),
-            hovertemplate=(
-                '<br>%{y} '
-                + var_unit
-                + ' on %{customdata[0]}'
-                + ' %{customdata[1]} <br>'
-                + '<extra></extra>'),
-            marker_color=rgb_to_hex(color)
-        )
+        var = data.header.data_type.name
+        var_unit = data.header.unit
+        bar = _daily_bar_chart_figure(data, var, var_unit, color)
 
-    fig = go.Figure(fig_data)
+    chart_title = chart_title if chart_title else var
+
+    fig = go.Figure(bar)
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
     fig.update_yaxes(title_text='('+var_unit+')')
     fig.update_layout(
@@ -259,7 +298,7 @@ def monthly_bar_chart(data: MonthlyCollection,
         data: A ladybug MonthlyCollection object.
         chart_title: A string to be used as the title of the plot. If not set, the name
             of the data will be used. Defaults to None.
-        color: A Ladybug color object. If not set, a random color will be used. Defaults 
+        color: A Ladybug color object. If not set, a random color will be used. Defaults
             to None.
 
     Returns:
@@ -280,7 +319,7 @@ def daily_bar_chart(data: DailyCollection,
         data: A ladybug DailyCollection object.
         chart_title: A string to be used as the title of the plot. If not set, the name
             of the data will be used. Defaults to None.
-        color: A Ladybug color object. If not set, a random color will be used. Defaults 
+        color: A Ladybug color object. If not set, a random color will be used. Defaults
             to None.
 
     Returns:
