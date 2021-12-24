@@ -5,6 +5,9 @@ import pandas as pd
 from calendar import month_name
 from enum import Enum
 
+# Abbreviated month names
+MONTHS = [month[:3] for month in month_name[1:]]
+
 
 class Frequency(Enum):
     """Time interval of data."""
@@ -45,9 +48,8 @@ def dataframe(frequency: Frequency = Frequency.HOURLY) -> pd.DataFrame:
     data_frame.insert(loc=3, column="hour", value=data_frame.index.hour)
 
     # add month name column
-    months_abbreviated = [month[:3] for month in month_name[1:]]
     month_number_name_dict = {count + 1: month for count,
-                              month in enumerate(months_abbreviated)}
+                              month in enumerate(MONTHS)}
     data_frame.insert(loc=4, column="month_names", value=data_frame["month"].astype(
         'int').map(month_number_name_dict))
 
