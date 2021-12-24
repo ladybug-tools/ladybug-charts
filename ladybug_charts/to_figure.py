@@ -25,7 +25,7 @@ pio.templates.default = 'plotly_white'
 def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
             min_range: float = None, max_range: float = None,
             colorset: ColorSet = ColorSet.original) -> Figure:
-    """Create a plotly heatmap figure from Ladybug Hourly data.
+    """Create a plotly heat map figure from Ladybug Hourly data.
 
     Args:
         hourly_data: A Ladybug HourlyContinuousCollection object or a Ladybug
@@ -85,14 +85,20 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
     )
 
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
-    fig.update_xaxes(title_text="Days of the year")
     fig.update_yaxes(title_text="Hours of the day")
 
     fig.update_layout(
         template='plotly_white',
         margin=dict(
             l=20, r=20, t=33, b=20),
-        yaxis_nticks=13
+        yaxis_nticks=13,
+        title={
+            'text': var,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
     )
     fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
@@ -171,7 +177,7 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
               chart_title: str = None,
               colors: List[Color] = None,
               stack: bool = False) -> Figure:
-    """Create a plotly barchart figure from multiple ladybug monthly or daily data.
+    """Create a plotly bar chart figure from multiple ladybug monthly or daily data.
 
     Args:
         data: A list of ladybug monthly data or a list of ladybug daily data.
@@ -243,7 +249,7 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
 def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
                            chart_type: str = 'monthly', chart_title: str = None,
                            color: Color = None) -> Figure:
-    """Create a plotly barchart figure from a ladybug monthly or daily data object.
+    """Create a plotly bar chart figure from a ladybug monthly or daily data object.
 
     Args:
         data: A ladybug monthly or daily data object.
@@ -291,7 +297,7 @@ def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
 def monthly_bar_chart(data: MonthlyCollection,
                       chart_title: str = None,
                       color: Color = None) -> Figure:
-    """Create a plotly barchart figure from a ladybug monthly data object.
+    """Create a plotly  bar chart figure from a ladybug monthly data object.
 
     Args:
         data: A ladybug MonthlyCollection object.
@@ -312,7 +318,7 @@ def monthly_bar_chart(data: MonthlyCollection,
 def daily_bar_chart(data: DailyCollection,
                     chart_title: str = None,
                     color: Color = None) -> Figure:
-    """Create a plotly barchart figure from a ladybug daily data object.
+    """Create a plotly bar chart figure from a ladybug daily data object.
 
     Args:
         data: A ladybug DailyCollection object.
