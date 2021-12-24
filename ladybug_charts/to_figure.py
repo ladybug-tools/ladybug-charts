@@ -328,3 +328,107 @@ def daily_bar_chart(data: DailyCollection,
         f' supported. Instead got {type(data)}'
 
     return _bar_chart_single_data(data, 'daily', chart_title=chart_title, color=color)
+
+
+def hourly_chart(data: HourlyContinuousCollection, color: Color = None) -> Figure:
+    """Create a plotly bar chart figure from a ladybug hourly continuous data object.
+
+    Args:
+        data: A ladybug HourlyContinuousCollection object.
+        color: A Ladybug color object. If not set, a random color will be used. Defaults
+            to None.
+
+    Returns:
+        A plotly figure.
+    """
+
+    var = data.header.data_type.name
+    var_unit = data.header.unit
+    var_color = color if color else Color(
+        randint(0, 255), randint(0, 255), randint(0, 255))
+
+    df = dataframe()
+    series = Series(data)
+    df[var] = series.values
+
+    data_max = 5 * ceil(df[var].max() / 5)
+    data_min = 5 * floor(df[var].min() / 5)
+    range_y = [data_min, data_max]
+
+    # Get min, max, and mean of each day
+    dbt_day = df.groupby(np.arange(len(df.index)) // 24)[var].agg(
+        ["min", "max", "mean"]
+    )
+    trace1 = go.Bar(
+        x=df["UTC_time"].dt.date.unique(),
+        y=dbt_day["max"] - dbt_day["min"],
+        base=dbt_day["min"],
+        marker_color=rgb_to_hex(var_color),
+        marker_opacity=0.3,
+        name=var + " Range",
+        customdata=np.stack(
+            (dbt_day["mean"], df.iloc[::24, :]["month_names"], df.iloc[::24, :]["day"]),
+            axis=-1,
+        ),
+        hovertemplate=(
+            "Max: %{y:.2f} "
+            + var_unit
+            + "<br>Min: %{base:.2f} "
+            + var_unit
+            + "<br><b>Ave : %{customdata[0]:.2f} "
+            + var_unit
+            + "</b><br>Month: %{customdata[1]}<br>Day: %{customdata[2]}<br>"
+            + "<extra></extra>"
+        ),
+    )
+
+    trace2 = go.Scatter(
+        x=df["UTC_time"].dt.date.unique(),
+        y=dbt_day["mean"],
+        name="Average " + var,
+        mode="lines",
+        marker_color=rgb_to_hex(var_color),
+        marker_opacity=1,
+        customdata=np.stack(
+            (dbt_day["mean"], df.iloc[::24, :]["month_names"], df.iloc[::24, :]["day"]),
+            axis=-1,
+        ),
+        hovertemplate=(
+            "<b>Ave : %{customdata[0]:.2f} "
+            + var_unit
+            + "</b><br>Month: %{customdata[1]}<br>Day: %{customdata[2]}<br>"
+            + "<extra></extra>"
+        ),
+    )
+
+    data = [trace1, trace2]
+
+    fig = go.Figure(
+        data=data, layout=go.Layout(barmode="overlay", bargap=0, margin=dict(
+            l=20, r=20, t=33, b=20))
+    )
+
+    fig.update_xaxes(
+        dtick="M1",
+        tickformat="%b",
+        ticklabelmode="period",
+        showline=True,
+        linewidth=1,
+        linecolor="black",
+        mirror=True,
+    )
+    fig.update_yaxes(
+        range=range_y,
+        title_text=f'({var_unit})',
+        showline=True,
+        linewidth=1,
+        linecolor="black",
+        mirror=True,
+    )
+
+    fig.update_layout(
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        template='plotly_white',
+    )
+
+    return fig
