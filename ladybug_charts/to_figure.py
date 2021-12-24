@@ -336,7 +336,7 @@ def daily_bar_chart(data: DailyCollection,
     return _bar_chart_single_data(data, 'daily', chart_title=chart_title, color=color)
 
 
-def hourly_chart(data: HourlyContinuousCollection, color: Color = None) -> Figure:
+def hourly_bar_chart(data: HourlyContinuousCollection, color: Color = None) -> Figure:
     """Create a plotly bar chart figure from a ladybug hourly continuous data object.
 
     Args:
