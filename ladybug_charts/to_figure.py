@@ -8,7 +8,6 @@ from math import ceil, floor
 from plotly.graph_objects import Figure
 from plotly.graph_objects import Bar
 from typing import Union, List, Tuple
-from calendar import month_name
 from random import randint
 
 from ._to_dataframe import dataframe, Frequency
@@ -101,8 +100,8 @@ def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCo
     return fig
 
 
-def _monthly_chart_bar(data: MonthlyCollection, var: str, var_unit: str,
-                       color: Color = None) -> Bar:
+def _monthly_bar(data: MonthlyCollection, var: str, var_unit: str,
+                 color: Color = None) -> Bar:
     """Create a monthly chart figure data from Ladybug Monthly data.
 
     Args:
@@ -135,8 +134,8 @@ def _monthly_chart_bar(data: MonthlyCollection, var: str, var_unit: str,
     )
 
 
-def _daily_chart_bar(data: DailyCollection, var: str, var_unit: str,
-                     color: Color = None) -> Bar:
+def _daily_bar(data: DailyCollection, var: str, var_unit: str,
+               color: Color = None) -> Bar:
     """Create a daily chart figure data from Ladybug Daily data.
 
     Args:
@@ -204,14 +203,14 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
             var = item.header.data_type.name
             var_unit = item.header.unit
             color = colors[count] if colors else None
-            bar = _monthly_chart_bar(item, var, var_unit, color)
+            bar = _monthly_bar(item, var, var_unit, color)
             fig.add_trace(bar)
             names.append(var)
         else:
             var = item.header.data_type.name
             var_unit = item.header.unit
             color = colors[count] if colors else None
-            bar = _daily_chart_bar(item, var, var_unit, color)
+            bar = _daily_bar(item, var, var_unit, color)
             fig.add_trace(bar)
             names.append(var)
 
@@ -261,11 +260,11 @@ def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
     if chart_type == 'monthly':
         var = data.header.data_type.name
         var_unit = data.header.unit
-        bar = _monthly_chart_bar(data, var, var_unit, color)
+        bar = _monthly_bar(data, var, var_unit, color)
     else:
         var = data.header.data_type.name
         var_unit = data.header.unit
-        bar = _daily_chart_bar(data, var, var_unit, color)
+        bar = _daily_bar(data, var, var_unit, color)
 
     chart_title = chart_title if chart_title else var
 
