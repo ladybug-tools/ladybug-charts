@@ -438,3 +438,103 @@ def hourly_bar_chart(data: HourlyContinuousCollection, color: Color = None) -> F
     )
 
     return fig
+
+
+def per_hour_bar_chart(data: HourlyContinuousCollection,
+                       color: Color = None) -> Figure:
+    """Create a plotly per hour bar chart figure from a ladybug hourly continuous data.
+
+    Args:
+        data: A ladybug HourlyContinuousCollection object.
+        color: A Ladybug color object. If not set, a random color will be used. Defaults
+            to None.
+
+    Returns:
+        A plotly figure.
+    """
+
+    assert isinstance(data, HourlyContinuousCollection), 'Only ladybug hourly continuous'\
+        f' data is supported. Instead got {type(data)}'
+
+    var = data.header.data_type.name
+    var_unit = data.header.unit
+    var_color = color if color else Color(
+        randint(0, 255), randint(0, 255), randint(0, 255))
+
+    df = dataframe()
+    series = Series(data)
+    df[var] = series.values
+
+    data_max = 5 * ceil(df[var].max() / 5)
+    data_min = 5 * floor(df[var].min() / 5)
+    range_y = [data_min, data_max]
+
+    var_month_ave = df.groupby(["month", "hour"])[var].median().reset_index()
+
+    fig = make_subplots(
+        rows=1,
+        cols=12,
+        subplot_titles=MONTHS,
+    )
+
+    for i in range(12):
+
+        fig.add_trace(
+            go.Scatter(
+                x=df.loc[df["month"] == i + 1, "hour"],
+                y=df.loc[df["month"] == i + 1, var],
+                mode="markers",
+                marker_color=rgb_to_hex(var_color),
+                opacity=0.5,
+                marker_size=3,
+                name=MONTHS[i],
+                showlegend=False,
+                customdata=df.loc[df["month"] == i + 1, "month_names"],
+                hovertemplate=(
+                    "<b>"
+                    + var
+                    + ": %{y:.2f} "
+                    + var_unit
+                    + "</b><br>Month: %{customdata}<br>Hour: %{x}:00<br>"
+                ),
+            ),
+            row=1,
+            col=i + 1,
+        )
+
+        fig.add_trace(
+            go.Scatter(
+                x=var_month_ave.loc[var_month_ave["month"] == i + 1, "hour"],
+                y=var_month_ave.loc[var_month_ave["month"] == i + 1, var],
+                mode="lines",
+                line_color=rgb_to_hex(var_color),
+                line_width=3,
+                name=None,
+                showlegend=False,
+                hovertemplate=(
+                    "<b>" + var + ": %{y:.2f} " + var_unit + "</b><br>Hour: %{x}:00<br>"
+                ),
+            ),
+            row=1,
+            col=i + 1,
+        )
+
+        fig.update_xaxes(range=[0, 25], row=1, col=i + 1)
+        fig.update_yaxes(range=range_y, row=1, col=i + 1)
+
+    fig.update_xaxes(
+        ticktext=["6", "12", "18"], tickvals=["6", "12", "18"], tickangle=0
+    )
+    fig.update_layout(
+        template='plotly_white',
+        dragmode=False,
+        margin=dict(l=20, r=20, t=55, b=20),
+        title={
+            'text': var + f' ({var_unit})',
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'}
+    )
+
+    return fig
