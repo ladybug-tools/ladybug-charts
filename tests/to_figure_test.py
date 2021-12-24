@@ -7,27 +7,32 @@ from ladybug.color import Color
 
 
 def test_hourly_continuous_to_heatmap(epw):
-    fig = epw.dry_bulb_temperature.heatmap()
+    fig = epw.dry_bulb_temperature.heat_map()
     assert isinstance(fig, Figure)
 
 
 def test_hourly_discontinuous_to_heatmap(epw):
-    fig = epw.dry_bulb_temperature.filter_by_conditional_statement('a>25').heatmap()
+    fig = epw.dry_bulb_temperature.filter_by_conditional_statement('a>25').heat_map()
+    assert isinstance(fig, Figure)
+
+
+def test_hourly_to_per_hour_chart(epw):
+    fig = epw.dry_bulb_temperature.per_hour_chart()
     assert isinstance(fig, Figure)
 
 
 def test_hourly_to_bar_chart(epw):
-    fig = epw.dry_bulb_temperature.barchart()
+    fig = epw.dry_bulb_temperature.bar_chart()
     assert isinstance(fig, Figure)
 
 
 def test_monthly_to_bar_chart(epw):
-    fig = epw.dry_bulb_temperature.average_monthly().barchart()
+    fig = epw.dry_bulb_temperature.average_monthly().bar_chart()
     assert isinstance(fig, Figure)
 
 
 def test_daily_to_bar_chart(epw):
-    fig = epw.dry_bulb_temperature.average_daily().barchart()
+    fig = epw.dry_bulb_temperature.average_daily().bar_chart()
     assert isinstance(fig, Figure)
 
 
