@@ -7,14 +7,16 @@ import plotly.graph_objects as go
 from math import ceil, floor
 from plotly.graph_objects import Figure
 from plotly.graph_objects import Bar
+from plotly.subplots import make_subplots
 from typing import Union, List, Tuple
 from random import randint
 
-from ._to_dataframe import dataframe, Frequency
+from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
 
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
+    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, \
+    MonthlyPerHourCollection
 from ladybug.color import Color
 from ladybug_pandas.series import Series
 
@@ -22,9 +24,9 @@ from ladybug_pandas.series import Series
 pio.templates.default = 'plotly_white'
 
 
-def heatmap(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
-            min_range: float = None, max_range: float = None,
-            colorset: ColorSet = ColorSet.original) -> Figure:
+def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
+             min_range: float = None, max_range: float = None,
+             colorset: ColorSet = ColorSet.original) -> Figure:
     """Create a plotly heat map figure from Ladybug Hourly data.
 
     Args:
@@ -347,6 +349,9 @@ def hourly_bar_chart(data: HourlyContinuousCollection, color: Color = None) -> F
     Returns:
         A plotly figure.
     """
+
+    assert isinstance(data, HourlyContinuousCollection), 'Only ladybug hourly continuous'\
+        f' data is supported. Instead got {type(data)}'
 
     var = data.header.data_type.name
     var_unit = data.header.unit
