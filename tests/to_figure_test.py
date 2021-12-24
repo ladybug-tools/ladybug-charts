@@ -16,12 +16,17 @@ def test_hourly_discontinuous_to_heatmap(epw):
     assert isinstance(fig, Figure)
 
 
+def test_hourly_to_bar_chart(epw):
+    fig = epw.dry_bulb_temperature.barchart()
+    assert isinstance(fig, Figure)
+
+
 def test_monthly_to_bar_chart(epw):
     fig = epw.dry_bulb_temperature.average_monthly().barchart()
     assert isinstance(fig, Figure)
 
 
-def test_daily_bar_chart(epw):
+def test_daily_to_bar_chart(epw):
     fig = epw.dry_bulb_temperature.average_daily().barchart()
     assert isinstance(fig, Figure)
 
