@@ -2,7 +2,7 @@ from plotly.graph_objects import Figure
 from ladybug_comfort.degreetime import heating_degree_time, cooling_degree_time
 from ladybug.datacollection import HourlyContinuousCollection
 from ladybug.datatype.temperaturetime import HeatingDegreeTime, CoolingDegreeTime
-from ladybug_charts.to_figure import bar_chart
+from ladybug_charts.to_figure import bar_chart, wind_rose
 from ladybug.color import Color
 
 
@@ -63,4 +63,9 @@ def test_bar_chart_multiple_daily_data(epw):
     dbt = epw.dry_bulb_temperature.average_daily()
     rh = epw.relative_humidity.average_daily()
     fig = bar_chart([dbt, rh])
+    assert isinstance(fig, Figure)
+
+
+def test_wind_rose(epw):
+    fig = wind_rose(epw.wind_speed, epw.wind_direction)
     assert isinstance(fig, Figure)
