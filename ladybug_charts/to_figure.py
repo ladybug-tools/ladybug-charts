@@ -338,8 +338,8 @@ def daily_bar_chart(data: DailyCollection,
     return _bar_chart_single_data(data, 'daily', chart_title=chart_title, color=color)
 
 
-def hourly_bar_chart(data: HourlyContinuousCollection, color: Color = None) -> Figure:
-    """Create a plotly bar chart figure from a ladybug hourly continuous data object.
+def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None) -> Figure:
+    """Create a plotly line chart figure from a ladybug hourly continuous data object.
 
     Args:
         data: A ladybug HourlyContinuousCollection object.
@@ -445,9 +445,9 @@ def hourly_bar_chart(data: HourlyContinuousCollection, color: Color = None) -> F
     return fig
 
 
-def per_hour_bar_chart(data: HourlyContinuousCollection,
-                       color: Color = None) -> Figure:
-    """Create a plotly per hour bar chart figure from a ladybug hourly continuous data.
+def per_hour_line_chart(data: HourlyContinuousCollection,
+                        color: Color = None) -> Figure:
+    """Create a plotly per hour line chart figure from a ladybug hourly continuous data.
 
     Args:
         data: A ladybug HourlyContinuousCollection object.

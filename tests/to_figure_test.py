@@ -17,12 +17,12 @@ def test_hourly_discontinuous_to_heatmap(epw):
 
 
 def test_hourly_to_per_hour_chart(epw):
-    fig = epw.dry_bulb_temperature.per_hour_chart()
+    fig = epw.dry_bulb_temperature.per_hour_line_chart()
     assert isinstance(fig, Figure)
 
 
-def test_hourly_to_bar_chart(epw):
-    fig = epw.dry_bulb_temperature.bar_chart()
+def test_hourly_to_line_chart(epw):
+    fig = epw.dry_bulb_temperature.line_chart()
     assert isinstance(fig, Figure)
 
 
