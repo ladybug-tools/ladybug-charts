@@ -2,6 +2,7 @@
 
 
 import numpy as np
+import pandas as pd
 import plotly.io as pio
 import plotly.graph_objects as go
 from math import ceil, floor
@@ -15,8 +16,7 @@ from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
 
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, \
-    MonthlyPerHourCollection
+    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
 from ladybug.color import Color
 from ladybug_pandas.series import Series
 
@@ -541,5 +541,139 @@ def per_hour_line_chart(data: HourlyContinuousCollection,
             'xanchor': 'center',
             'yanchor': 'top'}
     )
+
+    return fig
+
+
+def _speed_labels(bins, units):
+    """Return labels for a wind speed range."""
+    labels = []
+    for left, right in zip(bins[:-1], bins[1:]):
+        if left == bins[0]:
+            labels.append("calm")
+        elif np.isinf(right):
+            labels.append(">{} {}".format(left, units))
+        else:
+            labels.append("{} - {} {}".format(left, right, units))
+    return labels
+
+
+def wind_rose(wind_speed: HourlyContinuousCollection, wind_dir: HourlyContinuousCollection,
+              month: List[int] = [1, 12], hour: List[int] = [1, 24],
+              title: str = 'Wind Rose', legend: bool = True,
+              colorset: ColorSet = ColorSet.original) -> Figure:
+    """Create a windrose plot.
+
+    Args:
+        wind_speed: A ladybug hourly continuous data object for wind speed.
+        wind_dir: A ladybug hourly continuous data object for wind direction.
+        month: A list of months to plot. Defaults to [1, 12].
+        hour: A list of hours to plot. Defaults to [1, 24].
+        title: A title for the plot. Defaults to Wind Rose.
+        legend: A boolean to show/hide legend. Defaults to True.
+        colorset: A ladybug colorset object. Defaults to ColorSet.original.
+
+    Returns:
+        A plotly figure.
+    """
+
+    assert isinstance(wind_speed, HourlyContinuousCollection) \
+        and isinstance(wind_dir, HourlyContinuousCollection), 'Only ladybug hourly'\
+        ' continuous data is supported in both wind_speed and wind_dir.'
+
+    df = dataframe()
+    series = Series(wind_speed)
+    df['wind_speed'] = series.values
+    series = Series(wind_dir)
+    df['wind_dir'] = series.values
+
+    start_month = month[0]
+    end_month = month[1]
+    start_hour = hour[0]
+    end_hour = hour[1]
+    if start_month <= end_month:
+        df = df.loc[(df["month"] >= start_month) & (df["month"] <= end_month)]
+    else:
+        df = df.loc[(df["month"] <= end_month) | (df["month"] >= start_month)]
+    if start_hour <= end_hour:
+        df = df.loc[(df["hour"] >= start_hour) & (df["hour"] <= end_hour)]
+    else:
+        df = df.loc[(df["hour"] <= end_hour) | (df["hour"] >= start_hour)]
+
+    spd_colors = [rgb_to_hex(color) for color in color_set[colorset.value]]
+    spd_bins = [-1, 0.5, 1.5, 3.3, 5.5, 7.9, 10.7, 13.8, 17.1, 20.7, np.inf]
+    spd_labels = _speed_labels(spd_bins, units="m/s")
+    dir_bins = np.arange(-22.5 / 2, 370, 22.5)
+    dir_labels = (dir_bins[:-1] + dir_bins[1:]) / 2
+    total_count = df.shape[0]
+    calm_count = df.query("wind_speed == 0").shape[0]
+    rose = (
+        df.assign(
+            WindSpd_bins=lambda df: pd.cut(
+                df["wind_speed"], bins=spd_bins, labels=spd_labels, right=True
+            )
+        )
+        .assign(
+            WindDir_bins=lambda df: pd.cut(
+                df["wind_dir"], bins=dir_bins, labels=dir_labels, right=False
+            )
+        )
+        .replace({"WindDir_bins": {360: 0}})
+        .groupby(by=["WindSpd_bins", "WindDir_bins"])
+        .size()
+        .unstack(level="WindSpd_bins")
+        .fillna(0)
+        .assign(calm=lambda df: calm_count / df.shape[0])
+        .sort_index(axis=1)
+        .applymap(lambda x: x / total_count * 100)
+    )
+    fig = go.Figure()
+    for i, col in enumerate(rose.columns):
+        fig.add_trace(
+            go.Barpolar(
+                r=rose[col],
+                theta=rose.index.categories,
+                name=col,
+                marker_color=spd_colors[i],
+                hovertemplate="frequency: %{r:.2f}%"
+                + "<br>"
+                + "direction: %{theta:.2f}"
+                + "\u00B0 deg"
+                + "<br>",
+            )
+        )
+
+    fig.update_traces(
+        text=[
+            "North",
+            "N-N-E",
+            "N-E",
+            "E-N-E",
+            "East",
+            "E-S-E",
+            "S-E",
+            "S-S-E",
+            "South",
+            "S-S-W",
+            "S-W",
+            "W-S-W",
+            "West",
+            "W-N-W",
+            "N-W",
+            "N-N-W",
+        ]
+    )
+    if title != "":
+        fig.update_layout(title=title, title_x=0.5)
+    fig.update_layout(
+        autosize=True,
+        polar_angularaxis_rotation=90,
+        polar_angularaxis_direction="clockwise",
+        showlegend=legend,
+        dragmode=False,
+        margin=dict(l=20, r=20, t=55, b=20),
+    )
+    fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
+    fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
 
     return fig
