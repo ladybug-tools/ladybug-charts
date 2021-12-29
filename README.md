@@ -48,4 +48,7 @@ sphinx-build -b html ./docs ./docs/_build/docs
 
 ## Credits:
 This project is a derivative work of Betti, G., Tartarini, F., Schiavon, S., Nguyen, C. (2021). CBE Clima Tool. Version 0.4.6. Center for the Built Environment, University of California Berkeley. https://clima.cbe.berkeley.edu
-Developed by: Giovanni Betti, Federico Tartarini. Christine Nguyen,
+Developed by: Giovanni Betti, Federico Tartarini. Christine Nguyen.
+
+The CBE Clima Tool is licensed under a [Creative Commons Attribution-Commercial 4.0 
+International License (CC BY 4.0) Version: 0.5.1](https://creativecommons.org/licenses/by/4.0/)
