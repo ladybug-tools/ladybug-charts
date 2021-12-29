@@ -17,6 +17,7 @@ from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_se
 
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
+from ladybug.windrose import WindRose
 from ladybug.color import Color
 from ladybug_pandas.series import Series
 
@@ -558,17 +559,12 @@ def _speed_labels(bins, units):
     return labels
 
 
-def wind_rose(wind_speed: HourlyContinuousCollection, wind_dir: HourlyContinuousCollection,
-              month: List[int] = [1, 12], hour: List[int] = [1, 24],
-              title: str = 'Wind Rose', legend: bool = True,
+def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True,
               colorset: ColorSet = ColorSet.original) -> Figure:
     """Create a windrose plot.
 
     Args:
-        wind_speed: A ladybug hourly continuous data object for wind speed.
-        wind_dir: A ladybug hourly continuous data object for wind direction.
-        month: A list of months to plot. Defaults to [1, 12].
-        hour: A list of hours to plot. Defaults to [1, 24].
+        wind_rose: A ladybug WindRose object.
         title: A title for the plot. Defaults to Wind Rose.
         legend: A boolean to show/hide legend. Defaults to True.
         colorset: A ladybug colorset object. Defaults to ColorSet.original.
@@ -577,9 +573,15 @@ def wind_rose(wind_speed: HourlyContinuousCollection, wind_dir: HourlyContinuous
         A plotly figure.
     """
 
-    assert isinstance(wind_speed, HourlyContinuousCollection) \
-        and isinstance(wind_dir, HourlyContinuousCollection), 'Only ladybug hourly'\
-        ' continuous data is supported in both wind_speed and wind_dir.'
+    assert isinstance(wind_rose, WindRose), 'Ladybug WindRose object is required.'\
+        f' Instead got {type(wind_rose)}'
+
+    wind_speed = wind_rose.analysis_data_collection
+    wind_dir = wind_rose.direction_data_collection
+
+    if isinstance(wind_speed, HourlyDiscontinuousCollection):
+        wind_speed = discontinuous_to_continuous(wind_speed)
+        wind_dir = discontinuous_to_continuous(wind_dir)
 
     df = dataframe()
     series = Series(wind_speed)
@@ -587,10 +589,11 @@ def wind_rose(wind_speed: HourlyContinuousCollection, wind_dir: HourlyContinuous
     series = Series(wind_dir)
     df['wind_dir'] = series.values
 
-    start_month = month[0]
-    end_month = month[1]
-    start_hour = hour[0]
-    end_hour = hour[1]
+    start_month = wind_rose.analysis_period.st_month
+    end_month = wind_rose.analysis_period.end_month
+    start_hour = wind_rose.analysis_period.st_hour
+    end_hour = wind_rose.analysis_period.end_hour
+
     if start_month <= end_month:
         df = df.loc[(df["month"] >= start_month) & (df["month"] <= end_month)]
     else:
