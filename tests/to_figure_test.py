@@ -4,6 +4,7 @@ from ladybug.datacollection import HourlyContinuousCollection
 from ladybug.datatype.temperaturetime import HeatingDegreeTime, CoolingDegreeTime
 from ladybug_charts.to_figure import bar_chart, wind_rose
 from ladybug.color import Color
+from ladybug.windrose import WindRose
 
 
 def test_hourly_continuous_to_heatmap(epw):
@@ -67,5 +68,6 @@ def test_bar_chart_multiple_daily_data(epw):
 
 
 def test_wind_rose(epw):
-    fig = wind_rose(epw.wind_speed, epw.wind_direction)
+    lb_wind_rose = WindRose(epw.wind_direction, epw.wind_speed)
+    fig = lb_wind_rose.plot()
     assert isinstance(fig, Figure)
