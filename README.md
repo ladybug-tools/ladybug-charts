@@ -52,3 +52,5 @@ Developed by: Giovanni Betti, Federico Tartarini. Christine Nguyen.
 
 The CBE Clima Tool is licensed under a [Creative Commons Attribution-Commercial 4.0 
 International License (CC BY 4.0) Version: 0.5.1](https://creativecommons.org/licenses/by/4.0/)
+
+The Clima tools is developed under the [MIT](https://choosealicense.com/licenses/mit/) license.
