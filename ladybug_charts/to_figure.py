@@ -693,12 +693,28 @@ def psych_chart(psych: PsychrometricChart,
                 data: Union[HourlyContinuousCollection,
                             HourlyDiscontinuousCollection] = None,
                 colorset: ColorSet = ColorSet.original, title: str = None) -> Figure:
+    """Create a psychrometric chart.
 
+    Args:
+        psych: A ladybug PsychrometricChart object.
+        data: A ladybug HourlyDataCollection object.
+        colorset: A Colorset object. Defaults to ColorSet.original which will use
+            Ladybug's original colorset.
+        title: A title for the plot. Defaults to None.
+
+    Returns:
+        A plotly figure.
+    """
+
+    # get dbt and rh from the psychrometric chart
     dbt = psych.temperature
     rh = psych.relative_humidity
+
+    # We're not supporting Daily data for now
     assert not isinstance(dbt, DailyCollection), 'Ladybug PsychrometricChart created'\
         ' using DailyCollection is not supported.'
 
+    # make sure all data collections are aligned
     if data:
         if isinstance(data, HourlyDiscontinuousCollection):
             assert HourlyDiscontinuousCollection.are_collections_aligned([data, dbt, rh]),\
@@ -709,6 +725,7 @@ def psych_chart(psych: PsychrometricChart,
         else:
             raise ValueError(f'{type(data)} object is not supported.')
 
+    # Convert Discontinuous data to Continuous data
     if isinstance(dbt, HourlyDiscontinuousCollection):
         if data:
             data = discontinuous_to_continuous(data)
