@@ -6,6 +6,8 @@ from typing import List, Tuple
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, BaseCollection
 from ladybug.color import Color, Colorset
+from ladybug.analysisperiod import AnalysisPeriod
+from ladybug.header import Header
 
 
 def discontinuous_to_continuous(
@@ -25,7 +27,9 @@ def discontinuous_to_continuous(
         else:
             values.append(None)
 
-    return HourlyContinuousCollection(data.header, values)
+    header = Header(data.header.data_type, data.header.unit,
+                    AnalysisPeriod(), data.header.metadata)
+    return HourlyContinuousCollection(header, values)
 
 
 def rgb_to_hex(color: Color) -> str:
