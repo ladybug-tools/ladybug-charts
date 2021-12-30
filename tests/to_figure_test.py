@@ -2,9 +2,11 @@ from plotly.graph_objects import Figure
 from ladybug_comfort.degreetime import heating_degree_time, cooling_degree_time
 from ladybug.datacollection import HourlyContinuousCollection
 from ladybug.datatype.temperaturetime import HeatingDegreeTime, CoolingDegreeTime
-from ladybug_charts.to_figure import bar_chart, wind_rose
+from ladybug_charts.to_figure import bar_chart
 from ladybug.color import Color
 from ladybug.windrose import WindRose
+from ladybug.psychchart import PsychrometricChart
+from ladybug.analysisperiod import AnalysisPeriod
 
 
 def test_hourly_continuous_to_heatmap(epw):
@@ -70,4 +72,16 @@ def test_bar_chart_multiple_daily_data(epw):
 def test_wind_rose(epw):
     lb_wind_rose = WindRose(epw.wind_direction, epw.wind_speed)
     fig = lb_wind_rose.plot()
+    assert isinstance(fig, Figure)
+
+
+def test_psych_chart(epw):
+    lb_psy = PsychrometricChart(epw.dry_bulb_temperature, epw.relative_humidity)
+    fig = lb_psy.plot()
+    assert isinstance(fig, Figure)
+
+
+def test_psych_chart_with_data(epw):
+    lb_psy = PsychrometricChart(epw.dry_bulb_temperature, epw.relative_humidity)
+    fig = lb_psy.plot(data=epw.direct_normal_radiation)
     assert isinstance(fig, Figure)
