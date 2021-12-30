@@ -14,9 +14,7 @@ from typing import Union, List, Tuple
 from random import randint
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
-from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set, \
-    calculate_psychrometrics
-
+from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
 from ladybug.windrose import WindRose
@@ -685,23 +683,43 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
     return fig
 
 
-def psych_chart(psych: PsychrometricChart, var: str = None, colorset: ColorSet = ColorSet.original,
-                title: str = None) -> Figure:
+def _humidity_ratio(dbt: float, rh: float) -> float:
+    if dbt == None or rh == None:
+        return 0.0
+    return psy.humid_ratio_from_db_rh(dbt, rh)
+
+
+def psych_chart(psych: PsychrometricChart,
+                data: Union[HourlyContinuousCollection,
+                            HourlyDiscontinuousCollection] = None,
+                colorset: ColorSet = ColorSet.original, title: str = None) -> Figure:
 
     dbt = psych.temperature
     rh = psych.relative_humidity
+    assert not isinstance(dbt, DailyCollection), 'Ladybug PsychrometricChart created'\
+        ' using DailyCollection is not supported.'
+
+    if data:
+        if isinstance(data, HourlyDiscontinuousCollection):
+            assert HourlyDiscontinuousCollection.are_collections_aligned([data, dbt, rh]),\
+                'HourlyDiscontinuousCollection objects are not aligned.'
+        elif isinstance(data, HourlyContinuousCollection):
+            assert HourlyContinuousCollection.are_collections_aligned([data, dbt, rh]),\
+                'HourlyContinuousCollection objects are not aligned.'
+        else:
+            raise ValueError(f'{type(data)} object is not supported.')
+
+    if isinstance(dbt, HourlyDiscontinuousCollection):
+        if data:
+            data = discontinuous_to_continuous(data)
+        dbt = discontinuous_to_continuous(dbt)
+        rh = discontinuous_to_continuous(rh)
 
     # creating dataframe
     df = dataframe()
     df['DBT'] = Series(dbt).values
     df['RH'] = Series(rh).values
-    df['hr'] = np.vectorize(psy.humid_ratio_from_db_rh)(dbt.values, rh.values)
-    df['t_dp'] = np.vectorize(psy.dew_point_from_db_rh)(dbt.values, rh.values)
-    df['h'] = np.vectorize(psy.enthalpy_from_db_hr)(dbt.values, df['hr'].values)
-
-    # if not var:
-    #     df['text'] = df['DBT'].astype(str) + df['hr'].astype(str)
-    #     df['count'] = [df['text'].value_counts()[val] for val in df['text'].values]
+    df['hr'] = np.vectorize(_humidity_ratio)(dbt.values, rh.values)
 
     # Set maximum and minimum according to data
     data_max = 5 * ceil(df["DBT"].max() / 5)
@@ -711,8 +729,6 @@ def psych_chart(psych: PsychrometricChart, var: str = None, colorset: ColorSet =
     data_max = (5 * ceil(df["hr"].max() * 1000 / 5)) / 1000
     data_min = (5 * floor(df["hr"].min() * 1000 / 5)) / 1000
     var_range_y = [data_min, data_max]
-
-    title = "Psychrometric Chart" if title or var == None else var
 
     dbt_list = list(range(-60, 60, 1))
     rh_list = list(range(10, 110, 10))
@@ -740,8 +756,9 @@ def psych_chart(psych: PsychrometricChart, var: str = None, colorset: ColorSet =
             )
         )
 
-    if not var:
-
+    # if no data is provided, plot frequency
+    if not data:
+        # add count column that is used to plot frequency as count
         df['text'] = df['DBT'].astype(str) + df['hr'].astype(str)
         df['count'] = [df['text'].value_counts()[val] for val in df['text'].values]
 
@@ -760,29 +777,32 @@ def psych_chart(psych: PsychrometricChart, var: str = None, colorset: ColorSet =
                                 for color in color_set[colorset.value]],
                     colorbar=dict(thickness=30, title='Hours' + '<br>  '),
                 ),
-                customdata=np.stack((df['count']), axis=-1),
-                hovertemplate='Hours: %{customdata}'
+                customdata=np.stack((df['RH'], df['count']), axis=-1),
+                hovertemplate='Dry bulb temperature'
+                + ": %{x}"
+                + ' C'
+                + "<br>"
+                + 'Relative humidity'
+                + ": %{customdata[0]}"
+                + ' %'
+                + "<br>"
+                + 'Humidity ratio'
+                + ": %{y: .2f}"
+                + ' Kg water / Kg air'
+                + "<br>"
+                + 'Hours in a year'
+                + ": %{customdata[1]}"
             )
         )
 
-        title = 'Psychrometric Chart - Frequency'
-        fig.add_trace(
-            go.Histogram2d(
-                x=df["DBT"],
-                y=df["hr"],
-                name="",
-                histfunc='sum',
-                colorscale=[rgb_to_hex(Color(255, 255, 255))]+[rgb_to_hex(color)
-                                                               for color in color_set[colorset.value]],
-                hovertemplate="",
-                autobinx=False,
-                xbins=dict(start=var_range_x[0], end=var_range_x[1], size=1),
-                autobiny=False,
-                ybins=dict(start=var_range_y[0], end=var_range_y[1], size=0.001),
-            )
-        )
+        title = title if title else 'Psychrometric Chart - Frequency'
 
+    # plot the data
     else:
+        var = data.header.data_type.name
+        var_unit = data.header.unit
+        df[var] = Series(data).values
+
         fig.add_trace(
             go.Scatter(
                 x=df["DBT"],
@@ -796,34 +816,29 @@ def psych_chart(psych: PsychrometricChart, var: str = None, colorset: ColorSet =
                     opacity=1,
                     colorscale=[rgb_to_hex(color)
                                 for color in color_set[colorset.value]],
-                    colorbar=dict(thickness=30, title='C' + "<br>  "),
-                    cmax=5,
-                    cmin=-5
+                    colorbar=dict(thickness=30, title=var_unit + "<br>  "),
                 ),
-                customdata=np.stack((df["RH"], df["h"], df[var], df["t_dp"]), axis=-1),
+                customdata=np.stack((df['RH'], df[var]), axis=-1),
                 hovertemplate='Dry bulb temperature'
-                + ": %{x:.2f}"
-                + 'C'
+                + ": %{x}"
+                + ' C'
                 + "<br>"
                 + 'Relative humidity'
-                + ": %{customdata[0]:.2f}"
-                + '%'
+                + ": %{customdata[0]}"
+                + ' %'
                 + "<br>"
-                + 'Enthalpy'
-                + ": %{customdata[1]:.2f}"
-                + 'J/kg dry air'
+                + 'Humidity ratio'
+                + ": %{y: .2f}"
+                + ' Kg water / Kg air'
                 + "<br>"
-                + 'Dew point temperature'
-                + ": %{customdata[3]:.2f}"
-                + 'C'
-                + "<br>"
-                + "<br>"
-                + 'Var Name'
-                + ": %{customdata[2]:.2f}"
-                + 'Var unit',
+                + var
+                + ": %{customdata[1]}"
+                + ' ' + var_unit,
                 name="",
             )
         )
+
+        title = title if title else f'Psychrometric Chart - {var}'
 
     fig.update_layout(
         template='plotly_white',
