@@ -1,6 +1,7 @@
 """Create plotly figures from pandas Dataframe."""
 
 
+from ladybug.psychchart import PsychrometricChart
 import numpy as np
 import pandas as pd
 import plotly.io as pio
@@ -13,13 +14,15 @@ from typing import Union, List, Tuple
 from random import randint
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
-from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
+from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set, \
+    calculate_psychrometrics
 
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
 from ladybug.windrose import WindRose
 from ladybug.color import Color
 from ladybug_pandas.series import Series
+from ladybug import psychrometrics as psy
 
 # set white background in all charts
 pio.templates.default = 'plotly_white'
@@ -679,4 +682,174 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
     fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
 
+    return fig
+
+
+def psych_chart(psych: PsychrometricChart, var: str = None, colorset: ColorSet = ColorSet.original,
+                title: str = None) -> Figure:
+
+    dbt = psych.temperature
+    rh = psych.relative_humidity
+
+    # creating dataframe
+    df = dataframe()
+    df['DBT'] = Series(dbt).values
+    df['RH'] = Series(rh).values
+    df['hr'] = np.vectorize(psy.humid_ratio_from_db_rh)(dbt.values, rh.values)
+    df['t_dp'] = np.vectorize(psy.dew_point_from_db_rh)(dbt.values, rh.values)
+    df['h'] = np.vectorize(psy.enthalpy_from_db_hr)(dbt.values, df['hr'].values)
+
+    # if not var:
+    #     df['text'] = df['DBT'].astype(str) + df['hr'].astype(str)
+    #     df['count'] = [df['text'].value_counts()[val] for val in df['text'].values]
+
+    # Set maximum and minimum according to data
+    data_max = 5 * ceil(df["DBT"].max() / 5)
+    data_min = 5 * floor(df["DBT"].min() / 5)
+    var_range_x = [data_min, data_max]
+
+    data_max = (5 * ceil(df["hr"].max() * 1000 / 5)) / 1000
+    data_min = (5 * floor(df["hr"].min() * 1000 / 5)) / 1000
+    var_range_y = [data_min, data_max]
+
+    title = "Psychrometric Chart" if title or var == None else var
+
+    dbt_list = list(range(-60, 60, 1))
+    rh_list = list(range(10, 110, 10))
+
+    rh_df = pd.DataFrame()
+    for rh_item in rh_list:
+        hr_list = np.vectorize(psy.humid_ratio_from_db_rh)(dbt_list, rh_item)
+        name = "rh" + str(rh_item)
+        rh_df[name] = hr_list
+
+    fig = go.Figure()
+
+    # Add curved lines for humidity
+    for rh_item in rh_list:
+        name = "rh" + str(rh_item)
+        fig.add_trace(
+            go.Scatter(
+                x=dbt_list,
+                y=rh_df[name],
+                showlegend=False,
+                mode="lines",
+                name="",
+                hovertemplate="RH " + str(rh_item) + "%",
+                line=dict(width=1, color="#85837f"),
+            )
+        )
+
+    if not var:
+
+        df['text'] = df['DBT'].astype(str) + df['hr'].astype(str)
+        df['count'] = [df['text'].value_counts()[val] for val in df['text'].values]
+
+        fig.add_trace(
+            go.Scatter(
+                x=df["DBT"],
+                y=df["hr"],
+                showlegend=False,
+                mode="markers",
+                marker=dict(
+                    size=7,
+                    color=df['count'],
+                    showscale=True,
+                    opacity=1,
+                    colorscale=[rgb_to_hex(color)
+                                for color in color_set[colorset.value]],
+                    colorbar=dict(thickness=30, title='Hours' + '<br>  '),
+                ),
+                customdata=np.stack((df['count']), axis=-1),
+                hovertemplate='Hours: %{customdata}'
+            )
+        )
+
+        title = 'Psychrometric Chart - Frequency'
+        fig.add_trace(
+            go.Histogram2d(
+                x=df["DBT"],
+                y=df["hr"],
+                name="",
+                histfunc='sum',
+                colorscale=[rgb_to_hex(Color(255, 255, 255))]+[rgb_to_hex(color)
+                                                               for color in color_set[colorset.value]],
+                hovertemplate="",
+                autobinx=False,
+                xbins=dict(start=var_range_x[0], end=var_range_x[1], size=1),
+                autobiny=False,
+                ybins=dict(start=var_range_y[0], end=var_range_y[1], size=0.001),
+            )
+        )
+
+    else:
+        fig.add_trace(
+            go.Scatter(
+                x=df["DBT"],
+                y=df["hr"],
+                showlegend=False,
+                mode="markers",
+                marker=dict(
+                    size=7,
+                    color=df[var],
+                    showscale=True,
+                    opacity=1,
+                    colorscale=[rgb_to_hex(color)
+                                for color in color_set[colorset.value]],
+                    colorbar=dict(thickness=30, title='C' + "<br>  "),
+                    cmax=5,
+                    cmin=-5
+                ),
+                customdata=np.stack((df["RH"], df["h"], df[var], df["t_dp"]), axis=-1),
+                hovertemplate='Dry bulb temperature'
+                + ": %{x:.2f}"
+                + 'C'
+                + "<br>"
+                + 'Relative humidity'
+                + ": %{customdata[0]:.2f}"
+                + '%'
+                + "<br>"
+                + 'Enthalpy'
+                + ": %{customdata[1]:.2f}"
+                + 'J/kg dry air'
+                + "<br>"
+                + 'Dew point temperature'
+                + ": %{customdata[3]:.2f}"
+                + 'C'
+                + "<br>"
+                + "<br>"
+                + 'Var Name'
+                + ": %{customdata[2]:.2f}"
+                + 'Var unit',
+                name="",
+            )
+        )
+
+    fig.update_layout(
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=33, b=20),
+        title={
+            'text': title,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        })
+
+    fig.update_xaxes(
+        title_text='Temperature (°C)',
+        range=var_range_x,
+        showline=True,
+        linewidth=1,
+        linecolor='black',
+        mirror=True,
+    )
+    fig.update_yaxes(
+        title_text='Humidity Ratio (KG water/KG air)',
+        range=var_range_y,
+        showline=True,
+        linewidth=1,
+        linecolor='black',
+        mirror=True,
+    )
     return fig
