@@ -894,7 +894,7 @@ def psych_chart(psych: PsychrometricChart,
 
 
 def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
-            color: Color = None, min_range: float = None, max_range: float = None):
+            colorset: ColorSet = ColorSet.original, min_range: float = None, max_range: float = None):
 
     var = data
     df = dataframe()
@@ -912,24 +912,18 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
     df['altitude'] = altitudes
     df['azimuth'] = azimuths
 
-    # hours = list(df.hour.values)[:25]
-    # altitude = list(df.altitude.values)[:25]
-    # for i in range(len(hours)):
-    #     print(hours[i], altitude[i])
-
     if var:
         var_name = data.header.data_type.name
         var_unit = data.header.unit
-        var_color = color if color else Color(
-            randint(0, 255), randint(0, 255), randint(0, 255))
+        var_color = [rgb_to_hex(color) for color in color_set[colorset.value]]
 
         # add data to the dataframe
         df[var_name] = Series(data).values
         # filter the whole dataframe based on sun elevations
         solpos = df.loc[df["altitude"] > 0, :]
 
-        data_max = 5 * ceil(solpos[var].max() / 5)
-        data_min = 5 * floor(solpos[var].min() / 5)
+        data_max = 5 * ceil(solpos[var_name].max() / 5)
+        data_min = 5 * floor(solpos[var_name].min() / 5)
 
         if min_range == None and max_range == None:
             var_range = [data_min, data_max]
@@ -954,7 +948,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
         var_color = "orange"
         marker_size = 3
     else:
-        vals = solpos[var]
+        vals = solpos[var_name]
         marker_size = (((vals - vals.min()) / vals.max()) + 1) * 4
 
     fig = go.Figure()
@@ -1014,7 +1008,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                 theta=solpos["azimuth"],
                 mode="markers",
                 marker=dict(
-                    color=solpos[var],
+                    color=solpos[var_name],
                     size=marker_size,
                     line_width=0,
                     colorscale=var_color,
@@ -1029,7 +1023,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                         solpos["hour"],
                         solpos["altitude"],
                         solpos["azimuth"],
-                        solpos[var],
+                        solpos[var_name],
                     ),
                     axis=-1,
                 ),
@@ -1071,17 +1065,18 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
 
         solpos = solpos.loc[solpos['altitude'] > 0, :]
 
+        # This sorting is necessary for the correct drawing of lines
+        alts = list(90 * np.cos(np.radians(solpos.altitude)))
+        azis = list(solpos.azimuth)
+        azi_alt = {azis[i]: alts[i] for i in range(len(azis))}
+        azi_alt_sorted = {k: azi_alt[k] for k in sorted(azi_alt)}
+
         fig.add_trace(
             go.Scatterpolar(
-                r=90 * np.cos(np.radians(solpos.altitude)),
-                theta=solpos.azimuth,
-                mode="markers",
-                marker=dict(
-                    color='orange',
-                    size=marker_size+1,
-                    line_width=1,
-                    line_color='orange',
-                ),
+                r=list(azi_alt_sorted.values()),
+                theta=list(azi_alt_sorted.keys()),
+                mode="lines",
+                line_color='orange',
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
@@ -1113,17 +1108,18 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
 
         solpos = solpos.loc[solpos["altitude"] > 0, :]
 
+        # This sorting is necessary for the correct drawing of lines
+        alts = list(90 * np.cos(np.radians(solpos.altitude)))
+        azis = list(solpos.azimuth)
+        azi_alt = {azis[i]: alts[i] for i in range(len(azis))}
+        azi_alt_sorted = {k: azi_alt[k] for k in sorted(azi_alt)}
+
         fig.add_trace(
             go.Scatterpolar(
-                r=90 * np.cos(np.radians(solpos.altitude)),
-                theta=solpos.azimuth,
-                mode="markers",
-                marker=dict(
-                    color='orange',
-                    size=marker_size,
-                    line_width=0,
-                    line_color='orange',
-                ),
+                r=list(azi_alt_sorted.values()),
+                theta=list(azi_alt_sorted.keys()),
+                mode="lines",
+                line_color='orange',
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
