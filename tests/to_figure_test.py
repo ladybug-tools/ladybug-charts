@@ -7,6 +7,8 @@ from ladybug.color import Color
 from ladybug.windrose import WindRose
 from ladybug.psychchart import PsychrometricChart
 from ladybug.analysisperiod import AnalysisPeriod
+from ladybug.hourlyplot import HourlyPlot
+from ladybug.monthlychart import MonthlyChart
 
 
 def test_hourly_continuous_to_heatmap(epw):
@@ -66,6 +68,20 @@ def test_bar_chart_multiple_daily_data(epw):
     dbt = epw.dry_bulb_temperature.average_daily()
     rh = epw.relative_humidity.average_daily()
     fig = bar_chart([dbt, rh])
+    assert isinstance(fig, Figure)
+
+
+def test_hourly_plot(epw):
+    hp = HourlyPlot(epw.dry_bulb_temperature)
+    fig = hp.plot()
+    assert isinstance(fig, Figure)
+
+
+def test_monthly_chart_plot(epw):
+    dbt_monthly = epw.dry_bulb_temperature.average_monthly()
+    rh_monthly = epw.relative_humidity.average_monthly()
+    mc = MonthlyChart([dbt_monthly, rh_monthly])
+    fig = mc.plot()
     assert isinstance(fig, Figure)
 
 
