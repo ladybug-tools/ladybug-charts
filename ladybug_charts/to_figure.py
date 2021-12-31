@@ -1093,6 +1093,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                 theta=list(azi_alt_sorted.keys()),
                 mode="lines",
                 line_color=var_color,
+                line_width=1,
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
@@ -1136,6 +1137,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                 theta=list(azi_alt_sorted.keys()),
                 mode="lines",
                 line_color=var_color,
+                line_width=1,
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
