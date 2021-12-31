@@ -1,26 +1,30 @@
 """Create plotly figures from pandas Dataframe."""
 
 
-from ladybug.psychchart import PsychrometricChart
 import numpy as np
 import pandas as pd
-import plotly.io as pio
-import plotly.graph_objects as go
-from math import ceil, floor
-from plotly.graph_objects import Figure
-from plotly.graph_objects import Bar
-from plotly.subplots import make_subplots
+
+from math import ceil, floor, cos, radians
 from typing import Union, List, Tuple
 from random import randint
 
+import plotly.io as pio
+import plotly.graph_objects as go
+from plotly.graph_objects import Figure
+from plotly.graph_objects import Bar
+from plotly.subplots import make_subplots
+
 from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
+
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
 from ladybug.windrose import WindRose
 from ladybug.color import Color
 from ladybug_pandas.series import Series
 from ladybug import psychrometrics as psy
+from ladybug.sunpath import Sunpath
+from ladybug.psychchart import PsychrometricChart
 
 # set white background in all charts
 pio.templates.default = 'plotly_white'
