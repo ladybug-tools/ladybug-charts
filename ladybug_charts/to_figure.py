@@ -895,7 +895,7 @@ def psych_chart(psych: PsychrometricChart,
 
 def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
             colorset: ColorSet = ColorSet.original, min_range: float = None,
-            max_range: float = None, title: str = 'Sunpath') -> Figure:
+            max_range: float = None, title: str = None) -> Figure:
     """ Plot Sunpath.
 
     Args:
@@ -907,7 +907,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
             set to the minimum value of the data. Defaults to None.
         max_range: Maximum value for the colorbar. If not set, the maximum value will be
             set to the maximum value of the data. Defaults to None.
-        title: A string to be used as the title of the plot. Defaults to 'Sunpath'.
+        title: A string to be used as the title of the plot. Defaults to None.
 
     Returns:
         A plotly Figure.
@@ -931,6 +931,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
         var_name = data.header.data_type.name
         var_unit = data.header.unit
         var_colorscale = [rgb_to_hex(color) for color in color_set[colorset.value]]
+        title = 'Sunpath - ' + var_name if title is None else title
 
         # add data to the dataframe
         df[var_name] = Series(data).values
@@ -951,6 +952,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
 
     else:
         solpos = df.loc[df["altitude"] > 0, :]
+        title = 'Sunpath' if title is None else title
 
     tz = "UTC"
     times = pd.date_range(
