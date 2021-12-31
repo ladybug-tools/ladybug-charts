@@ -7,6 +7,7 @@ import pandas as pd
 from math import ceil, floor, cos, radians
 from typing import Union, List, Tuple
 from random import randint
+from datetime import timedelta
 
 import plotly.io as pio
 import plotly.graph_objects as go
@@ -25,6 +26,7 @@ from ladybug_pandas.series import Series
 from ladybug import psychrometrics as psy
 from ladybug.sunpath import Sunpath
 from ladybug.psychchart import PsychrometricChart
+from ladybug.dt import DateTime
 
 # set white background in all charts
 pio.templates.default = 'plotly_white'
@@ -887,5 +889,277 @@ def psych_chart(psych: PsychrometricChart,
         linewidth=1,
         linecolor='black',
         mirror=True,
+    )
+    return fig
+
+
+def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
+            color: Color = None, min_range: float = None, max_range: float = None):
+
+    var = data
+    df = dataframe()
+
+    latitude = sunpath.latitude
+    longitude = sunpath.longitude
+    time_zone = sunpath.time_zone
+
+    altitudes, azimuths = [], []
+    for time in df['times']:
+        date_time = DateTime(time.month, time.day, time.hour, time.minute)
+        altitudes.append(sunpath.calculate_sun_from_date_time(date_time).altitude)
+        azimuths.append(sunpath.calculate_sun_from_date_time(date_time).azimuth)
+
+    df['altitude'] = altitudes
+    df['azimuth'] = azimuths
+
+    # hours = list(df.hour.values)[:25]
+    # altitude = list(df.altitude.values)[:25]
+    # for i in range(len(hours)):
+    #     print(hours[i], altitude[i])
+
+    if var:
+        var_name = data.header.data_type.name
+        var_unit = data.header.unit
+        var_color = color if color else Color(
+            randint(0, 255), randint(0, 255), randint(0, 255))
+
+        # add data to the dataframe
+        df[var_name] = Series(data).values
+        # filter the whole dataframe based on sun elevations
+        solpos = df.loc[df["altitude"] > 0, :]
+
+        data_max = 5 * ceil(solpos[var].max() / 5)
+        data_min = 5 * floor(solpos[var].min() / 5)
+
+        if min_range == None and max_range == None:
+            var_range = [data_min, data_max]
+        elif min_range != None and max_range == None:
+            var_range = [min_range, data_max]
+        elif min_range == None and max_range != None:
+            var_range = [data_min, max_range]
+        else:
+            var_range = [min_range, max_range]
+
+    else:
+        solpos = df.loc[df["altitude"] > 0, :]
+
+    tz = "UTC"
+    times = pd.date_range(
+        "2019-01-01 00:00:00", "2020-01-01", closed="left", freq="H", tz=tz
+    )
+    delta = timedelta(days=0, hours=time_zone - 1, minutes=0)
+    times = times - delta
+
+    if not var:
+        var_color = "orange"
+        marker_size = 3
+    else:
+        vals = solpos[var]
+        marker_size = (((vals - vals.min()) / vals.max()) + 1) * 4
+
+    fig = go.Figure()
+    # draw altitude circles
+    for i in range(10):
+        pt = []
+        for j in range(361):
+            pt.append(j)
+
+        fig.add_trace(
+            go.Scatterpolar(
+                r=[90 * cos(radians(i * 10))] * 361,
+                theta=pt,
+                mode="lines",
+                line_color="silver",
+                line_width=1,
+                hovertemplate="Altitude circle<br>" + str(i * 10) + "\u00B0deg",
+                name="",
+            )
+        )
+
+    # Draw annalemma
+    if not var:
+        fig.add_trace(
+            go.Scatterpolar(
+                r=90 * np.cos(np.radians(solpos["altitude"])),
+                theta=solpos["azimuth"],
+                mode="markers",
+                marker_color="orange",
+                marker_size=marker_size,
+                marker_line_width=0,
+                customdata=np.stack(
+                    (
+                        solpos["day"],
+                        solpos["month_names"],
+                        solpos["hour"],
+                        solpos["altitude"],
+                        solpos["azimuth"],
+                    ),
+                    axis=-1,
+                ),
+                hovertemplate="month: %{customdata[1]}"
+                + "<br>day: %{customdata[0]:.0f}"
+                + "<br>hour: %{customdata[2]:.0f}:00"
+                + "<br>sun altitude: %{customdata[3]:.2f}"
+                + "\u00B0deg"
+                + "<br>sun azimuth: %{customdata[4]:.2f}"
+                + "\u00B0deg"
+                + "<br>",
+                name="",
+            )
+        )
+    else:
+        fig.add_trace(
+            go.Scatterpolar(
+                r=90 * np.cos(np.radians(solpos['altitude'])),
+                theta=solpos["azimuth"],
+                mode="markers",
+                marker=dict(
+                    color=solpos[var],
+                    size=marker_size,
+                    line_width=0,
+                    colorscale=var_color,
+                    cmin=var_range[0],
+                    cmax=var_range[1],
+                    colorbar=dict(thickness=30, title=var_unit + "<br>  "),
+                ),
+                customdata=np.stack(
+                    (
+                        solpos["day"],
+                        solpos["month_names"],
+                        solpos["hour"],
+                        solpos["altitude"],
+                        solpos["azimuth"],
+                        solpos[var],
+                    ),
+                    axis=-1,
+                ),
+                hovertemplate="month: %{customdata[1]}"
+                + "<br>day: %{customdata[0]:.0f}"
+                + "<br>hour: %{customdata[2]:.0f}:00"
+                + "<br>sun altitude: %{customdata[3]:.2f}"
+                + "\u00B0deg"
+                + "<br>sun azimuth: %{customdata[4]:.2f}"
+                + "\u00B0deg"
+                + "<br>"
+                + "<br><b>"
+                + var_name
+                + ": %{customdata[5]:.2f}"
+                + var_unit
+                + "</b>",
+                name="",
+            )
+        )
+
+    # draw equinox and sostices
+    for date in pd.to_datetime(["2019-03-21", "2019-06-21", "2019-12-21"]):
+        times = pd.date_range(date, date + pd.Timedelta("24h"), freq="5min", tz='UTC')
+        times = times - delta
+        solpos = pd.DataFrame()
+        solpos['times'] = times
+        solpos.set_index("times", drop=False, append=False,
+                         inplace=True, verify_integrity=False)
+
+        azimuth, altitude = [], []
+        for time in times:
+            azimuth.append(sunpath.calculate_sun_from_date_time(
+                DateTime(time.month, time.day, time.hour, time.minute)).azimuth)
+            altitude.append(sunpath.calculate_sun_from_date_time(
+                DateTime(time.month, time.day, time.hour, time.minute)).altitude)
+
+        solpos['azimuth'] = azimuth
+        solpos['altitude'] = altitude
+
+        solpos = solpos.loc[solpos['altitude'] > 0, :]
+
+        fig.add_trace(
+            go.Scatterpolar(
+                r=90 * np.cos(np.radians(solpos.altitude)),
+                theta=solpos.azimuth,
+                mode="markers",
+                marker=dict(
+                    color='orange',
+                    size=marker_size+1,
+                    line_width=1,
+                    line_color='orange',
+                ),
+                customdata=solpos.altitude,
+                hovertemplate="<br>sun altitude: %{customdata:.2f}"
+                + "\u00B0deg"
+                + "<br>sun azimuth: %{theta:.2f}"
+                + "\u00B0deg"
+                + "<br>",
+                name="",
+            )
+        )
+
+    # draw sunpath on the 21st of each other month
+    for date in pd.to_datetime(["2019-01-21", "2019-02-21", "2019-4-21", "2019-5-21"]):
+        times = pd.date_range(date, date + pd.Timedelta("24h"), freq="5min", tz=tz)
+        times = times - delta
+        solpos = pd.DataFrame()
+        solpos['times'] = times
+        solpos.set_index("times", drop=False, append=False,
+                         inplace=True, verify_integrity=False)
+
+        azimuth, altitude = [], []
+        for time in times:
+            azimuth.append(sunpath.calculate_sun_from_date_time(
+                DateTime(time.month, time.day, time.hour, time.minute)).azimuth)
+            altitude.append(sunpath.calculate_sun_from_date_time(
+                DateTime(time.month, time.day, time.hour, time.minute)).altitude)
+
+        solpos['azimuth'] = azimuth
+        solpos['altitude'] = altitude
+
+        solpos = solpos.loc[solpos["altitude"] > 0, :]
+
+        fig.add_trace(
+            go.Scatterpolar(
+                r=90 * np.cos(np.radians(solpos.altitude)),
+                theta=solpos.azimuth,
+                mode="markers",
+                marker=dict(
+                    color='orange',
+                    size=marker_size,
+                    line_width=0,
+                    line_color='orange',
+                ),
+                customdata=solpos.altitude,
+                hovertemplate="<br>sun altitude: %{customdata:.2f}"
+                + "\u00B0deg"
+                + "<br>sun azimuth: %{theta:.2f}"
+                + "\u00B0deg"
+                + "<br>",
+                name="",
+            )
+        )
+
+    fig.update_layout(
+        showlegend=False,
+        polar=dict(
+            radialaxis_tickfont_size=10,
+            angularaxis=dict(
+                tickfont_size=10,
+                rotation=90,  # start position of angular axis
+                direction="clockwise",
+            ),
+        ),
+    )
+
+    fig.update_layout(
+        autosize=False,
+    )
+
+    fig.update_layout(
+        template='plotly_white',
+        title_x=0.5,
+        dragmode=False,
+        margin=dict(l=20, r=20, t=33, b=20)
+    )
+
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(visible=False),
+        )
     )
     return fig
