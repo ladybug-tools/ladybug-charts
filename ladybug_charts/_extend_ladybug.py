@@ -3,12 +3,12 @@
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
 from ladybug_charts.to_figure import heat_map, monthly_bar_chart, daily_bar_chart, \
-    hourly_line_chart, per_hour_line_chart, wind_rose, psych_chart, bar_chart
+    hourly_line_chart, per_hour_line_chart, wind_rose, psych_chart, bar_chart, sunpath
 from ladybug.windrose import WindRose
 from ladybug.psychchart import PsychrometricChart
 from ladybug.hourlyplot import HourlyPlot
 from ladybug.monthlychart import MonthlyChart
-
+from ladybug.sunpath import Sunpath
 
 HourlyContinuousCollection.heat_map = heat_map
 HourlyDiscontinuousCollection.heat_map = heat_map
@@ -18,6 +18,7 @@ HourlyContinuousCollection.line_chart = hourly_line_chart
 HourlyContinuousCollection.per_hour_line_chart = per_hour_line_chart
 WindRose.plot = wind_rose
 PsychrometricChart.plot = psych_chart
+Sunpath.plot = sunpath
 
 
 def hourly_plot(self):
