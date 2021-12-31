@@ -894,13 +894,25 @@ def psych_chart(psych: PsychrometricChart,
 
 
 def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
-            colorset: ColorSet = ColorSet.original, min_range: float = None, max_range: float = None):
+            colorset: ColorSet = ColorSet.original, min_range: float = None,
+            max_range: float = None, title: str = 'Sunpath') -> Figure:
+    """ Plot Sunpath.
 
-    var = data
+    Args:
+        sunpath: A Ladybug Sunpath object.
+        data: An HourlyContinuousCollection object to be plotted on the sunpath. Defaults
+            to None.
+        colorset: A ColorSet to be used for plotting. Defaults to ColorSet.original.
+        min_range: Minimum value for the colorbar. If not set, the minimum value will be
+            set to the minimum value of the data. Defaults to None.
+        max_range: Maximum value for the colorbar. If not set, the maximum value will be
+            set to the maximum value of the data. Defaults to None.
+        title: A string to be used as the title of the plot. Defaults to 'Sunpath'.
+
+    Returns:
+        A plotly Figure.
+    """
     df = dataframe()
-
-    latitude = sunpath.latitude
-    longitude = sunpath.longitude
     time_zone = sunpath.time_zone
 
     altitudes, azimuths = [], []
@@ -912,10 +924,13 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
     df['altitude'] = altitudes
     df['azimuth'] = azimuths
 
-    if var:
+    if data:
+        assert isinstance(data, HourlyContinuousCollection), 'data must be an'\
+            f' HourlyContinuousCollection. Instead got {type(data)}.'
+
         var_name = data.header.data_type.name
         var_unit = data.header.unit
-        var_color = [rgb_to_hex(color) for color in color_set[colorset.value]]
+        var_colorscale = [rgb_to_hex(color) for color in color_set[colorset.value]]
 
         # add data to the dataframe
         df[var_name] = Series(data).values
@@ -944,10 +959,11 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
     delta = timedelta(days=0, hours=time_zone - 1, minutes=0)
     times = times - delta
 
-    if not var:
+    if not data:
         var_color = "orange"
         marker_size = 3
     else:
+        var_color = 'silver'
         vals = solpos[var_name]
         marker_size = (((vals - vals.min()) / vals.max()) + 1) * 4
 
@@ -971,13 +987,13 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
         )
 
     # Draw annalemma
-    if not var:
+    if not data:
         fig.add_trace(
             go.Scatterpolar(
                 r=90 * np.cos(np.radians(solpos["altitude"])),
                 theta=solpos["azimuth"],
                 mode="markers",
-                marker_color="orange",
+                marker_color=var_color,
                 marker_size=marker_size,
                 marker_line_width=0,
                 customdata=np.stack(
@@ -1011,7 +1027,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                     color=solpos[var_name],
                     size=marker_size,
                     line_width=0,
-                    colorscale=var_color,
+                    colorscale=var_colorscale,
                     cmin=var_range[0],
                     cmax=var_range[1],
                     colorbar=dict(thickness=30, title=var_unit + "<br>  "),
@@ -1076,7 +1092,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                 r=list(azi_alt_sorted.values()),
                 theta=list(azi_alt_sorted.keys()),
                 mode="lines",
-                line_color='orange',
+                line_color=var_color,
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
@@ -1119,7 +1135,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                 r=list(azi_alt_sorted.values()),
                 theta=list(azi_alt_sorted.keys()),
                 mode="lines",
-                line_color='orange',
+                line_color=var_color,
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
@@ -1133,29 +1149,25 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
     fig.update_layout(
         showlegend=False,
         polar=dict(
-            radialaxis_tickfont_size=10,
+            radialaxis=dict(tickfont_size=10, visible=False),
             angularaxis=dict(
                 tickfont_size=10,
                 rotation=90,  # start position of angular axis
                 direction="clockwise",
             ),
         ),
-    )
-
-    fig.update_layout(
         autosize=False,
-    )
-
-    fig.update_layout(
         template='plotly_white',
         title_x=0.5,
         dragmode=False,
-        margin=dict(l=20, r=20, t=33, b=20)
+        margin=dict(l=20, r=20, t=33, b=20),
+        title={
+            'text': title,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
     )
 
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=False),
-        )
-    )
     return fig
