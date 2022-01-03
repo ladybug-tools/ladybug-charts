@@ -781,44 +781,23 @@ def psych_chart(psych: PsychrometricChart,
 
     # if no data is provided, plot frequency
     if not data:
-        # add count column that is used to plot frequency as count
-        df['text'] = df['DBT'].astype(str) + df['hr'].astype(str)
-        df['count'] = [df['text'].value_counts()[val] for val in df['text'].values]
-
+        title = 'Psychrometric Chart - Frequency'
         fig.add_trace(
-            go.Scatter(
+            go.Histogram2d(
                 x=df["DBT"],
                 y=df["hr"],
-                showlegend=False,
-                mode="markers",
-                marker=dict(
-                    size=7,
-                    color=df['count'],
-                    showscale=True,
-                    opacity=1,
-                    colorscale=[rgb_to_hex(color)
-                                for color in color_set[colorset.value]],
-                    colorbar=dict(thickness=30, title='Hours' + '<br>  '),
-                ),
-                customdata=np.stack((df['RH'], df['count']), axis=-1),
-                hovertemplate='Dry bulb temperature'
-                + ": %{x}"
-                + ' C'
-                + "<br>"
-                + 'Relative humidity'
-                + ": %{customdata[0]}"
-                + ' %'
-                + "<br>"
-                + 'Humidity ratio'
-                + ": %{y: .2f}"
-                + ' Kg water / Kg air'
-                + "<br>"
-                + 'Hours in a year'
-                + ": %{customdata[1]}"
+                name="",
+                colorscale=[rgb_to_hex(color)
+                            for color in color_set[colorset.value]],
+                hovertemplate="",
+                histnorm="",
+                histfunc="count",
+                autobinx=False,
+                xbins=dict(start=var_range_x[0], end=var_range_x[1], size=1),
+                autobiny=False,
+                ybins=dict(start=var_range_y[0], end=var_range_y[1], size=0.001),
             )
         )
-
-        title = title if title else 'Psychrometric Chart - Frequency'
 
     # plot the data
     else:
@@ -874,6 +853,7 @@ def psych_chart(psych: PsychrometricChart,
             'yanchor': 'top'
         })
 
+    print(var_range_x, var_range_y)
     fig.update_xaxes(
         title_text='Temperature (°C)',
         range=var_range_x,
@@ -881,6 +861,7 @@ def psych_chart(psych: PsychrometricChart,
         linewidth=1,
         linecolor='black',
         mirror=True,
+        dtick=5
     )
     fig.update_yaxes(
         title_text='Humidity Ratio (KG water/KG air)',

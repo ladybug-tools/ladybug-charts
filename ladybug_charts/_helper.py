@@ -6,8 +6,9 @@ from typing import List, Tuple
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, BaseCollection
 from ladybug.color import Color, Colorset
-from ladybug.analysisperiod import AnalysisPeriod
+from ladybug import psychrometrics as psy
 from ladybug.header import Header
+from ladybug.analysisperiod import AnalysisPeriod
 
 
 def discontinuous_to_continuous(
@@ -98,3 +99,21 @@ color_set = {
     'thermal_comfort': Colorset.thermal_comfort(),
     'view_study': Colorset.view_study()
 }
+
+
+def calculate_psychrometrics(dbt: float, rh: float) -> dict:
+    saturated_vapor_pressure = psy.saturated_vapor_pressure(dbt+273.15)
+    vapour_pressure = rh / 100 * saturated_vapor_pressure
+    humidity_ratio = psy.humid_ratio_from_db_rh(dbt, rh)
+    dew_point_temperature = psy.dew_point_from_db_rh(dbt, rh)
+    wet_bulb_temperature = psy.wet_bulb_from_db_rh(dbt, rh)
+    enthalpy = psy.enthalpy_from_db_hr(dbt, humidity_ratio)
+
+    return {
+        "p_sat": saturated_vapor_pressure,
+        "p_vap": vapour_pressure,
+        "hr": humidity_ratio,
+        "t_wb": wet_bulb_temperature,
+        "t_dp": dew_point_temperature,
+        "h": enthalpy,
+    }
