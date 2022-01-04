@@ -761,8 +761,23 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     fillcolor=rgb_to_hex(psych.container.value_colors[count]),
                     line=dict(width=0),
                     showlegend=False,
-                    mode='lines'
-                ))
+                    mode='lines',
+                )
+            )
+
+            # In plotly, it's not possible to have hover text on a filled shape
+            # add another trace just to have hover text
+            fig.add_trace(
+                go.Scatter(
+                    x=[psych_dummy.colored_mesh.face_centroids[count].x],
+                    y=[psych_dummy.colored_mesh.face_centroids[count].y],
+                    showlegend=False,
+                    mode='markers',
+                    opacity=0,
+                    hovertemplate=str(int(psych_dummy.hour_values[count])) + ' hours' +
+                    '<extra></extra>',
+                )
+            )
 
         # create a dummy trace to make the Legend
         colorbar_trace = go.Scatter(
@@ -801,6 +816,22 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     showlegend=False,
                     mode='lines'
                 ))
+
+            # In plotly, it's not possible to have hover text on a filled shape
+            # add another trace just to have hover text
+            fig.add_trace(
+                go.Scatter(
+                    x=[mesh.face_centroids[count].x],
+                    y=[mesh.face_centroids[count].y],
+                    showlegend=False,
+                    mode='markers',
+                    opacity=0,
+                    hovertemplate=str(
+                        int(graphic_container.values[count])) + ' '
+                    + graphic_container.legend_parameters.title +
+                    '<extra></extra>',
+                )
+            )
 
         # create a dummy trace to make the Legend
         colorbar_trace = go.Scatter(
