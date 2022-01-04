@@ -9,6 +9,7 @@ from ladybug.color import Color, Colorset
 from ladybug import psychrometrics as psy
 from ladybug.header import Header
 from ladybug.analysisperiod import AnalysisPeriod
+from ladybug_geometry.geometry2d import Mesh2D
 
 
 def discontinuous_to_continuous(
@@ -101,19 +102,32 @@ color_set = {
 }
 
 
-def calculate_psychrometrics(dbt: float, rh: float) -> dict:
-    saturated_vapor_pressure = psy.saturated_vapor_pressure(dbt+273.15)
-    vapour_pressure = rh / 100 * saturated_vapor_pressure
-    humidity_ratio = psy.humid_ratio_from_db_rh(dbt, rh)
-    dew_point_temperature = psy.dew_point_from_db_rh(dbt, rh)
-    wet_bulb_temperature = psy.wet_bulb_from_db_rh(dbt, rh)
-    enthalpy = psy.enthalpy_from_db_hr(dbt, humidity_ratio)
+def humidity_ratio(dbt: float, rh: float) -> float:
+    """Calculate humidity ratio from dry bulb temperature and relative humidity."""
+    if dbt == None or rh == None:
+        return 0.0
+    return psy.humid_ratio_from_db_rh(dbt, rh)
 
-    return {
-        "p_sat": saturated_vapor_pressure,
-        "p_vap": vapour_pressure,
-        "hr": humidity_ratio,
-        "t_wb": wet_bulb_temperature,
-        "t_dp": dew_point_temperature,
-        "h": enthalpy,
-    }
+
+def mesh_to_cordinates(mesh: Mesh2D) -> List[List[List[float], List[float]]]:
+    """Convert vertices of Ladybug 2D mesh to coordinates that Plotly can use.
+
+    Args:
+        mesh: Ladybug 2D mesh.
+
+    Returns:
+        A list of lists of coordinates where each list has two lists. The first has 
+        x coordinates and the second has y coordinates.
+    """
+    cords = []
+    for face in mesh.faces:
+        x_cords = []
+        y_cords = []
+        for vert in face:
+            x_cords.append(mesh.vertices[vert].x)
+            y_cords.append(mesh.vertices[vert].y)
+        # Add first cordinate to the end to close the polygon
+        x_cords.append(x_cords[0])
+        y_cords.append(y_cords[0])
+        cords.append([x_cords, y_cords])
+    return cords

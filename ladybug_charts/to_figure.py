@@ -16,10 +16,11 @@ from plotly.graph_objects import Bar
 from plotly.subplots import make_subplots
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
-from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set
+from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
+    humidity_ratio, mesh_to_cordinates
 
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
+    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
 from ladybug.windrose import WindRose
 from ladybug.color import Color
 from ladybug_pandas.series import Series
@@ -689,23 +690,15 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
     return fig
 
 
-def _humidity_ratio(dbt: float, rh: float) -> float:
-    if dbt == None or rh == None:
-        return 0.0
-    return psy.humid_ratio_from_db_rh(dbt, rh)
-
-
 def psych_chart(psych: PsychrometricChart,
                 data: Union[HourlyContinuousCollection,
                             HourlyDiscontinuousCollection] = None,
-                colorset: ColorSet = ColorSet.original, title: str = None) -> Figure:
+                title: str = None) -> Figure:
     """Create a psychrometric chart.
 
     Args:
         psych: A ladybug PsychrometricChart object.
         data: A ladybug HourlyDataCollection object.
-        colorset: A Colorset object. Defaults to ColorSet.original which will use
-            Ladybug's original colorset.
         title: A title for the plot. Defaults to None.
 
     Returns:
@@ -742,7 +735,7 @@ def psych_chart(psych: PsychrometricChart,
     df = dataframe()
     df['DBT'] = Series(dbt).values
     df['RH'] = Series(rh).values
-    df['hr'] = np.vectorize(_humidity_ratio)(dbt.values, rh.values)
+    df['hr'] = np.vectorize(humidity_ratio)(dbt.values, rh.values)
 
     # Set maximum and minimum according to data
     data_max = 5 * ceil(df["DBT"].max() / 5)
@@ -782,22 +775,19 @@ def psych_chart(psych: PsychrometricChart,
     # if no data is provided, plot frequency
     if not data:
         title = 'Psychrometric Chart - Frequency'
-        fig.add_trace(
-            go.Histogram2d(
-                x=df["DBT"],
-                y=df["hr"],
-                name="",
-                colorscale=[rgb_to_hex(color)
-                            for color in color_set[colorset.value]],
-                hovertemplate="",
-                histnorm="",
-                histfunc="count",
-                autobinx=False,
-                xbins=dict(start=var_range_x[0], end=var_range_x[1], size=1),
-                autobiny=False,
-                ybins=dict(start=var_range_y[0], end=var_range_y[1], size=0.001),
-            )
-        )
+        # Plot colored mesh
+        cords = mesh_to_cordinates(psych.colored_mesh)
+        for count, cord in enumerate(cords):
+            fig.add_trace(
+                go.Scatter(
+                    x=cord[0],
+                    y=cord[1],
+                    fill='toself',
+                    fillcolor=rgb_to_hex(psych.container.value_colors[count]),
+                    line=dict(width=0),
+                    showlegend=False,
+                    mode='lines'
+                ))
 
     # plot the data
     else:
@@ -817,7 +807,7 @@ def psych_chart(psych: PsychrometricChart,
                     showscale=True,
                     opacity=1,
                     colorscale=[rgb_to_hex(color)
-                                for color in color_set[colorset.value]],
+                                for color in psych.container.value_colors],
                     colorbar=dict(thickness=30, title=var_unit + "<br>  "),
                 ),
                 customdata=np.stack((df['RH'], df[var]), axis=-1),
