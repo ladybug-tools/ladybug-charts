@@ -1,6 +1,7 @@
 """Create plotly figures from pandas Dataframe."""
 
 
+from ladybug_geometry.geometry2d.pointvector import Point2D
 import numpy as np
 import pandas as pd
 
@@ -17,7 +18,7 @@ from plotly.subplots import make_subplots
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
-    humidity_ratio, mesh_to_coordinates
+    mesh_to_coordinates
 
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
@@ -690,8 +691,7 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
     return fig
 
 
-def psych_chart(psych: PsychrometricChart,
-                data: BaseCollection = None,
+def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 title: str = None) -> Figure:
     """Create a psychrometric chart.
 
@@ -704,47 +704,24 @@ def psych_chart(psych: PsychrometricChart,
         A plotly figure.
     """
 
-    # get dbt and rh from the psychrometric chart
     dbt = psych.temperature
     rh = psych.relative_humidity
+    hr = [psy.humid_ratio_from_db_rh(
+        dbt.values[i], rh.values[i]) for i in range(len(dbt))]
 
-    # We're not supporting Daily data for now
-    assert not isinstance(dbt, DailyCollection), 'Ladybug PsychrometricChart created'\
-        ' using DailyCollection is not supported.'
-
-    # make sure all data collections are aligned
-    if data:
-        if isinstance(data, HourlyDiscontinuousCollection):
-            assert HourlyDiscontinuousCollection.are_collections_aligned([data, dbt, rh]),\
-                'HourlyDiscontinuousCollection objects are not aligned.'
-        elif isinstance(data, HourlyContinuousCollection):
-            assert HourlyContinuousCollection.are_collections_aligned([data, dbt, rh]),\
-                'HourlyContinuousCollection objects are not aligned.'
-        else:
-            raise ValueError(f'{type(data)} object is not supported.')
-
-    # Convert Discontinuous data to Continuous data
-    if isinstance(dbt, HourlyDiscontinuousCollection):
-        if data:
-            data = discontinuous_to_continuous(data)
-        dbt = discontinuous_to_continuous(dbt)
-        rh = discontinuous_to_continuous(rh)
-
-    # creating dataframe
-    df = dataframe()
-    df['DBT'] = Series(dbt).values
-    df['RH'] = Series(rh).values
-    df['hr'] = np.vectorize(humidity_ratio)(dbt.values, rh.values)
-
-    # Set maximum and minimum according to data
-    data_max = 5 * ceil(df["DBT"].max() / 5)
-    data_min = 5 * floor(df["DBT"].min() / 5)
+    data_max = 5 * ceil(dbt.max / 5)
+    data_min = 5 * floor(dbt.min / 5)
     var_range_x = [data_min, data_max]
 
-    data_max = (5 * ceil(df["hr"].max() * 1000 / 5)) / 1000
-    data_min = (5 * floor(df["hr"].min() * 1000 / 5)) / 1000
+    data_max = (5 * ceil(max(hr) * 1000 / 5)) / 1000
+    data_min = (5 * floor(min(hr) * 1000 / 5)) / 1000
     var_range_y = [data_min, data_max]
 
+    # create dummy psych-chart to create mesh
+    base_point = Point2D(var_range_x[0], 0)
+    psych_dummy = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1)
+
+    # prepare for drawing humidity lines
     dbt_list = list(range(-60, 60, 1))
     rh_list = list(range(10, 110, 10))
 
@@ -774,7 +751,7 @@ def psych_chart(psych: PsychrometricChart,
     if not data:
         title = 'Psychrometric Chart - Frequency'
         # Plot colored mesh
-        cords = mesh_to_coordinates(psych.colored_mesh)
+        cords = mesh_to_coordinates(psych_dummy.colored_mesh)
         for count, cord in enumerate(cords):
             fig.add_trace(
                 go.Scatter(
@@ -797,9 +774,9 @@ def psych_chart(psych: PsychrometricChart,
                 colorscale=[rgb_to_hex(color)
                             for color in psych.legend_parameters.colors],
                 showscale=True,
-                cmin=min(psych.hour_values),
-                cmax=max(psych.hour_values),
-                colorbar=dict(thickness=30, title='hr'),
+                cmin=psych.legend_parameters.min,
+                cmax=psych.legend_parameters.max,
+                colorbar=dict(thickness=30, title=psych.legend_parameters.title),
             ),
         )
         # add the dummy trace to the figure
@@ -811,7 +788,7 @@ def psych_chart(psych: PsychrometricChart,
         title = title if title else f'Psychrometric Chart - {var}'
 
         # add colored data mesh
-        mesh, graphic_container = psych.data_mesh(data)
+        mesh, graphic_container = psych_dummy.data_mesh(data)
         cords = mesh_to_coordinates(mesh)
         for count, cord in enumerate(cords):
             fig.add_trace(
@@ -835,9 +812,10 @@ def psych_chart(psych: PsychrometricChart,
                 colorscale=[rgb_to_hex(color)
                             for color in graphic_container.legend_parameters.colors],
                 showscale=True,
-                cmin=data.min,
-                cmax=data.max,
-                colorbar=dict(thickness=30, title=var_unit),
+                cmin=graphic_container.legend_parameters.min,
+                cmax=graphic_container.legend_parameters.max,
+                colorbar=dict(
+                    thickness=30, title=graphic_container.legend_parameters.title),
             ),
         )
 
