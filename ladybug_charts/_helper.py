@@ -109,7 +109,7 @@ def humidity_ratio(dbt: float, rh: float) -> float:
     return psy.humid_ratio_from_db_rh(dbt, rh)
 
 
-def mesh_to_cordinates(mesh: Mesh2D) -> List[List[List[float], List[float]]]:
+def mesh_to_coordinates(mesh: Mesh2D) -> List[List[List[float], List[float]]]:
     """Convert vertices of Ladybug 2D mesh to coordinates that Plotly can use.
 
     Args:
