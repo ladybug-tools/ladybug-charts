@@ -3,10 +3,8 @@
 from __future__ import annotations
 from enum import Enum
 from typing import List, Tuple
-from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, BaseCollection
+from ladybug.datacollection import HourlyContinuousCollection, HourlyDiscontinuousCollection
 from ladybug.color import Color, Colorset
-from ladybug import psychrometrics as psy
 from ladybug.header import Header
 from ladybug.analysisperiod import AnalysisPeriod
 from ladybug_geometry.geometry2d import Mesh2D
@@ -100,13 +98,6 @@ color_set = {
     'thermal_comfort': Colorset.thermal_comfort(),
     'view_study': Colorset.view_study()
 }
-
-
-def humidity_ratio(dbt: float, rh: float) -> float:
-    """Calculate humidity ratio from dry bulb temperature and relative humidity."""
-    if dbt == None or rh == None:
-        return 0.0
-    return psy.humid_ratio_from_db_rh(dbt, rh)
 
 
 def mesh_to_coordinates(mesh: Mesh2D) -> List[List[List[float], List[float]]]:
