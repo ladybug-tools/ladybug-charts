@@ -697,7 +697,7 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
 
     Args:
         psych: A ladybug PsychrometricChart object.
-        data: A ladybug HourlyDataCollection object.
+        data: A ladybug DataCollection object.
         title: A title for the plot. Defaults to None.
 
     Returns:
