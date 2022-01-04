@@ -17,7 +17,7 @@ from plotly.subplots import make_subplots
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
-    humidity_ratio, mesh_to_cordinates
+    humidity_ratio, mesh_to_coordinates
 
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
@@ -691,8 +691,7 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
 
 
 def psych_chart(psych: PsychrometricChart,
-                data: Union[HourlyContinuousCollection,
-                            HourlyDiscontinuousCollection] = None,
+                data: BaseCollection = None,
                 title: str = None) -> Figure:
     """Create a psychrometric chart.
 
@@ -772,11 +771,10 @@ def psych_chart(psych: PsychrometricChart,
             )
         )
 
-    # if no data is provided, plot frequency
     if not data:
         title = 'Psychrometric Chart - Frequency'
         # Plot colored mesh
-        cords = mesh_to_cordinates(psych.colored_mesh)
+        cords = mesh_to_coordinates(psych.colored_mesh)
         for count, cord in enumerate(cords):
             fig.add_trace(
                 go.Scatter(
@@ -789,48 +787,62 @@ def psych_chart(psych: PsychrometricChart,
                     mode='lines'
                 ))
 
-    # plot the data
+        # create a dummy trace to make the Legend
+        colorbar_trace = go.Scatter(
+            x=[None],
+            y=[None],
+            mode='markers',
+            showlegend=False,
+            marker=dict(
+                colorscale=[rgb_to_hex(color)
+                            for color in psych.legend_parameters.colors],
+                showscale=True,
+                cmin=min(psych.hour_values),
+                cmax=max(psych.hour_values),
+                colorbar=dict(thickness=30, title='hr'),
+            ),
+        )
+        # add the dummy trace to the figure
+        fig.add_trace(colorbar_trace)
+
     else:
         var = data.header.data_type.name
         var_unit = data.header.unit
-        df[var] = Series(data).values
+        title = title if title else f'Psychrometric Chart - {var}'
 
-        fig.add_trace(
-            go.Scatter(
-                x=df["DBT"],
-                y=df["hr"],
-                showlegend=False,
-                mode="markers",
-                marker=dict(
-                    size=7,
-                    color=df[var],
-                    showscale=True,
-                    opacity=1,
-                    colorscale=[rgb_to_hex(color)
-                                for color in psych.container.value_colors],
-                    colorbar=dict(thickness=30, title=var_unit + "<br>  "),
-                ),
-                customdata=np.stack((df['RH'], df[var]), axis=-1),
-                hovertemplate='Dry bulb temperature'
-                + ": %{x}"
-                + ' C'
-                + "<br>"
-                + 'Relative humidity'
-                + ": %{customdata[0]}"
-                + ' %'
-                + "<br>"
-                + 'Humidity ratio'
-                + ": %{y: .2f}"
-                + ' Kg water / Kg air'
-                + "<br>"
-                + var
-                + ": %{customdata[1]}"
-                + ' ' + var_unit,
-                name="",
-            )
+        # add colored data mesh
+        mesh, graphic_container = psych.data_mesh(data)
+        cords = mesh_to_coordinates(mesh)
+        for count, cord in enumerate(cords):
+            fig.add_trace(
+                go.Scatter(
+                    x=cord[0],
+                    y=cord[1],
+                    fill='toself',
+                    fillcolor=rgb_to_hex(graphic_container.value_colors[count]),
+                    line=dict(width=0),
+                    showlegend=False,
+                    mode='lines'
+                ))
+
+        # create a dummy trace to make the Legend
+        colorbar_trace = go.Scatter(
+            x=[None],
+            y=[None],
+            mode='markers',
+            showlegend=False,
+            marker=dict(
+                colorscale=[rgb_to_hex(color)
+                            for color in graphic_container.legend_parameters.colors],
+                showscale=True,
+                cmin=data.min,
+                cmax=data.max,
+                colorbar=dict(thickness=30, title=var_unit),
+            ),
         )
 
-        title = title if title else f'Psychrometric Chart - {var}'
+        # add the dummy trace to the figure
+        fig.add_trace(colorbar_trace)
 
     fig.update_layout(
         template='plotly_white',
@@ -843,7 +855,6 @@ def psych_chart(psych: PsychrometricChart,
             'yanchor': 'top'
         })
 
-    print(var_range_x, var_range_y)
     fig.update_xaxes(
         title_text='Temperature (°C)',
         range=var_range_x,
@@ -896,8 +907,8 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
     df['azimuth'] = azimuths
 
     if data:
-        assert isinstance(data, HourlyContinuousCollection), 'data must be an'\
-            f' HourlyContinuousCollection. Instead got {type(data)}.'
+        assert isinstance(data, HourlyContinuousCollection), 'data must be an'
+        f' HourlyContinuousCollection. Instead got {type(data)}.'
 
         var_name = data.header.data_type.name
         var_unit = data.header.unit
