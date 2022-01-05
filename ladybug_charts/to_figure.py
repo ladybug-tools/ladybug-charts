@@ -20,6 +20,7 @@ from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
     mesh_to_coordinates
 from ._psych import _psych_chart
+from .utils import Strategy, StrategyParameters
 
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
@@ -30,7 +31,7 @@ from ladybug import psychrometrics as psy
 from ladybug.sunpath import Sunpath
 from ladybug.psychchart import PsychrometricChart
 from ladybug.dt import DateTime
-from ladybug_comfort.chart import polygonpmv
+from ladybug_comfort.chart.polygonpmv import PolygonPMV
 
 
 # set white background in all charts
@@ -695,18 +696,35 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
 
 
 def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
-                title: str = None) -> Figure:
+                title: str = None, polygon_pmv: PolygonPMV = None,
+                strategies: List[Strategy] = None,
+                strategy_parameters: StrategyParameters = StrategyParameters(),
+                solar_data: HourlyContinuousCollection = None) -> Figure:
     """Create a psychrometric chart.
 
     Args:
         psych: A ladybug PsychrometricChart object.
         data: A ladybug DataCollection object.
         title: A title for the plot. Defaults to None.
+        polygon_pmv: A ladybug PolygonPMV object. If provided, polygons will be drawn.
+            Defaults to None.
+        strategies: A list of strategies to be applied to the chart. Accepts a list of
+            Stragegy objects. Defaults to out of the box StrategyParameters object.
+        strategy_parameters: A StrategyParameters object. Defaults to None.
+        solar_data: An annual hourly continuous data collection of irradiance
+            (or radiation) in W/m2 (or Wh/m2) that aligns with the data
+            points on the psychrometric chart. This is only required when
+            plotting a "Passive Solar Heating" strategy polygon on the chart.
+            The irradiance values should be incident on the orientation of
+            the passive solar heated windows. So using global horizontal
+            radiation assumes that all windows are skylights (like a
+            greenhouse). Defaults to None.
 
     Returns:
         A plotly figure.
     """
-    return _psych_chart(psych, data, title)
+    return _psych_chart(psych, data, title, polygon_pmv, strategies,
+                        strategy_parameters, solar_data)
 
 
 def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
