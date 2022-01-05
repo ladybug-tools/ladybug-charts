@@ -8,6 +8,7 @@ from ladybug.color import Color, Colorset
 from ladybug.header import Header
 from ladybug.analysisperiod import AnalysisPeriod
 from ladybug_geometry.geometry2d import Mesh2D
+from ladybug_geometry.geometry2d.pointvector import Point2D
 
 
 def discontinuous_to_continuous(
@@ -121,4 +122,28 @@ def mesh_to_coordinates(mesh: Mesh2D) -> List[List[List[float], List[float]]]:
         x_cords.append(x_cords[0])
         y_cords.append(y_cords[0])
         cords.append([x_cords, y_cords])
+
     return cords
+
+
+def verts_to_coordinates(points: List[Point2D]) -> Tuple[List[float], List[float]]:
+    """Convert a list of Ladybug Point2Ds to coordinates that Plotly can use.
+
+    Args:
+        points: A list of Ladybug Point2Ds.
+
+    Returns:
+        A tuple of two items
+
+        -   A list of x coordinates.
+        -   A list of y coordinates.
+    """
+    x_cords, y_cords = [], []
+    for point in points:
+
+        x_cords.append(point.x)
+        y_cords.append(point.y)
+
+    x_cords.append(x_cords[0])
+    y_cords.append(y_cords[0])
+    return x_cords, y_cords
