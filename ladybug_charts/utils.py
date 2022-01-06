@@ -5,8 +5,9 @@ from enum import Enum
 
 class Strategy(Enum):
     """Strategies to apply to the psychrometric chart."""
+    comfort = 'Comfort'
     evaporative_cooling = 'Evaporative Cooling'
-    mas_night_ventilation = 'Mass + Night Vent'
+    mas_night_ventilation = 'Mass + Night Ventilation'
     occupant_use_of_fans = 'Occupant Use of Fans'
     capture_internal_heat = 'Capture Internal Heat'
     passive_solar_heating = 'Passive Solar Heating'
