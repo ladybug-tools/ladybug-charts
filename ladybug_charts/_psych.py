@@ -24,6 +24,7 @@ from ladybug_geometry.geometry2d.pointvector import Point2D, Vector2D
 from ladybug_geometry.geometry2d.line import LineSegment2D
 from ladybug_geometry.geometry2d.arc import Arc2D
 from ladybug_geometry.geometry2d.polyline import Polyline2D
+from ladybug.color import Color
 
 # set white background in all charts
 pio.templates.default = 'plotly_white'
@@ -48,9 +49,10 @@ def strategy_warning(polygon_name: str) -> str:
 
 def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                  title: str = None, polygon_pmv: PolygonPMV = None,
-                 strategies: List[Strategy] = None,
+                 strategies: List[Strategy] = [Strategy.comfort],
                  strategy_parameters: StrategyParameters = StrategyParameters(),
-                 solar_data: HourlyContinuousCollection = None) -> Figure:
+                 solar_data: HourlyContinuousCollection = None,
+                 colors: List[Color] = None) -> Figure:
     """Create a psychrometric chart.
 
     Args:
@@ -70,6 +72,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
             the passive solar heated windows. So using global horizontal
             radiation assumes that all windows are skylights (like a
             greenhouse). Defaults to None.
+        colors: A list of colors to be used for the comfort polygons. Defaults to None.
 
     Returns:
         A plotly figure.
@@ -77,15 +80,8 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
 
     dbt = psych.temperature
     rh = psych.relative_humidity
-    hr = [psy.humid_ratio_from_db_rh(
-        dbt.values[i], rh.values[i]) for i in range(len(dbt))]
 
-    data_max = 5 * ceil(dbt.max / 5)
-    data_min = 5 * floor(dbt.min / 5)
     var_range_x = [int(psych.temperature_labels[0]), int(psych.temperature_labels[-1])]
-
-    data_max = (5 * ceil(max(hr) * 1000 / 5)) / 1000
-    data_min = (5 * floor(min(hr) * 1000 / 5)) / 1000
     var_range_y = [0.0, float(psych.hr_labels[-1])]
 
     # create dummy psych-chart to create mesh
@@ -235,25 +231,47 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     # add polygons if requested
     ###########################################################################
     if polygon_pmv:
+
+        # Use colors if provided
+        if colors:
+            if len(colors) == len(strategies) and\
+                    all([isinstance(color, Color) for color in colors]):
+                strategy_colors = [rgb_to_hex(color) for color in colors]
+            else:
+                raise ValueError(
+                    'colors must be a list of Color objects and match the'
+                    ' length of strategies')
+        else:
+            # Defult colors for the comfort polygons
+            strategy_colors = {
+                'Evaporative Cooling': '#008dff',
+                'Mass + Night Ventilation': '#333333',
+                'Occupant Use of Fans': '#3d17ff',
+                'Capture Internal Heat': '#f58700',
+                'Passive Solar Heating': '#ff0400',
+                'Comfort': '#00eeff'
+            }
+
         poly_obj = PolygonPMV(psych_dummy)
 
         # collecting all the polygons
         polygons, polygon_names, polygon_data = [], [], []
 
-        # adding comfort polygon
-        comfort_poly = poly_obj.comfort_polygons[0]
-        poly_name = 'Comfort'
-        polygons.append(comfort_poly)
-        polygon_names.append(poly_name)
-        dat = poly_obj.evaluate_polygon(comfort_poly, tolerance=0.01)
-        dat = dat[0] if len(dat) == 1 else poly_obj.create_collection(dat, poly_name)
-        polygon_data.append(dat)
-
         # If other strategies are applied, add their polygons
         if strategies:
 
+            if Strategy.comfort in strategies:
+                poly_name = Strategy.comfort.value
+                comfort_poly = poly_obj.comfort_polygons[0]
+                polygons.append(comfort_poly)
+                polygon_names.append(poly_name)
+                dat = poly_obj.evaluate_polygon(comfort_poly, tolerance=0.01)
+                dat = dat[0] if len(
+                    dat) == 1 else poly_obj.create_collection(dat, poly_name)
+                polygon_data.append(dat)
+
             if Strategy.evaporative_cooling in strategies:
-                poly_name = 'Evaporative Cooling'
+                poly_name = Strategy.evaporative_cooling.value
                 ec_poly = poly_obj.evaporative_cooling_polygon()
                 if ec_poly:
                     polygons.append(ec_poly)
@@ -266,7 +284,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     strategy_warning(poly_name)
 
             if Strategy.mas_night_ventilation in strategies:
-                poly_name = 'Mass + Night Ventilation'
+                poly_name = Strategy.mas_night_ventilation.value
                 nf_poly = poly_obj.night_flush_polygon(
                     strategy_parameters.day_above_comfort)
                 if nf_poly:
@@ -283,7 +301,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     strategy_warning(poly_name)
 
             if Strategy.occupant_use_of_fans in strategies:
-                poly_name = 'Occupant Use of Fans'
+                poly_name = Strategy.occupant_use_of_fans.value
                 fan_poly = poly_obj.fan_use_polygon(strategy_parameters.fan_air_speed)
                 if fan_poly:
                     polygons.append(fan_poly)
@@ -296,7 +314,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     strategy_warning(poly_name)
 
             if Strategy.capture_internal_heat in strategies:
-                poly_name = 'Capture Internal Heat'
+                poly_name = Strategy.capture_internal_heat.value
                 iht_poly = poly_obj.internal_heat_polygon(
                     strategy_parameters.balance_temperature)
                 if iht_poly:
@@ -308,7 +326,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     polygon_data.append(dat)
 
             if Strategy.passive_solar_heating in strategies:
-                poly_name = 'Passive Solar Heating'
+                poly_name = Strategy.passive_solar_heating.value
                 if not solar_data:
                     warnings.warn('In order to plot a passive solar heating polygon, '
                                   'you need to provide a solar data object.')
@@ -327,6 +345,9 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                         polygon_data.append(dat)
                     else:
                         strategy_warning(poly_name)
+
+        else:
+            raise ValueError('You need to provide at least one strategy')
 
         # compute comfrt and total comfort values
         polygon_comfort = [dat.average * 100 for dat in polygon_data] if \
@@ -398,16 +419,23 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 verts += anti_clockwise_sorted_top_verts
             else:
                 verts = [point for geo in polygon for point in geo.vertices]
+
+            # get cordinates from vertices of polygons
             x_cords, y_cords = verts_to_coordinates(verts)
+
+            # plot the actual polygons
             fig.add_trace(
                 go.Scatter(
                     x=x_cords,
                     y=y_cords,
-                    line=dict(width=4),
+                    line=dict(
+                        width=4,
+                        color=strategy_colors[polygon_names[count]] if not colors else strategy_colors[count]),
                     showlegend=True,
                     name=polygon_names[count] + ': ' +
                     str(round(polygon_comfort[count])) + '% of time',
                     mode='lines',
+                    hovertemplate='' + '<extra></extra>',
                 ))
 
     fig.update_layout(
