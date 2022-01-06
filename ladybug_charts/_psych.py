@@ -249,7 +249,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 'Occupant Use of Fans': '#3d17ff',
                 'Capture Internal Heat': '#f58700',
                 'Passive Solar Heating': '#ff0400',
-                'Comfort': '#00eeff'
+                'Comfort': '#009402'
             }
 
         poly_obj = PolygonPMV(psych_dummy)
