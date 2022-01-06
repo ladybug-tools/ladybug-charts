@@ -697,9 +697,10 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
 
 def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 title: str = None, polygon_pmv: PolygonPMV = None,
-                strategies: List[Strategy] = None,
+                strategies: List[Strategy] = [Strategy.comfort],
                 strategy_parameters: StrategyParameters = StrategyParameters(),
-                solar_data: HourlyContinuousCollection = None) -> Figure:
+                solar_data: HourlyContinuousCollection = None,
+                colors: List[Color] = None) -> Figure:
     """Create a psychrometric chart.
 
     Args:
@@ -719,12 +720,13 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
             the passive solar heated windows. So using global horizontal
             radiation assumes that all windows are skylights (like a
             greenhouse). Defaults to None.
+        colors: A list of colors to be used for the comfort polygons. Defaults to None.
 
     Returns:
         A plotly figure.
     """
     return _psych_chart(psych, data, title, polygon_pmv, strategies,
-                        strategy_parameters, solar_data)
+                        strategy_parameters, solar_data, colors)
 
 
 def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
