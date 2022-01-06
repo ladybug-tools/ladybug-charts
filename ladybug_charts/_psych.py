@@ -88,31 +88,72 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     base_point = Point2D(var_range_x[0], 0)
     psych_dummy = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1)
 
-    # prepare for drawing humidity lines
-    dbt_list = list(range(var_range_x[0], var_range_x[1]+1, 1))
-    rh_list = list(range(10, 110, 10))
-
-    rh_df = pd.DataFrame()
-    for rh_item in rh_list:
-        hr_list = np.vectorize(psy.humid_ratio_from_db_rh)(dbt_list, rh_item)
-        name = "rh" + str(rh_item)
-        rh_df[name] = hr_list
-
     fig = go.Figure()
+    ###########################################################################
+    # Add lines
+    ###########################################################################
 
-    ###########################################################################
-    # Add curved lines for humidity
-    ###########################################################################
-    for rh_item in rh_list:
-        name = "rh" + str(rh_item)
+    # add relative humidity lines
+    for count, polyline in enumerate(psych_dummy.rh_lines):
+        # get cordinates from vertices of polygons
+        x_cords, y_cords = verts_to_coordinates(polyline.vertices, close=False)
         fig.add_trace(
             go.Scatter(
-                x=dbt_list,
-                y=rh_df[name],
+                x=x_cords,
+                y=y_cords,
                 showlegend=False,
                 mode="lines",
                 name="",
-                hovertemplate="RH " + str(rh_item) + "%",
+                hovertemplate="RH " + psych_dummy.rh_labels[count] + "%",
+                line=dict(width=1, color="#85837f"),
+            )
+        )
+
+    # add enthalpy lines
+    for count, line in enumerate(psych_dummy.enthalpy_lines):
+        # get cordinates from vertices of polygons
+        x_cords, y_cords = verts_to_coordinates(line.vertices, close=False)
+        fig.add_trace(
+            go.Scatter(
+                x=x_cords,
+                y=y_cords,
+                showlegend=False,
+                mode="lines",
+                name="",
+                hovertemplate="Enthalpy " + psych_dummy.enthalpy_labels[count],
+                line=dict(width=1, color="#85837f"),
+            )
+        )
+
+    # add temperature lines
+    for count, line in enumerate(psych_dummy.temperature_lines):
+        # get cordinates from vertices of polygons
+        x_cords, y_cords = verts_to_coordinates(line.vertices, close=False)
+        fig.add_trace(
+            go.Scatter(
+                x=x_cords,
+                y=y_cords,
+                showlegend=False,
+                mode="lines",
+                name="",
+                hovertemplate="Temperature " +
+                psych_dummy.temperature_labels[count] + ' C',
+                line=dict(width=1, color="#85837f"),
+            )
+        )
+
+    # add humidity ratio lines
+    for count, line in enumerate(psych_dummy.hr_lines):
+        # get cordinates from vertices of polygons
+        x_cords, y_cords = verts_to_coordinates(line.vertices, close=False)
+        fig.add_trace(
+            go.Scatter(
+                x=x_cords,
+                y=y_cords,
+                showlegend=False,
+                mode="lines",
+                name="",
+                hovertemplate="Humidity Ratio " + psych_dummy.hr_labels[count],
                 line=dict(width=1, color="#85837f"),
             )
         )
