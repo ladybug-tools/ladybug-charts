@@ -82,18 +82,18 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
 
     data_max = 5 * ceil(dbt.max / 5)
     data_min = 5 * floor(dbt.min / 5)
-    var_range_x = [data_min, data_max]
+    var_range_x = [int(psych.temperature_labels[0]), int(psych.temperature_labels[-1])]
 
     data_max = (5 * ceil(max(hr) * 1000 / 5)) / 1000
     data_min = (5 * floor(min(hr) * 1000 / 5)) / 1000
-    var_range_y = [data_min, data_max]
+    var_range_y = [0.0, float(psych.hr_labels[-1])]
 
     # create dummy psych-chart to create mesh
     base_point = Point2D(var_range_x[0], 0)
     psych_dummy = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1)
 
     # prepare for drawing humidity lines
-    dbt_list = list(range(-60, 60, 1))
+    dbt_list = list(range(var_range_x[0], var_range_x[1]+1, 1))
     rh_list = list(range(10, 110, 10))
 
     rh_df = pd.DataFrame()
