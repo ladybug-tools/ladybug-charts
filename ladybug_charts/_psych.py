@@ -273,7 +273,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     polygons.append(nf_poly)
                     polygon_names.append(poly_name)
                     dat = poly_obj.evaluate_night_flush_polygon(
-                        nf_poly, psych_dummy.original_temperature,
+                        nf_poly, psych_dummy.temperature,
                         strategy_parameters.night_below_comfort,
                         strategy_parameters.time_constant, tolerance=0.01)
                     dat = dat[0] if len(
