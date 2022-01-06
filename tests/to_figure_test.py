@@ -4,6 +4,7 @@ from ladybug.datacollection import HourlyContinuousCollection
 from ladybug.datatype.temperaturetime import HeatingDegreeTime, CoolingDegreeTime
 from ladybug_charts.to_figure import bar_chart
 from ladybug_charts._helper import ColorSet
+from ladybug_charts.utils import Strategy
 from ladybug.color import Color
 from ladybug.windrose import WindRose
 from ladybug.psychchart import PsychrometricChart
@@ -11,6 +12,7 @@ from ladybug.analysisperiod import AnalysisPeriod
 from ladybug.hourlyplot import HourlyPlot
 from ladybug.monthlychart import MonthlyChart
 from ladybug.sunpath import Sunpath
+from ladybug_comfort.chart.polygonpmv import PolygonPMV
 
 
 def test_hourly_continuous_to_heatmap(epw):
@@ -101,7 +103,16 @@ def test_psych_chart(epw):
 
 def test_psych_chart_with_data(epw):
     lb_psy = PsychrometricChart(epw.dry_bulb_temperature, epw.relative_humidity)
-    fig = lb_psy.plot(data=epw.direct_normal_radiation)
+    pmv = PolygonPMV(lb_psy)
+    fig = lb_psy.plot(data=epw.direct_normal_radiation, polygon_pmv=pmv,
+                      strategies=[
+                          Strategy.comfort,
+                          Strategy.evaporative_cooling,
+                          Strategy.mas_night_ventilation,
+                          Strategy.occupant_use_of_fans,
+                          Strategy.capture_internal_heat,
+                          Strategy.passive_solar_heating, ],
+                      solar_data=epw.direct_normal_radiation,)
     assert isinstance(fig, Figure)
 
 
