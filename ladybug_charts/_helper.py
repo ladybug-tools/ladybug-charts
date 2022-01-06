@@ -126,11 +126,12 @@ def mesh_to_coordinates(mesh: Mesh2D) -> List[List[List[float], List[float]]]:
     return cords
 
 
-def verts_to_coordinates(points: List[Point2D]) -> Tuple[List[float], List[float]]:
+def verts_to_coordinates(points: List[Point2D], close: bool = True) -> Tuple[List[float], List[float]]:
     """Convert a list of Ladybug Point2Ds to coordinates that Plotly can use.
 
     Args:
         points: A list of Ladybug Point2Ds.
+        close: Boolean to close the polygon. Default: True.
 
     Returns:
         A tuple of two items
@@ -138,12 +139,14 @@ def verts_to_coordinates(points: List[Point2D]) -> Tuple[List[float], List[float
         -   A list of x coordinates.
         -   A list of y coordinates.
     """
+
     x_cords, y_cords = [], []
     for point in points:
-
         x_cords.append(point.x)
         y_cords.append(point.y)
 
-    x_cords.append(x_cords[0])
-    y_cords.append(y_cords[0])
+    if close:
+        x_cords.append(x_cords[0])
+        y_cords.append(y_cords[0])
+
     return x_cords, y_cords
