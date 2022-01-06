@@ -20,8 +20,9 @@ from ladybug.datacollection import BaseCollection, HourlyContinuousCollection
 from ladybug import psychrometrics as psy
 from ladybug.psychchart import PsychrometricChart
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
-from ladybug_geometry.geometry2d.pointvector import Point2D
+from ladybug_geometry.geometry2d.pointvector import Point2D, Vector2D
 from ladybug_geometry.geometry2d.line import LineSegment2D
+from ladybug_geometry.geometry2d.arc import Arc2D
 from ladybug_geometry.geometry2d.polyline import Polyline2D
 
 # set white background in all charts
@@ -341,7 +342,62 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
 
         # draw each polygon
         for count, polygon in enumerate(polygons):
-            verts = [point for geo in polygon for point in geo.vertices]
+
+            # find left , right, top and bottom sides of the polygon
+            center_side_dict = {}
+            for side in polygon:
+                if isinstance(side, LineSegment2D):
+                    center_side_dict[side.midpoint] = side
+                else:
+                    center_side_dict[side.center] = side
+            left_key = sorted(list(center_side_dict.keys()), key=lambda x: x.x)[0]
+            right_key = sorted(list(center_side_dict.keys()), key=lambda x: x.x)[-1]
+            bottom_key = sorted(list(center_side_dict.keys()), key=lambda x: x.y)[0]
+            top_key = sorted(list(center_side_dict.keys()), key=lambda x: x.y)[-1]
+
+            # if the top side is a polyline and has 3 vertices
+            if isinstance(center_side_dict[top_key], Polyline2D) and \
+                    len(center_side_dict[top_key].vertices) == 3:
+
+                # create a center point from the bottom side and a horizontal reference vector
+                if isinstance(center_side_dict[bottom_key], LineSegment2D):
+                    center_point = center_side_dict[bottom_key].midpoint
+                else:
+                    center_point = center_side_dict[bottom_key].center
+                right_point = Point2D(center_point.x+100, center_point.y)
+                ref_vector = LineSegment2D.from_end_points(center_point, right_point).v
+
+                # sort vertices of polyline before creating the arc
+                vertices = center_side_dict[top_key].vertices
+                vectors = [LineSegment2D.from_end_points(
+                    center_point, vert).v for vert in vertices]
+                angles = [ref_vector.angle_counterclockwise(vec) for vec in vectors]
+                angles_verts_dict = dict(zip(angles, vertices))
+                vertices = [angles_verts_dict[angle]
+                            for angle in sorted(angles_verts_dict.keys())]
+                arc = Arc2D.from_start_mid_end(vertices[2], vertices[1], vertices[0])
+                center_side_dict[top_key] = arc.to_polyline(10)
+
+                # sort vertices of polyline created from arc
+                top_verts = center_side_dict[top_key].vertices
+                vectors = [LineSegment2D.from_end_points(
+                    center_point, vert).v for vert in top_verts]
+                angles = [ref_vector.angle_counterclockwise(vec) for vec in vectors]
+                angles_verts_dict = dict(zip(angles, top_verts))
+                anti_clockwise_sorted_top_verts = [angles_verts_dict[angle]
+                                                   for angle in sorted(angles_verts_dict.keys())]
+
+                # Collect all the vertices that should be in anti clockwise order
+                verts = []
+                for vert in center_side_dict[left_key].vertices:
+                    verts.append(vert)
+                for vert in center_side_dict[bottom_key].vertices:
+                    verts.append(vert)
+                for vert in center_side_dict[right_key].vertices:
+                    verts.append(vert)
+                verts += anti_clockwise_sorted_top_verts
+            else:
+                verts = [point for geo in polygon for point in geo.vertices]
             x_cords, y_cords = verts_to_coordinates(verts)
             fig.add_trace(
                 go.Scatter(
