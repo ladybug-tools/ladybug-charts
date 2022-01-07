@@ -21,9 +21,12 @@ PsychrometricChart.plot = psych_chart
 Sunpath.plot = sunpath
 
 
-def hourly_plot(self):
+def hourly_plot(self, title: str = None, show_title: bool = False):
     hourly_data = self.data_collection
-    return heat_map(hourly_data)
+    min_range = self.legend_parameters.min
+    max_range = self.legend_parameters.max
+    colors = self.legend_parameters.colors
+    return heat_map(hourly_data, min_range, max_range, colors, title, show_title)
 
 
 HourlyPlot.plot = hourly_plot
