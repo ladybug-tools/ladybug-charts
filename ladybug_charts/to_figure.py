@@ -1,9 +1,9 @@
 """Create plotly figures from pandas Dataframe."""
 
 
-from ladybug_geometry.geometry2d.pointvector import Point2D
 import numpy as np
 import pandas as pd
+import warnings
 
 from math import ceil, floor, cos, radians
 from typing import Union, List, Tuple
@@ -32,6 +32,7 @@ from ladybug.sunpath import Sunpath
 from ladybug.psychchart import PsychrometricChart
 from ladybug.dt import DateTime
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
+from ladybug_geometry.geometry2d.pointvector import Point2D
 
 
 # set white background in all charts
@@ -40,7 +41,7 @@ pio.templates.default = 'plotly_white'
 
 def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
              min_range: float = None, max_range: float = None,
-             colorset: ColorSet = ColorSet.original) -> Figure:
+             colors: List[Color] = None, title: str = None, show_title: bool = False) -> Figure:
     """Create a plotly heat map figure from Ladybug Hourly data.
 
     Args:
@@ -50,7 +51,10 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
             will be calculated based on data. Defaults to None.
         max_range: The maximum value for the legend of the heatmap. If not set, value
             will be calculated based on data. Defaults to None.
-        colorset: A ColorSets object. Defaults to Original Ladybug Colorset.
+        colors: A list of Ladybug Color objects. Defaults to None.
+        title: A string to be used as the title of the plot. If not set, the name
+            of the data will be used. Defaults to None.
+        show_title: A boolean to show or hide the title of the chart. Defaults to False.
 
     Returns:
         A plotly figure.
@@ -79,6 +83,9 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
         # Set maximum and minimum according to data
         range_z = [5 * floor(df[var].min() / 5), 5 * ceil(df[var].max() / 5)]
 
+    if not colors:
+        colors = color_set[ColorSet.original.value]
+
     fig = go.Figure(
         data=go.Heatmap(
             y=df["hour"],
@@ -86,7 +93,7 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
             z=df[var],
             zmin=range_z[0],
             zmax=range_z[1],
-            colorscale=[rgb_to_hex(color) for color in color_set[colorset.value]],
+            colorscale=[rgb_to_hex(color) for color in colors],
             customdata=np.stack((df["month_names"], df["day"]), axis=-1),
             hovertemplate=(
                 "<b>"
@@ -103,18 +110,27 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
     fig.update_yaxes(title_text="Hours of the day")
 
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': title if title else var,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
+
     fig.update_layout(
         template='plotly_white',
         margin=dict(
             l=20, r=20, t=33, b=20),
         yaxis_nticks=13,
-        title={
-            'text': var,
-            'y': 1,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
+        title=fig_title,
     )
     fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
