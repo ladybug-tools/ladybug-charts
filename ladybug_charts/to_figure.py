@@ -610,15 +610,13 @@ def _speed_labels(bins, units):
     return labels
 
 
-def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True,
-              colorset: ColorSet = ColorSet.original) -> Figure:
+def wind_rose(wind_rose: WindRose, title: str = None, show_title: bool = False) -> Figure:
     """Create a windrose plot.
 
     Args:
         wind_rose: A ladybug WindRose object.
-        title: A title for the plot. Defaults to Wind Rose.
-        legend: A boolean to show/hide legend. Defaults to True.
-        colorset: A ladybug colorset object. Defaults to ColorSet.original.
+        title: A title for the plot. Defaults to None.
+        show_title: A boolean to show or hide the title. Defaults to False.
 
     Returns:
         A plotly figure.
@@ -654,7 +652,7 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
     else:
         df = df.loc[(df["hour"] <= end_hour) | (df["hour"] >= start_hour)]
 
-    spd_colors = [rgb_to_hex(color) for color in color_set[colorset.value]]
+    spd_colors = [rgb_to_hex(color) for color in wind_rose.legend_parameters.colors]
     spd_bins = [-1, 0.5, 1.5, 3.3, 5.5, 7.9, 10.7, 13.8, 17.1, 20.7, np.inf]
     spd_labels = _speed_labels(spd_bins, units="m/s")
     dir_bins = np.arange(-22.5 / 2, 370, 22.5)
@@ -717,18 +715,30 @@ def wind_rose(wind_rose: WindRose, title: str = 'Wind Rose', legend: bool = True
             "N-N-W",
         ]
     )
-    if title != "":
-        fig.update_layout(title=title, title_x=0.5)
+
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': title if title else 'Wind Rose',
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
+
     fig.update_layout(
         autosize=True,
         polar_angularaxis_rotation=90,
         polar_angularaxis_direction="clockwise",
-        showlegend=legend,
         dragmode=False,
         margin=dict(l=20, r=20, t=55, b=20),
+        title=fig_title,
     )
-    fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
-    fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
 
     return fig
 
