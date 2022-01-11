@@ -25,7 +25,7 @@ from .utils import Strategy, StrategyParameters
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
 from ladybug.windrose import WindRose
-from ladybug.color import Color
+from ladybug.color import Color, Colorset
 from ladybug_pandas.series import Series
 from ladybug import psychrometrics as psy
 from ladybug.sunpath import Sunpath
@@ -768,20 +768,21 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
 
 
 def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
-            colorset: ColorSet = ColorSet.original, min_range: float = None,
-            max_range: float = None, title: str = None) -> Figure:
+            colorset: Colorset = Colorset.original(), min_range: float = None,
+            max_range: float = None, title: str = None, show_title: bool = False) -> Figure:
     """ Plot Sunpath.
 
     Args:
         sunpath: A Ladybug Sunpath object.
         data: An HourlyContinuousCollection object to be plotted on the sunpath. Defaults
             to None.
-        colorset: A ColorSet to be used for plotting. Defaults to ColorSet.original.
+        colorset: A Ladybug Colorset object. Defaults to ColorSet.original.
         min_range: Minimum value for the colorbar. If not set, the minimum value will be
             set to the minimum value of the data. Defaults to None.
         max_range: Maximum value for the colorbar. If not set, the maximum value will be
             set to the maximum value of the data. Defaults to None.
         title: A string to be used as the title of the plot. Defaults to None.
+        show_title: A boolean to show or hide the title of the plot. Defaults to False.
 
     Returns:
         A plotly Figure.
@@ -804,8 +805,8 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
 
         var_name = data.header.data_type.name
         var_unit = data.header.unit
-        var_colorscale = [rgb_to_hex(color) for color in color_set[colorset.value]]
-        title = 'Sunpath - ' + var_name if title is None else title
+        var_colorscale = [rgb_to_hex(color) for color in colorset]
+        chart_title = 'Sunpath - ' + var_name if title is None else title
 
         # add data to the dataframe
         df[var_name] = Series(data).values
@@ -826,7 +827,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
 
     else:
         solpos = df.loc[df["altitude"] > 0, :]
-        title = 'Sunpath' if title is None else title
+        chart_title = 'Sunpath' if title is None else title
 
     tz = "UTC"
     times = pd.date_range(
@@ -1024,6 +1025,21 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
             )
         )
 
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': chart_title,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
+
     fig.update_layout(
         showlegend=False,
         polar=dict(
@@ -1039,13 +1055,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
         title_x=0.5,
         dragmode=False,
         margin=dict(l=20, r=20, t=33, b=20),
-        title={
-            'text': title,
-            'y': 1,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        }
+        title=fig_title,
     )
 
     return fig
