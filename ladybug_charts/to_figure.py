@@ -206,18 +206,26 @@ def _daily_bar(data: DailyCollection, var: str, var_unit: str,
 
 
 def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
-              chart_title: str = None,
+              min_range: float = None, max_range: float = None,
               colors: List[Color] = None,
+              title: str = None,
+              show_title: bool = False,
               stack: bool = False) -> Figure:
     """Create a plotly bar chart figure from multiple ladybug monthly or daily data.
 
     Args:
         data: A list of ladybug monthly data or a list of ladybug daily data.
-        chart_title: A string to be used as the title of the plot. If not set, the
-            names of data will be used to create a title for the chart. Defaults to None.
+        min_range: Minimum value for the legend. If not set will be calculated
+            from the data. Defaults to None.
+        max_range: Maximum value for the legend. If not set will be calculated
+            from the data. Defaults to None.
         colors: A list of ladybug color objects. The length of this list needs to match
             the length of data argument. If not set, random colors will be used.
             Defaults to None.
+        title: A string to be used as the title of the plot. If not set, the
+            names of data will be used to create a title for the chart. Defaults to None.
+        show_title: A boolean to set whether to show the title of the chart.
+            Defaults to False.
         stack: A boolean to determine whether to stack the data. Defaults to False which
             will show data side by side.
 
@@ -231,6 +239,12 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
     if colors:
         assert len(colors) == len(data), 'Length of colors argument needs to match'\
             f' the length of data argument. Instead got {len(colors)} and {len(data)}'
+
+    # set the range of y-axis if provided
+    if min_range == None and max_range == None:
+        range = None
+    elif min_range != None and max_range != None:
+        range = [min_range, max_range]
 
     fig = go.Figure()
     names = []
@@ -252,28 +266,36 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
             fig.add_trace(bar)
             names.append(var)
 
-    chart_title = chart_title if chart_title else ' - '.join(names)
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': title if title else ' - '.join(names),
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
 
-    fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
     fig.update_layout(
         barmode='relative' if stack else 'group',
         template='plotly_white',
         margin=dict(l=20, r=20, t=33, b=20),
         yaxis_nticks=13,
-        title={
-            'text': chart_title,
-            'y': 1,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
+        title=fig_title,
         legend={
             'x': 0,
-            'y': 1.2,
+            'y': 1.1,
         }
     )
-    fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
-    fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
+    fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period",
+                     showline=True, linewidth=1, linecolor="black", mirror=True)
+    fig.update_yaxes(showline=True, linewidth=1,
+                     linecolor="black", mirror=True, range=range)
 
     return fig
 
