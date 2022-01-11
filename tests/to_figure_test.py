@@ -3,12 +3,10 @@ from ladybug_comfort.degreetime import heating_degree_time, cooling_degree_time
 from ladybug.datacollection import HourlyContinuousCollection
 from ladybug.datatype.temperaturetime import HeatingDegreeTime, CoolingDegreeTime
 from ladybug_charts.to_figure import bar_chart
-from ladybug_charts._helper import ColorSet
 from ladybug_charts.utils import Strategy
-from ladybug.color import Color
+from ladybug.color import Color, Colorset
 from ladybug.windrose import WindRose
 from ladybug.psychchart import PsychrometricChart
-from ladybug.analysisperiod import AnalysisPeriod
 from ladybug.hourlyplot import HourlyPlot
 from ladybug.monthlychart import MonthlyChart
 from ladybug.sunpath import Sunpath
@@ -118,6 +116,6 @@ def test_psych_chart_with_data(epw):
 
 def test_sunpath(epw):
     lb_sunpath = Sunpath.from_location(epw.location)
-    fig = lb_sunpath.plot(data=epw.dry_bulb_temperature, colorset=ColorSet.nuanced,
-                          min_range=0, max_range=50, title='SUNPATH')
+    fig = lb_sunpath.plot(data=epw.dry_bulb_temperature, colorset=Colorset.nuanced(),
+                          min_range=0, max_range=50, title='SUNPATH', show_title=True)
     assert isinstance(fig, Figure)
