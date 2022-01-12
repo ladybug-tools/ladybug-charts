@@ -744,7 +744,7 @@ def wind_rose(wind_rose: WindRose, title: str = None, show_title: bool = False) 
 
 
 def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
-                title: str = None, polygon_pmv: PolygonPMV = None,
+                title: str = None, show_title: bool = False, polygon_pmv: PolygonPMV = None,
                 strategies: List[Strategy] = [Strategy.comfort],
                 strategy_parameters: StrategyParameters = StrategyParameters(),
                 solar_data: HourlyContinuousCollection = None,
@@ -755,6 +755,7 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
         psych: A ladybug PsychrometricChart object.
         data: A ladybug DataCollection object.
         title: A title for the plot. Defaults to None.
+        show_title: A boolean to show or hide the title. Defaults to False.
         polygon_pmv: A ladybug PolygonPMV object. If provided, polygons will be drawn.
             Defaults to None.
         strategies: A list of strategies to be applied to the chart. Accepts a list of
@@ -773,7 +774,7 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     Returns:
         A plotly figure.
     """
-    return _psych_chart(psych, data, title, polygon_pmv, strategies,
+    return _psych_chart(psych, data, title, show_title, polygon_pmv, strategies,
                         strategy_parameters, solar_data, colors)
 
 
@@ -847,10 +848,10 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
     times = times - delta
 
     if not data:
-        var_color = "orange"
+        var_color = rgb_to_hex(colorset[-1])
         marker_size = 3
     else:
-        var_color = 'silver'
+        var_color = '#8c8e91'
         vals = solpos[var_name]
         marker_size = (((vals - vals.min()) / vals.max()) + 1) * 4
 
@@ -978,9 +979,8 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
             go.Scatterpolar(
                 r=list(azi_alt_sorted.values()),
                 theta=list(azi_alt_sorted.keys()),
-                mode="lines",
-                line_color=var_color,
-                line_width=1,
+                mode="markers",
+                marker=dict(color=var_color, size=2.5),
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
@@ -1022,9 +1022,8 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
             go.Scatterpolar(
                 r=list(azi_alt_sorted.values()),
                 theta=list(azi_alt_sorted.keys()),
-                mode="lines",
-                line_color=var_color,
-                line_width=1,
+                mode="markers",
+                marker=dict(color=var_color, size=2.5),
                 customdata=solpos.altitude,
                 hovertemplate="<br>sun altitude: %{customdata:.2f}"
                 + "\u00B0deg"
