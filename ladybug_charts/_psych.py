@@ -48,7 +48,7 @@ def strategy_warning(polygon_name: str) -> str:
 
 
 def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
-                 title: str = None, polygon_pmv: PolygonPMV = None,
+                 title: str = None, show_title: bool = False, polygon_pmv: PolygonPMV = None,
                  strategies: List[Strategy] = [Strategy.comfort],
                  strategy_parameters: StrategyParameters = StrategyParameters(),
                  solar_data: HourlyContinuousCollection = None,
@@ -59,6 +59,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
         psych: A ladybug PsychrometricChart object.
         data: A ladybug DataCollection object.
         title: A title for the plot. Defaults to None.
+        show_title: A boolean to show or hide the title. Defaults to False.
         polygon_pmv: A ladybug PolygonPMV object. If provided, polygons will be drawn.
             Defaults to None.
         strategies: A list of strategies to be applied to the chart. Accepts a list of
@@ -86,7 +87,8 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
 
     # create dummy psych-chart to create mesh
     base_point = Point2D(var_range_x[0], 0)
-    psych_dummy = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1)
+    psych_dummy = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1,
+                                     legend_parameters=psych.legend_parameters)
 
     fig = go.Figure()
 
@@ -94,7 +96,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     # if no data is provided, plot frequency
     ###########################################################################
     if not data:
-        title = 'Psychrometric Chart - Frequency'
+        chart_title = 'Psychrometric Chart - Frequency'
         # Plot colored mesh
         cords = mesh_to_coordinates(psych_dummy.colored_mesh)
         for count, cord in enumerate(cords):
@@ -147,10 +149,11 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     ###########################################################################
     else:
         var = data.header.data_type.name
-        title = title if title else f'Psychrometric Chart - {var}'
+        chart_title = title if title else f'Psychrometric Chart - {var}'
 
         # add colored data mesh
-        mesh, graphic_container = psych_dummy.data_mesh(data)
+        mesh, graphic_container = psych_dummy.data_mesh(
+            data, psych_dummy.legend_parameters)
         cords = mesh_to_coordinates(mesh)
         for count, cord in enumerate(cords):
             fig.add_trace(
@@ -480,16 +483,25 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     hovertemplate='' + '<extra></extra>',
                 ))
 
-    fig.update_layout(
-        template='plotly_white',
-        margin=dict(l=20, r=20, t=33, b=20),
-        title={
-            'text': title,
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': title if title else chart_title,
             'y': 1,
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'
-        },
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
+
+    fig.update_layout(
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=33, b=20),
+        title=fig_title,
         legend=dict(
             yanchor="top",
             y=0.99,
