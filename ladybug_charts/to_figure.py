@@ -289,7 +289,7 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
         title=fig_title,
         legend={
             'x': 0,
-            'y': 1.1,
+            'y': 1.2,
         }
     )
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period",
