@@ -159,8 +159,6 @@ def _monthly_bar(data: MonthlyCollection, var: str, var_unit: str,
     return go.Bar(
         x=df['month_names'],
         y=[round(val, 2) for val in data.values],
-        text=[f'{round(val, 2)} {var_unit}' for val in data.values],
-        textposition='auto',
         customdata=np.stack((df["month_names"],), axis=-1),
         hovertemplate=(
             '<br>%{y} '
