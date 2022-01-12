@@ -25,7 +25,7 @@ from .utils import Strategy, StrategyParameters
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
 from ladybug.windrose import WindRose
-from ladybug.color import Color, Colorset
+from ladybug.color import Color, Colorset, ColorRange
 from ladybug_pandas.series import Series
 from ladybug import psychrometrics as psy
 from ladybug.sunpath import Sunpath
@@ -652,8 +652,16 @@ def wind_rose(wind_rose: WindRose, title: str = None, show_title: bool = False) 
     else:
         df = df.loc[(df["hour"] <= end_hour) | (df["hour"] >= start_hour)]
 
-    spd_colors = [rgb_to_hex(color) for color in wind_rose.legend_parameters.colors]
     spd_bins = [-1, 0.5, 1.5, 3.3, 5.5, 7.9, 10.7, 13.8, 17.1, 20.7, np.inf]
+    # Create a color range if the colorset does not have 11 colors
+    if len(wind_rose.legend_parameters.colors) < 11:
+        domain = [spd_bins[0], spd_bins[-2]+1]
+        color_range = ColorRange(
+            colors=wind_rose.legend_parameters.colors, domain=domain)
+        spd_colors = [rgb_to_hex(color_range.color(item)) for item in spd_bins]
+    else:
+        spd_colors = [rgb_to_hex(color) for color in wind_rose.legend_parameters.colors]
+
     spd_labels = _speed_labels(spd_bins, units="m/s")
     dir_bins = np.arange(-22.5 / 2, 370, 22.5)
     dir_labels = (dir_bins[:-1] + dir_bins[1:]) / 2
