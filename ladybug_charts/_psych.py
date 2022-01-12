@@ -1,6 +1,7 @@
 """Recreating ladybug psychrometric chart using Plotly."""
 
 
+from ladybug.legend import LegendParameters
 import numpy as np
 import pandas as pd
 import warnings
@@ -150,10 +151,9 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     else:
         var = data.header.data_type.name
         chart_title = title if title else f'Psychrometric Chart - {var}'
-
+        lp = LegendParameters(colors=psych_dummy.legend_parameters.colors)
         # add colored data mesh
-        mesh, graphic_container = psych_dummy.data_mesh(
-            data, psych_dummy.legend_parameters)
+        mesh, graphic_container = psych_dummy.data_mesh(data, lp)
         cords = mesh_to_coordinates(mesh)
         for count, cord in enumerate(cords):
             fig.add_trace(
