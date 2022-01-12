@@ -33,12 +33,10 @@ def hourly_plot(self, title: str = None, show_title: bool = False) -> Figure:
 HourlyPlot.plot = hourly_plot
 
 
-def plot_monthly_chart(self, title: str = None, show_title: bool = False,
+def plot_monthly_chart(self, min_range: float = None, max_range: float = None,
+                       title: str = None, show_title: bool = False,
                        stack: bool = False) -> Figure:
     data = self.data_collections
-    # TODO: min_range and max_range need to be discussed with Chris
-    min_range = None
-    max_range = None
     colors = self.colors
     return bar_chart(data, min_range, max_range, colors, title, show_title, stack)
 
