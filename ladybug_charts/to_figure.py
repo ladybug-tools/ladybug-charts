@@ -361,14 +361,17 @@ def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
 
 
 def monthly_bar_chart(data: MonthlyCollection,
-                      chart_title: str = None,
+                      title: str = None,
+                      show_title: bool = False,
                       color: Color = None) -> Figure:
     """Create a plotly  bar chart figure from a ladybug monthly data object.
 
     Args:
         data: A ladybug MonthlyCollection object.
-        chart_title: A string to be used as the title of the plot. If not set, the name
+        title: A string to be used as the title of the plot. If not set, the name
             of the data will be used. Defaults to None.
+        show_title: A boolean to set whether to show the title of the chart.
+            Defaults to False.
         color: A Ladybug color object. If not set, a random color will be used. Defaults
             to None.
 
@@ -378,18 +381,21 @@ def monthly_bar_chart(data: MonthlyCollection,
     assert isinstance(data, MonthlyCollection), 'Only ladybug monthly data is'\
         f' supported. Instead got {type(data)}'
 
-    return _bar_chart_single_data(data, 'monthly', chart_title=chart_title, color=color)
+    return _bar_chart_single_data(data, 'monthly', title, show_title, color=color)
 
 
 def daily_bar_chart(data: DailyCollection,
-                    chart_title: str = None,
+                    title: str = None,
+                    show_title: bool = False,
                     color: Color = None) -> Figure:
     """Create a plotly bar chart figure from a ladybug daily data object.
 
     Args:
         data: A ladybug DailyCollection object.
-        chart_title: A string to be used as the title of the plot. If not set, the name
+        title: A string to be used as the title of the plot. If not set, the name
             of the data will be used. Defaults to None.
+        show_title: A boolean to determine whether to show the title of the plot.
+            Defaults to False.
         color: A Ladybug color object. If not set, a random color will be used. Defaults
             to None.
 
@@ -399,7 +405,7 @@ def daily_bar_chart(data: DailyCollection,
     assert isinstance(data, DailyCollection), 'Only ladybug daily data is'\
         f' supported. Instead got {type(data)}'
 
-    return _bar_chart_single_data(data, 'daily', chart_title=chart_title, color=color)
+    return _bar_chart_single_data(data, 'daily', title, show_title, color)
 
 
 def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None) -> Figure:
