@@ -299,7 +299,8 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
 
 
 def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
-                           chart_type: str = 'monthly', chart_title: str = None,
+                           chart_type: str = 'monthly', title: str = None,
+                           show_title: bool = False,
                            color: Color = None) -> Figure:
     """Create a plotly bar chart figure from a ladybug monthly or daily data object.
 
@@ -307,8 +308,10 @@ def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
         data: A ladybug monthly or daily data object.
         chart_type: A string to determine the type of chart to be created.
             Accepted values are 'monthly' and 'daily'. Defaults to 'monthly'.
-        chart_title: A string to be used as the title of the plot. If not set, the
+        title: A string to be used as the title of the plot. If not set, the
             names of data will be used to create a title for the chart. Defaults to None.
+        show_title: A boolean to set whether to show the title of the chart.
+            Defaults to False.
         color: A ladybug color object. If not set, random colors will be used.
 
     Returns:
@@ -324,21 +327,32 @@ def _bar_chart_single_data(data: Union[MonthlyCollection, DailyCollection],
         var_unit = data.header.unit
         bar = _daily_bar(data, var, var_unit, color)
 
-    chart_title = chart_title if chart_title else var
+    chart_title = title if title else var
 
     fig = go.Figure(bar)
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
     fig.update_yaxes(title_text='('+var_unit+')')
-    fig.update_layout(
-        template='plotly_white',
-        margin=dict(l=20, r=20, t=33, b=20),
-        yaxis_nticks=13,
-        title={
+
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
             'text': chart_title,
             'y': 1,
             'x': 0.5,
             'xanchor': 'center',
-            'yanchor': 'top'}
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
+
+    fig.update_layout(
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=33, b=20),
+        yaxis_nticks=13,
+        title=fig_title,
     )
     fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
