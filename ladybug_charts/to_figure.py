@@ -166,7 +166,7 @@ def _monthly_bar(data: MonthlyCollection, var: str, var_unit: str,
             + ' in %{customdata[0]}'
             + '<extra></extra>'),
         marker_color=rgb_to_hex(color),
-        name=var
+        name=var + ' ' + var_unit
     )
 
 
@@ -199,7 +199,7 @@ def _daily_bar(data: DailyCollection, var: str, var_unit: str,
             + ' %{customdata[1]} <br>'
             + '<extra></extra>'),
         marker_color=rgb_to_hex(color),
-        name=var
+        name=var + ' ' + var_unit
     )
 
 
