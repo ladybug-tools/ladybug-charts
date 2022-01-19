@@ -665,8 +665,8 @@ def wind_rose(wind_rose: WindRose, title: str = None, show_title: bool = False) 
     wind_dir = wind_rose.direction_data_collection
 
     if isinstance(wind_speed, HourlyDiscontinuousCollection):
-        wind_speed = discontinuous_to_continuous(wind_speed)
-        wind_dir = discontinuous_to_continuous(wind_dir)
+        wind_speed = discontinuous_to_continuous(wind_speed)[0]
+        wind_dir = discontinuous_to_continuous(wind_dir)[0]
 
     df = dataframe()
     series = Series(wind_speed)
