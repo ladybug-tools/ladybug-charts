@@ -1,5 +1,6 @@
 """Add capability to generate a Figures from ladybug data objects. """
 
+from typing import List
 from plotly.graph_objects import Figure
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
@@ -22,12 +23,14 @@ PsychrometricChart.plot = psych_chart
 Sunpath.plot = sunpath
 
 
-def hourly_plot(self, title: str = None, show_title: bool = False) -> Figure:
+def hourly_plot(self, title: str = None, show_title: bool = False,
+                num_labels: int = None, labels: List[float] = None) -> Figure:
     hourly_data = self.data_collection
     min_range = self.legend_parameters.min
     max_range = self.legend_parameters.max
     colors = self.legend_parameters.colors
-    return heat_map(hourly_data, min_range, max_range, colors, title, show_title)
+    return heat_map(hourly_data, min_range, max_range, colors, title, show_title,
+                    num_labels, labels)
 
 
 HourlyPlot.plot = hourly_plot
