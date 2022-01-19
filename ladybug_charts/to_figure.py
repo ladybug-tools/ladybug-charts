@@ -124,7 +124,7 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
             'y': 1,
             'x': 0.5,
             'xanchor': 'center',
-            'yanchor': 'top'
+            'yanchor': 'top',
         }
     else:
         if title:
@@ -138,6 +138,7 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
             l=20, r=20, t=33, b=20),
         yaxis_nticks=13,
         title=fig_title,
+        title_pad=dict(t=5)
     )
     fig.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=True)
