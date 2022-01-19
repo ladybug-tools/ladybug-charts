@@ -41,7 +41,8 @@ pio.templates.default = 'plotly_white'
 
 def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
              min_range: float = None, max_range: float = None,
-             colors: List[Color] = None, title: str = None, show_title: bool = False) -> Figure:
+             colors: List[Color] = None, title: str = None, show_title: bool = False,
+             num_labels: int = None, labels: List[float] = None) -> Figure:
     """Create a plotly heat map figure from Ladybug Hourly data.
 
     Args:
@@ -55,6 +56,8 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
         title: A string to be used as the title of the plot. If not set, the name
             of the data will be used. Defaults to None.
         show_title: A boolean to show or hide the title of the chart. Defaults to False.
+        num_labels: The number of labels to be used in the legend. Defaults to None.
+        labels: A list of floats to be used as labels for the legend. Defaults to None. 
 
     Returns:
         A plotly figure.
@@ -87,6 +90,9 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
     if not colors:
         colors = color_set[ColorSet.original.value]
 
+    nticks = num_labels
+    dtick = labels
+
     fig = go.Figure(
         data=go.Heatmap(
             y=df["hour"],
@@ -104,7 +110,7 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
                 + "</b><br>Month: %{customdata[0]}<br>Day: %{customdata[1]}<br>Hour: %{y}:00<br>"
             ),
             name="",
-            colorbar=dict(title=var_unit),
+            colorbar=dict(title=var_unit, nticks=nticks, dtick=dtick),
         )
     )
 
