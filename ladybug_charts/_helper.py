@@ -12,14 +12,28 @@ from ladybug_geometry.geometry2d.pointvector import Point2D
 
 
 def discontinuous_to_continuous(
-        data: HourlyDiscontinuousCollection) -> HourlyContinuousCollection:
-    """Fill the gaps in Discontinuous data to create Continuous data."""
+        data: HourlyDiscontinuousCollection) -> Tuple[HourlyContinuousCollection,
+                                                      List[float, float]]:
+    """Fill the gaps in Discontinuous data to create Continuous data.
+
+    Args:
+        data: A Ladybug HourlyDiscontinuousCollection.
+
+    Returns:
+        A tuple of two items
+
+        -   A Ladybug HourlyContinuousCollection.
+
+        -   A List of two floats representing min and max values of the data.
+    """
 
     assert isinstance(data, HourlyDiscontinuousCollection), 'Only' \
         f' HourlyDiscontinuousCollection is supported. instead got {type(data)}'
 
     hoys = [dt.hoy for dt in data.datetimes]
     hoy_val = dict(zip(hoys, data.values))
+    # We need to find the range of the data here before we inject None values
+    data_range = [min(hoy_val.values()), max(hoy_val.values())]
 
     values = []
     for count in range(8760):
@@ -30,7 +44,8 @@ def discontinuous_to_continuous(
 
     header = Header(data.header.data_type, data.header.unit,
                     AnalysisPeriod(), data.header.metadata)
-    return HourlyContinuousCollection(header, values)
+
+    return HourlyContinuousCollection(header, values), data_range
 
 
 def rgb_to_hex(color: Color) -> str:
