@@ -65,7 +65,9 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
         f' Instead got {type(hourly_data)}'
 
     if isinstance(hourly_data, HourlyDiscontinuousCollection):
-        hourly_data = discontinuous_to_continuous(hourly_data)
+        hourly_data, data_range = discontinuous_to_continuous(hourly_data)
+    else:
+        data_range = [hourly_data.min, hourly_data.max]
 
     var = hourly_data.header.data_type.name
     df = dataframe()
@@ -76,12 +78,11 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
     if min_range != None and max_range != None:
         range_z = [min_range, max_range]
     elif min_range != None and max_range == None:
-        range_z = [min_range, 5 * ceil(df[var].max() / 5)]
+        range_z = [min_range, data_range[1]]
     elif min_range == None and max_range != None:
-        range_z = [5 * floor(df[var].min() / 5), max_range]
+        range_z = [data_range[0], max_range]
     else:
-        # Set maximum and minimum according to data
-        range_z = [5 * floor(df[var].min() / 5), 5 * ceil(df[var].max() / 5)]
+        range_z = [data_range[0], data_range[1]]
 
     if not colors:
         colors = color_set[ColorSet.original.value]
