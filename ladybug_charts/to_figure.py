@@ -110,7 +110,7 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
                 + "</b><br>Month: %{customdata[0]}<br>Day: %{customdata[1]}<br>Hour: %{y}:00<br>"
             ),
             name="",
-            colorbar=dict(title=var_unit, nticks=nticks, dtick=dtick),
+            colorbar=dict(title=var_unit, nticks=nticks, dtick=dtick, thickness=10),
         )
     )
 
