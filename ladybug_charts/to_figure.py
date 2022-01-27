@@ -419,13 +419,17 @@ def daily_bar_chart(data: DailyCollection,
     return _bar_chart_single_data(data, 'daily', title, show_title, color)
 
 
-def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None) -> Figure:
+def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None,
+                      title: str = None, show_title: bool = False) -> Figure:
     """Create a plotly line chart figure from a ladybug hourly continuous data object.
 
     Args:
         data: A ladybug HourlyContinuousCollection object.
         color: A Ladybug color object. If not set, a random color will be used. Defaults
             to None.
+        title: A string to be used as the title of the plot. Defaults to None.
+        show_title: A boolean to determine whether to show the title of the plot.
+            Defaults to False.
 
     Returns:
         A plotly figure.
@@ -499,6 +503,21 @@ def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None) -> 
         data=data, layout=go.Layout(barmode="overlay", bargap=0, margin=dict(
             l=20, r=20, t=33, b=20))
     )
+
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': title if title else var,
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
 
     fig.update_xaxes(
         dtick="M1",
