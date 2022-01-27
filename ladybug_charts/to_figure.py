@@ -287,6 +287,9 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
                 f'Title is set to "{title}" but show_title is set to False.')
         fig_title = None
 
+    # move legend upwards as mode data is loaded
+    legend_height = 1.2 if len(data) <= 3 else 1.2 + (len(data)-3)/10
+
     fig.update_layout(
         barmode='relative' if stack else 'group',
         template='plotly_white',
@@ -295,7 +298,7 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
         title=fig_title,
         legend={
             'x': 0,
-            'y': 1.2,
+            'y': legend_height,
         }
     )
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period",
