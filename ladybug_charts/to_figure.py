@@ -540,6 +540,7 @@ def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None,
     fig.update_layout(
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         template='plotly_white',
+        title=fig_title
     )
 
     return fig
@@ -991,7 +992,7 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
                     colorscale=var_colorscale,
                     cmin=var_range[0],
                     cmax=var_range[1],
-                    colorbar=dict(thickness=30, title=var_unit + "<br>  "),
+                    colorbar=dict(thickness=10, title=var_unit + "<br>  "),
                 ),
                 customdata=np.stack(
                     (

@@ -139,7 +139,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 showscale=True,
                 cmin=psych.legend_parameters.min,
                 cmax=psych.legend_parameters.max,
-                colorbar=dict(thickness=30, title=psych.legend_parameters.title),
+                colorbar=dict(thickness=10, title=psych.legend_parameters.title),
             ),
         )
         # add the dummy trace to the figure
@@ -196,7 +196,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 cmin=graphic_container.legend_parameters.min,
                 cmax=graphic_container.legend_parameters.max,
                 colorbar=dict(
-                    thickness=30, title=graphic_container.legend_parameters.title),
+                    thickness=10, title=graphic_container.legend_parameters.title),
             ),
         )
 
