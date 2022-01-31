@@ -685,6 +685,7 @@ def diurnal_average_chart(epw: EPW) -> Figure:
         rows=1,
         cols=12,
         subplot_titles=MONTHS,
+        shared_yaxes=True,
     )
 
     fig.update_layout(
@@ -758,7 +759,7 @@ def diurnal_average_chart(epw: EPW) -> Figure:
                         + "Month: %{customdata}<br>"
                         + "Hour: %{x}:00<br>"
                     ),
-                    yaxis="y" + str(i+1)
+
                 ),
                 row=1,
                 col=i + 1,
@@ -790,7 +791,8 @@ def diurnal_average_chart(epw: EPW) -> Figure:
                     + var_unit
                     + "</b><br>Month: %{customdata}<br>Hour: %{x}:00<br>"
                 ),
-                yaxis="y" + str(i + 1 + 12)
+                yaxis='y' + str(i + 1+12),
+
             ),
             row=1,
             col=i + 1,
@@ -808,17 +810,25 @@ def diurnal_average_chart(epw: EPW) -> Figure:
                 hovertemplate=(
                     "<b>" + var + ": %{y:.2f} " + var_unit + "</b><br>Hour: %{x}:00<br>"
                 ),
-                yaxis="y" + str(i + 1 + 12)
+                yaxis='y' + str(i + 1+12),
+
             ),
             row=1,
             col=i + 1,
         )
 
-    print(fig)
     fig.update_layout(
         template='plotly_white',
         dragmode=False,
     )
+    # fig.update_layout(
+    #     yaxis=dict(range=[0, 1600], tick0=0, dtick=100),
+    #     yaxis2=dict(range=[-20, 60], tick0=-20, dtick=5, anchor='x12', overlaying='y', side='right'))
+    fig['data'][56].update(yaxis='y23')
+    fig['data'][57].update(yaxis='y23')
+    fig['data'][58].update(yaxis='y24')
+    fig['data'][59].update(yaxis='y24')
+
     return fig
 
 
