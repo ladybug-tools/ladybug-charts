@@ -25,12 +25,15 @@ from .utils import Strategy, StrategyParameters
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
 from ladybug.windrose import WindRose
+from ladybug.analysisperiod import AnalysisPeriod
 from ladybug.color import Color, Colorset, ColorRange
 from ladybug_pandas.series import Series
 from ladybug.sunpath import Sunpath
 from ladybug.psychchart import PsychrometricChart
 from ladybug.dt import DateTime
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
+from ladybug.psychrometrics import wet_bulb_from_db_rh
+from ladybug.datatype.temperature import WetBulbTemperature
 
 from ladybug.epw import EPW
 
@@ -674,30 +677,90 @@ def diurnal_average_chart(epw: EPW) -> Figure:
     """
     glob_hor_rad = get_monthly_values(
         epw.global_horizontal_radiation.average_monthly_per_hour())
+    dir_nor_rad = get_monthly_values(
+        epw.direct_normal_radiation.average_monthly_per_hour())
+    diff_hor_rad = get_monthly_values(
+        epw.diffuse_horizontal_radiation.average_monthly_per_hour())
     dry_bulb_temp = get_monthly_values(
         epw.dry_bulb_temperature.average_monthly_per_hour())
+
+    wet_bulb = HourlyContinuousCollection.compute_function_aligned(
+        wet_bulb_from_db_rh, [epw.dry_bulb_temperature,
+                              epw.relative_humidity, epw.atmospheric_station_pressure],
+        WetBulbTemperature(), 'C')
+    wet_bulb_temp = get_monthly_values(wet_bulb.average_monthly_per_hour())
+
+    # dry bulb temperature scatter
+    # here, we are extracting month wise data from an HourlyContinuousData
+    # This is a 12 item long list with each item a month worth of data
+    monthly_dbt = [epw.dry_bulb_temperature.filter_by_analysis_period(
+        AnalysisPeriod(st_month=i, end_month=i)) for i in range(1, 13)]
 
     fig = go.Figure()
     for i in range(12):
         x = [[MONTHS[i]]*24, list(range(0, 24))]
 
+        # add global horizontal radiation
         fig.add_trace(
             go.Scatter(
                 x=x,
                 y=glob_hor_rad[i],
-                fill="tozeroy",
-                line_color='orange',
+                fill='tozeroy',
+                line_width=0,
+                line_color='red',
                 yaxis='y')
         )
 
-        # add dry-bulb temperature
+        # add direct normal radiation
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=dir_nor_rad[i],
+                fill='tozeroy',
+                line_width=0,
+                line_color='orange',
+                yaxis='y'))
+
+        # add diffuse horizontal radiation
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=diff_hor_rad[i],
+                fill='tozeroy',
+                line_width=0,
+                line_color='yellow',
+                yaxis='y'))
+
+        # add MonthlyPerHour average dry-bulb temperature
         fig.add_trace(
             go.Scatter(
                 x=x,
                 y=dry_bulb_temp[i],
-                line_color='red',
+                line_color='brown',
                 yaxis='y2')
         )
+
+        # add MonthlyPerHour average dry-bulb temperature
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=wet_bulb_temp[i],
+                line_color='blue',
+                yaxis='y2')
+        )
+
+        # add the spread of dry bulb temperature
+        # get hour for each data point in the datacollection
+        hours = [item.hour for item in monthly_dbt[i].datetimes]
+        fig.add_trace(
+            go.Scatter(
+                x=[[MONTHS[i]]*len(monthly_dbt[i]), hours],
+                y=monthly_dbt[i].values,
+                mode='markers',
+                marker_color='brown',
+                marker_size=3,
+                opacity=0.5,
+                yaxis='y2'))
 
     fig.update_layout(
         yaxis=dict(range=[0, 1600], tick0=0, dtick=100,
@@ -735,8 +798,8 @@ def wind_rose(wind_rose: WindRose, title: str = None, show_title: bool = False) 
         A plotly figure.
     """
 
-    assert isinstance(wind_rose, WindRose), 'Ladybug WindRose object is required.'\
-        f' Instead got {type(wind_rose)}'
+    assert isinstance(wind_rose, WindRose), 'Ladybug WindRose object is required.'
+    f' Instead got {type(wind_rose)}'
 
     wind_speed = wind_rose.analysis_data_collection
     wind_dir = wind_rose.direction_data_collection
