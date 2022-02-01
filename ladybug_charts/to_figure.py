@@ -19,6 +19,7 @@ from plotly.subplots import make_subplots
 from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
     get_monthly_values
+from ._helper_chart import get_dummy_trace
 from ._psych import _psych_chart
 from .utils import Strategy, StrategyParameters
 
@@ -609,6 +610,7 @@ def per_hour_line_chart(data: HourlyContinuousCollection, title: str = None,
                     + ": %{y:.2f} "
                     + var_unit
                     + "</b><br>Month: %{customdata}<br>Hour: %{x}:00<br>"
+                    + "<extra></extra>"
                 ),
             ),
             row=1,
@@ -626,6 +628,7 @@ def per_hour_line_chart(data: HourlyContinuousCollection, title: str = None,
                 showlegend=False,
                 hovertemplate=(
                     "<b>" + var + ": %{y:.2f} " + var_unit + "</b><br>Hour: %{x}:00<br>"
+                    + "<extra></extra>"
                 ),
             ),
             row=1,
@@ -666,15 +669,29 @@ def per_hour_line_chart(data: HourlyContinuousCollection, title: str = None,
     return fig
 
 
-def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False) -> Figure:
+def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
+                          colorset: ColorSet = ColorSet.original) -> Figure:
     """Create a diurnal average chart from a ladybug EPW object.
 
     Args:
         epw: A ladybug EPW object.
+        title: A string to be used as the title of the plot. Defaults to None.
+        show_title: A boolean to determine whether to show the title of the plot.
+            Defaults to False.
+        colorset: A ColorSet object. Defaults to ColorSet.original.
 
     Returns:
         A plotly figure.
     """
+    # assign colors
+    colors = color_set[colorset.value]
+    dbt_color = rgb_to_hex(colors[-1])
+    wbt_color = rgb_to_hex(colors[-2])
+    glob_hor_rad_color = rgb_to_hex(colors[-3])
+    dir_nor_rad_color = rgb_to_hex(colors[-4])
+    diff_hor_rad_color = rgb_to_hex(colors[-5])
+
+    # get monthly per hour average data
     glob_hor_rad = get_monthly_values(
         epw.global_horizontal_radiation.average_monthly_per_hour())
 
@@ -700,6 +717,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
     wet_bulb_temp = get_monthly_values(wet_bulb.average_monthly_per_hour())
 
     fig = go.Figure()
+
     for i in range(12):
         x = [[MONTHS[i]]*24, list(range(0, 24))]
 
@@ -710,8 +728,18 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
                 y=dry_bulb_temp_low[i],
                 line_color='gray',
                 line_width=0,
+                opacity=0.2,
                 yaxis='y2',
-                showlegend=False)
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + 'Dry-bulb temperature low'
+                    + ": %{y:.2f} "
+                    + 'C'
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ),
+            )
         )
 
         # add higher dry-bulb temperature
@@ -722,9 +750,17 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
                 line_color='gray',
                 fill='tonexty',
                 line_width=0,
-                opacity=0.3,
+                opacity=0.1,
                 yaxis='y2',
-                showlegend=False)
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + 'Dry-bulb temperature high'
+                    + ": %{y:.2f} "
+                    + 'C'
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ),)
         )
 
         # add global horizontal radiation
@@ -733,10 +769,18 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
                 x=x,
                 y=glob_hor_rad[i],
                 fill='tozeroy',
-                line_width=0,
-                line_color='red',
+                line_width=1,
+                line_color=glob_hor_rad_color,
                 yaxis='y',
-                showlegend=False)
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + 'Global horizontal radiation'
+                    + ": %{y:.2f} "
+                    + 'Wh/m2'
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ))
         )
 
         # add direct normal radiation
@@ -745,10 +789,18 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
                 x=x,
                 y=dir_nor_rad[i],
                 fill='tozeroy',
-                line_width=0,
-                line_color='orange',
+                line_width=1,
+                line_color=dir_nor_rad_color,
                 yaxis='y',
-                showlegend=False)
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + 'Direct normal radiation'
+                    + ": %{y:.2f} "
+                    + 'Wh/m2'
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ))
         )
 
         # add diffuse horizontal radiation
@@ -757,10 +809,18 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
                 x=x,
                 y=diff_hor_rad[i],
                 fill='tozeroy',
-                line_width=0,
-                line_color='yellow',
+                line_width=1,
+                line_color=diff_hor_rad_color,
                 yaxis='y',
-                showlegend=False)
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + 'Diffused horizontal radiation'
+                    + ": %{y:.2f} "
+                    + 'Wh/m2'
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ))
         )
 
         # add MonthlyPerHour average dry-bulb temperature
@@ -768,9 +828,17 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
             go.Scatter(
                 x=x,
                 y=dry_bulb_temp[i],
-                line_color='brown',
+                line_color=dbt_color,
                 yaxis='y2',
-                showlegend=False)
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + 'Monthly per hour average dry-bulb temperature'
+                    + ": %{y:.2f} "
+                    + 'C'
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ))
         )
 
         # add MonthlyPerHour average wet-bulb temperature
@@ -778,16 +846,36 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
             go.Scatter(
                 x=x,
                 y=wet_bulb_temp[i],
-                line_color='blue',
+                line_color=wbt_color,
                 yaxis='y2',
-                showlegend=False)
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + 'Monthly per hour average wet-bulb temperature'
+                    + ": %{y:.2f} "
+                    + 'C'
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ))
         )
+
+    # Add dummy traces to create legend
+    fig.add_trace(get_dummy_trace(
+        'Diffused horizontal radiation', diff_hor_rad_color))
+    fig.add_trace(get_dummy_trace(
+        'Direct normal radiation', dir_nor_rad_color))
+    fig.add_trace(get_dummy_trace(
+        'Global horizontal radiation', glob_hor_rad_color))
+    fig.add_trace(get_dummy_trace(
+        'Monthly per hour average wet-bulb temperature', wbt_color))
+    fig.add_trace(get_dummy_trace(
+        'Monthly per hour average dry-bulb temperature', dbt_color))
 
     # setting the title for the figure
     if show_title:
         fig_title = {
             'text': title if title else 'Diurnal Average',
-            'y': 1,
+            'y': 0.90,
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'
@@ -804,7 +892,11 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
             showdividers=False,
             showline=True,
             linecolor='black',
-            linewidth=1),
+            linewidth=1,
+            ticks='outside',
+            tickson='boundaries',
+            tickwidth=1,
+            ticklen=5),
 
         yaxis=dict(
             range=[0, 1600],
@@ -827,6 +919,12 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False)
             linewidth=1),
 
         title=fig_title,
+        legend=dict(
+            yanchor='top',
+            y=1,
+            xanchor='left',
+            x=0.01
+        )
 
     )
 
