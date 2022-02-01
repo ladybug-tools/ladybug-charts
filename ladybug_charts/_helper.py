@@ -3,7 +3,8 @@
 from __future__ import annotations
 from enum import Enum
 from typing import List, Tuple
-from ladybug.datacollection import HourlyContinuousCollection, HourlyDiscontinuousCollection
+from ladybug.datacollection import HourlyContinuousCollection, \
+    HourlyDiscontinuousCollection, MonthlyPerHourCollection
 from ladybug.color import Color, Colorset
 from ladybug.header import Header
 from ladybug.analysisperiod import AnalysisPeriod
@@ -165,3 +166,18 @@ def verts_to_coordinates(points: List[Point2D], close: bool = True) -> Tuple[Lis
         y_cords.append(y_cords[0])
 
     return x_cords, y_cords
+
+
+def get_monthly_values(data: MonthlyPerHourCollection) -> List[List[float]]:
+    """Get month wise MonthlyPerHour values.
+
+    Args:
+        data: A ladybug MonthlyPerHourCollection object.
+
+    Returns:
+        A list of lists of monthly values where the length of each list is 24.
+    """
+    values = []
+    for i in range(24, 312, 24):
+        values.append([data.values[j] for j in range(i-24, i)])
+    return values
