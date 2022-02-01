@@ -666,7 +666,7 @@ def per_hour_line_chart(data: HourlyContinuousCollection, title: str = None,
     return fig
 
 
-def diurnal_average_chart(epw: EPW) -> Figure:
+def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False) -> Figure:
     """Create a diurnal average chart from a ladybug EPW object.
 
     Args:
@@ -677,12 +677,21 @@ def diurnal_average_chart(epw: EPW) -> Figure:
     """
     glob_hor_rad = get_monthly_values(
         epw.global_horizontal_radiation.average_monthly_per_hour())
+
     dir_nor_rad = get_monthly_values(
         epw.direct_normal_radiation.average_monthly_per_hour())
+
     diff_hor_rad = get_monthly_values(
         epw.diffuse_horizontal_radiation.average_monthly_per_hour())
+
     dry_bulb_temp = get_monthly_values(
         epw.dry_bulb_temperature.average_monthly_per_hour())
+
+    dry_bulb_temp_low = get_monthly_values(
+        epw.dry_bulb_temperature.percentile_monthly_per_hour(0))
+
+    dry_bulb_temp_high = get_monthly_values(
+        epw.dry_bulb_temperature.percentile_monthly_per_hour(100))
 
     wet_bulb = HourlyContinuousCollection.compute_function_aligned(
         wet_bulb_from_db_rh, [epw.dry_bulb_temperature,
@@ -690,15 +699,33 @@ def diurnal_average_chart(epw: EPW) -> Figure:
         WetBulbTemperature(), 'C')
     wet_bulb_temp = get_monthly_values(wet_bulb.average_monthly_per_hour())
 
-    # dry bulb temperature scatter
-    # here, we are extracting month wise data from an HourlyContinuousData
-    # This is a 12 item long list with each item a month worth of data
-    monthly_dbt = [epw.dry_bulb_temperature.filter_by_analysis_period(
-        AnalysisPeriod(st_month=i, end_month=i)) for i in range(1, 13)]
-
     fig = go.Figure()
     for i in range(12):
         x = [[MONTHS[i]]*24, list(range(0, 24))]
+
+        # add lower dry-bulb temperature
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=dry_bulb_temp_low[i],
+                line_color='gray',
+                line_width=0,
+                yaxis='y2',
+                showlegend=False)
+        )
+
+        # add higher dry-bulb temperature
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=dry_bulb_temp_high[i],
+                line_color='gray',
+                fill='tonexty',
+                line_width=0,
+                opacity=0.3,
+                yaxis='y2',
+                showlegend=False)
+        )
 
         # add global horizontal radiation
         fig.add_trace(
@@ -708,7 +735,8 @@ def diurnal_average_chart(epw: EPW) -> Figure:
                 fill='tozeroy',
                 line_width=0,
                 line_color='red',
-                yaxis='y')
+                yaxis='y',
+                showlegend=False)
         )
 
         # add direct normal radiation
@@ -719,7 +747,9 @@ def diurnal_average_chart(epw: EPW) -> Figure:
                 fill='tozeroy',
                 line_width=0,
                 line_color='orange',
-                yaxis='y'))
+                yaxis='y',
+                showlegend=False)
+        )
 
         # add diffuse horizontal radiation
         fig.add_trace(
@@ -729,7 +759,9 @@ def diurnal_average_chart(epw: EPW) -> Figure:
                 fill='tozeroy',
                 line_width=0,
                 line_color='yellow',
-                yaxis='y'))
+                yaxis='y',
+                showlegend=False)
+        )
 
         # add MonthlyPerHour average dry-bulb temperature
         fig.add_trace(
@@ -737,37 +769,65 @@ def diurnal_average_chart(epw: EPW) -> Figure:
                 x=x,
                 y=dry_bulb_temp[i],
                 line_color='brown',
-                yaxis='y2')
+                yaxis='y2',
+                showlegend=False)
         )
 
-        # add MonthlyPerHour average dry-bulb temperature
+        # add MonthlyPerHour average wet-bulb temperature
         fig.add_trace(
             go.Scatter(
                 x=x,
                 y=wet_bulb_temp[i],
                 line_color='blue',
-                yaxis='y2')
+                yaxis='y2',
+                showlegend=False)
         )
 
-        # add the spread of dry bulb temperature
-        # get hour for each data point in the datacollection
-        hours = [item.hour for item in monthly_dbt[i].datetimes]
-        fig.add_trace(
-            go.Scatter(
-                x=[[MONTHS[i]]*len(monthly_dbt[i]), hours],
-                y=monthly_dbt[i].values,
-                mode='markers',
-                marker_color='brown',
-                marker_size=3,
-                opacity=0.5,
-                yaxis='y2'))
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': title if title else 'Diurnal Average',
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
 
     fig.update_layout(
-        yaxis=dict(range=[0, 1600], tick0=0, dtick=100,
-                   title='Global Horizontal Radiation'),
-        yaxis2=dict(range=[-20, 60], tick0=-20, dtick=5,
-                    title='Dry Bulb Temperature', overlaying='y', side='right'),
-        showlegend=False,
+
+        xaxis=dict(
+            showdividers=False,
+            showline=True,
+            linecolor='black',
+            linewidth=1),
+
+        yaxis=dict(
+            range=[0, 1600],
+            tick0=0,
+            dtick=100,
+            title='Radiation Wh/m2',
+            showline=True,
+            linecolor='black',
+            linewidth=1),
+
+        yaxis2=dict(
+            range=[-20, 60],
+            tick0=-20,
+            dtick=5,
+            title='Temperature C',
+            overlaying='y',
+            side='right',
+            showline=True,
+            linecolor='black',
+            linewidth=1),
+
+        title=fig_title,
+
     )
 
     return fig
