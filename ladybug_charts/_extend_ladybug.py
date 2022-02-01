@@ -5,12 +5,14 @@ from plotly.graph_objects import Figure
 from ladybug.datacollection import HourlyContinuousCollection, \
     HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection
 from ladybug_charts.to_figure import heat_map, monthly_bar_chart, daily_bar_chart, \
-    hourly_line_chart, per_hour_line_chart, wind_rose, psych_chart, bar_chart, sunpath
+    hourly_line_chart, per_hour_line_chart, wind_rose, psych_chart, bar_chart, sunpath,\
+    diurnal_average_chart
 from ladybug.windrose import WindRose
 from ladybug.psychchart import PsychrometricChart
 from ladybug.hourlyplot import HourlyPlot
 from ladybug.monthlychart import MonthlyChart
 from ladybug.sunpath import Sunpath
+from ladybug.epw import EPW
 
 HourlyContinuousCollection.heat_map = heat_map
 HourlyDiscontinuousCollection.heat_map = heat_map
@@ -21,6 +23,7 @@ HourlyContinuousCollection.per_hour_line_chart = per_hour_line_chart
 WindRose.plot = wind_rose
 PsychrometricChart.plot = psych_chart
 Sunpath.plot = sunpath
+EPW.diurnal_average_chart = diurnal_average_chart
 
 
 def hourly_plot(self, title: str = None, show_title: bool = False,
