@@ -1,10 +1,9 @@
 """Create plotly figures from pandas Dataframe."""
 
 
-from tkinter import ANCHOR
 import numpy as np
 import pandas as pd
-import warnings
+
 
 from math import ceil, floor, cos, radians
 from typing import Union, List, Tuple
@@ -19,7 +18,7 @@ from plotly.subplots import make_subplots
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
-    mesh_to_coordinates
+    get_monthly_values
 from ._psych import _psych_chart
 from .utils import Strategy, StrategyParameters
 
@@ -28,12 +27,11 @@ from ladybug.datacollection import HourlyContinuousCollection, \
 from ladybug.windrose import WindRose
 from ladybug.color import Color, Colorset, ColorRange
 from ladybug_pandas.series import Series
-from ladybug import psychrometrics as psy
 from ladybug.sunpath import Sunpath
 from ladybug.psychchart import PsychrometricChart
 from ladybug.dt import DateTime
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
-from ladybug_geometry.geometry2d.pointvector import Point2D
+
 from ladybug.epw import EPW
 
 
@@ -674,160 +672,40 @@ def diurnal_average_chart(epw: EPW) -> Figure:
     Returns:
         A plotly figure.
     """
-    df = dataframe()
+    glob_hor_rad = get_monthly_values(
+        epw.global_horizontal_radiation.average_monthly_per_hour())
+    dry_bulb_temp = get_monthly_values(
+        epw.dry_bulb_temperature.average_monthly_per_hour())
 
-    radiation_collection = [epw.global_horizontal_radiation, epw.direct_normal_radiation,
-                            epw.diffuse_horizontal_radiation]
-
-    rad_colors = ['red', 'orange', 'yellow']
-
-    fig = make_subplots(
-        rows=1,
-        cols=12,
-        subplot_titles=MONTHS,
-        shared_yaxes=True,
-    )
-
-    fig.update_layout(
-        yaxis=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis2=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis3=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis4=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis5=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis6=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis7=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis8=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis9=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis10=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis11=dict(range=[0, 1600], tick0=0, dtick=100),
-        yaxis12=dict(range=[0, 1600], tick0=0, dtick=100),
-
-        yaxis13=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x', overlaying='y', side='right'),
-        yaxis14=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x2', overlaying='y2', side='right'),
-        yaxis15=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x3', overlaying='y3', side='right'),
-        yaxis16=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x4', overlaying='y4', side='right'),
-        yaxis17=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x5', overlaying='y5', side='right'),
-        yaxis18=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x6', overlaying='y6', side='right'),
-        yaxis19=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x7', overlaying='y7', side='right'),
-        yaxis20=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x8', overlaying='y8', side='right'),
-        yaxis21=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x9', overlaying='y9', side='right'),
-        yaxis22=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x10', overlaying='y10', side='right'),
-        yaxis23=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x11', overlaying='y11', side='right'),
-        yaxis24=dict(range=[-20, 60], tick0=-20, dtick=5,
-                     anchor='x12', overlaying='y12', side='right')
-
-    )
-
-    # add radiation data
-    for count, rad_data in enumerate(radiation_collection):
-        var = rad_data.header.data_type.name
-        var_unit = rad_data.header.unit
-        series = Series(rad_data)
-        df[var] = series.values
-
-        var_month_ave = df.groupby(["month", "hour"])[var].median().reset_index()
-
-        for i in range(12):
-            fig.add_trace(
-                go.Scatter(
-                    x=var_month_ave.loc[var_month_ave["month"] == i + 1, "hour"],
-                    y=var_month_ave.loc[var_month_ave["month"] == i + 1, var],
-                    fill="tozeroy",
-                    mode="lines",
-                    line_color=rad_colors[count],
-                    line_width=2,
-                    name=None,
-                    showlegend=False,
-                    customdata=df.loc[df["month"] == i + 1, "month_names"],
-                    hovertemplate=(
-                        "<b>"
-                        + var
-                        + ": %{y:.2f} "
-                        + var_unit
-                        + "</b><br>"
-                        + "Month: %{customdata}<br>"
-                        + "Hour: %{x}:00<br>"
-                    ),
-
-                ),
-                row=1,
-                col=i + 1,
-            )
-
-    # add dry-bulb temperature data
-    var = epw.dry_bulb_temperature.header.data_type.name
-    var_unit = epw.dry_bulb_temperature.header.unit
-    series = Series(epw.dry_bulb_temperature)
-    df[var] = series.values
-
+    fig = go.Figure()
     for i in range(12):
+        x = [[MONTHS[i]]*24, list(range(0, 24))]
 
         fig.add_trace(
             go.Scatter(
-                x=df.loc[df["month"] == i + 1, "hour"],
-                y=df.loc[df["month"] == i + 1, var],
-                mode="markers",
-                marker_color='red',
-                opacity=0.5,
-                marker_size=3,
-                name=MONTHS[i],
-                showlegend=False,
-                customdata=df.loc[df["month"] == i + 1, "month_names"],
-                hovertemplate=(
-                    "<b>"
-                    + var
-                    + ": %{y:.2f} "
-                    + var_unit
-                    + "</b><br>Month: %{customdata}<br>Hour: %{x}:00<br>"
-                ),
-                yaxis='y' + str(i + 1+12),
-
-            ),
-            row=1,
-            col=i + 1,
+                x=x,
+                y=glob_hor_rad[i],
+                fill="tozeroy",
+                line_color='orange',
+                yaxis='y')
         )
-        var_month_ave = df.groupby(["month", "hour"])[var].median().reset_index()
+
+        # add dry-bulb temperature
         fig.add_trace(
             go.Scatter(
-                x=var_month_ave.loc[var_month_ave["month"] == i + 1, "hour"],
-                y=var_month_ave.loc[var_month_ave["month"] == i + 1, var],
-                mode="lines",
+                x=x,
+                y=dry_bulb_temp[i],
                 line_color='red',
-                line_width=3,
-                name=None,
-                showlegend=False,
-                hovertemplate=(
-                    "<b>" + var + ": %{y:.2f} " + var_unit + "</b><br>Hour: %{x}:00<br>"
-                ),
-                yaxis='y' + str(i + 1+12),
-
-            ),
-            row=1,
-            col=i + 1,
+                yaxis='y2')
         )
 
     fig.update_layout(
-        template='plotly_white',
-        dragmode=False,
+        yaxis=dict(range=[0, 1600], tick0=0, dtick=100,
+                   title='Global Horizontal Radiation'),
+        yaxis2=dict(range=[-20, 60], tick0=-20, dtick=5,
+                    title='Dry Bulb Temperature', overlaying='y', side='right'),
+        showlegend=False,
     )
-    # fig.update_layout(
-    #     yaxis=dict(range=[0, 1600], tick0=0, dtick=100),
-    #     yaxis2=dict(range=[-20, 60], tick0=-20, dtick=5, anchor='x12', overlaying='y', side='right'))
-    fig['data'][56].update(yaxis='y23')
-    fig['data'][57].update(yaxis='y23')
-    fig['data'][58].update(yaxis='y24')
-    fig['data'][59].update(yaxis='y24')
 
     return fig
 
