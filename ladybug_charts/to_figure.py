@@ -705,6 +705,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
     glob_hor_rad_color = rgb_to_hex(colors[-3])
     dir_nor_rad_color = rgb_to_hex(colors[-4])
     diff_hor_rad_color = rgb_to_hex(colors[-5])
+    spread_color = rgb_to_hex(Color(149, 152, 156))
 
     # get monthly per hour average data
     glob_hor_rad = get_monthly_values(
@@ -741,7 +742,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
             go.Scatter(
                 x=x,
                 y=dry_bulb_temp_low[i],
-                line_color='gray',
+                line_color=spread_color,
                 line_width=0,
                 opacity=0.2,
                 yaxis='y2',
@@ -762,7 +763,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
             go.Scatter(
                 x=x,
                 y=dry_bulb_temp_high[i],
-                line_color='gray',
+                line_color=spread_color,
                 fill='tonexty',
                 line_width=0,
                 opacity=0.1,
