@@ -12,6 +12,8 @@ from ladybug.monthlychart import MonthlyChart
 from ladybug.sunpath import Sunpath
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
 
+# heat maps
+
 
 def test_hourly_continuous_to_heatmap(epw):
     fig = epw.dry_bulb_temperature.heat_map()
@@ -22,15 +24,7 @@ def test_hourly_discontinuous_to_heatmap(epw):
     fig = epw.dry_bulb_temperature.filter_by_conditional_statement('a>25').heat_map()
     assert isinstance(fig, Figure)
 
-
-def test_hourly_to_per_hour_chart(epw):
-    fig = epw.dry_bulb_temperature.per_hour_line_chart()
-    assert isinstance(fig, Figure)
-
-
-def test_hourly_to_line_chart(epw):
-    fig = epw.dry_bulb_temperature.line_chart()
-    assert isinstance(fig, Figure)
+# bar charts
 
 
 def test_monthly_to_bar_chart(epw):
@@ -70,6 +64,25 @@ def test_bar_chart_multiple_daily_data(epw):
     dbt = epw.dry_bulb_temperature.average_daily()
     rh = epw.relative_humidity.average_daily()
     fig = bar_chart([dbt, rh])
+    assert isinstance(fig, Figure)
+
+# line-chart
+
+
+def test_hourly_to_line_chart(epw):
+    fig = epw.dry_bulb_temperature.line_chart()
+    assert isinstance(fig, Figure)
+
+# diurnal-average-charts
+
+
+def test_hourly_to_diurnal_average(epw):
+    fig = epw.dry_bulb_temperature.diurnal_average_chart()
+    assert isinstance(fig, Figure)
+
+
+def test_epw_to_diurnal_average(epw):
+    fig = epw.diurnal_average_chart()
     assert isinstance(fig, Figure)
 
 
