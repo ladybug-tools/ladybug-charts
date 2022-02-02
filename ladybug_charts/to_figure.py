@@ -24,7 +24,8 @@ from ._psych import _psych_chart
 from .utils import Strategy, StrategyParameters
 
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
+    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection,\
+    MonthlyPerHourCollection
 from ladybug.windrose import WindRose
 from ladybug.analysisperiod import AnalysisPeriod
 from ladybug.color import Color, Colorset, ColorRange
@@ -550,10 +551,10 @@ def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None,
     return fig
 
 
-def per_hour_line_chart(data: HourlyContinuousCollection, title: str = None,
-                        show_title: bool = False,
-                        color: Color = None) -> Figure:
-    """Create a plotly per hour line chart figure from a ladybug hourly continuous data.
+def monthly_per_hour_chart(data: HourlyContinuousCollection, title: str = None,
+                           show_title: bool = False,
+                           color: Color = None) -> Figure:
+    """Create a diurnal average chart from a ladybug hourly continuous data.
 
     Args:
         data: A ladybug HourlyContinuousCollection object.
@@ -570,85 +571,86 @@ def per_hour_line_chart(data: HourlyContinuousCollection, title: str = None,
     assert isinstance(data, HourlyContinuousCollection), 'Only ladybug hourly continuous'\
         f' data is supported. Instead got {type(data)}'
 
+    # get monthly per hour average data
+    monthly_values = get_monthly_values(data.average_monthly_per_hour())
+    monthly_lower_values = get_monthly_values(data.percentile_monthly_per_hour(0))
+    monthly_higher_values = get_monthly_values(data.percentile_monthly_per_hour(100))
+
     var = data.header.data_type.name
     var_unit = data.header.unit
     var_color = color if color else Color(
         randint(0, 255), randint(0, 255), randint(0, 255))
+    var_color = rgb_to_hex(var_color)
+    range_y = [data.min, data.max]
 
-    df = dataframe()
-    series = Series(data)
-    df[var] = series.values
-
-    data_max = 5 * ceil(df[var].max() / 5)
-    data_min = 5 * floor(df[var].min() / 5)
-    range_y = [data_min, data_max]
-
-    var_month_ave = df.groupby(["month", "hour"])[var].median().reset_index()
-
-    fig = make_subplots(
-        rows=1,
-        cols=12,
-        subplot_titles=MONTHS,
-    )
+    fig = go.Figure()
 
     for i in range(12):
+        x = [[MONTHS[i]]*24, list(range(0, 24))]
 
+        # add lower range
         fig.add_trace(
             go.Scatter(
-                x=df.loc[df["month"] == i + 1, "hour"],
-                y=df.loc[df["month"] == i + 1, var],
-                mode="markers",
-                marker_color=rgb_to_hex(var_color),
-                opacity=0.5,
-                marker_size=3,
-                name=MONTHS[i],
+                x=x,
+                y=monthly_lower_values[i],
+                line_color=var_color,
+                line_width=0,
+                opacity=0.2,
                 showlegend=False,
-                customdata=df.loc[df["month"] == i + 1, "month_names"],
+                hovertemplate=(
+                    "<b>"
+                    + var+' low'
+                    + ": %{y:.2f} "
+                    + var_unit
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ),
+            )
+        )
+
+        # add higher range
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=monthly_higher_values[i],
+                line_color=var_color,
+                fill='tonexty',
+                line_width=0,
+                opacity=0.1,
+                showlegend=False,
+                hovertemplate=(
+                    "<b>"
+                    + var + ' high'
+                    + ": %{y:.2f} "
+                    + var_unit
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
+                    + "<extra></extra>"
+                ),)
+        )
+
+        # add MonthlyPerHour average dry-bulb temperature
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=monthly_values[i],
+                line_color=var_color,
+                line_width=4,
+                showlegend=False,
                 hovertemplate=(
                     "<b>"
                     + var
                     + ": %{y:.2f} "
                     + var_unit
-                    + "</b><br>Month: %{customdata}<br>Hour: %{x}:00<br>"
+                    + "</b><br>Month: %{x[0]}<br>Hour: %{x[1]}:00<br>"
                     + "<extra></extra>"
-                ),
-            ),
-            row=1,
-            col=i + 1,
+                ))
         )
-
-        fig.add_trace(
-            go.Scatter(
-                x=var_month_ave.loc[var_month_ave["month"] == i + 1, "hour"],
-                y=var_month_ave.loc[var_month_ave["month"] == i + 1, var],
-                mode="lines",
-                line_color=rgb_to_hex(var_color),
-                line_width=3,
-                name=None,
-                showlegend=False,
-                hovertemplate=(
-                    "<b>" + var + ": %{y:.2f} " + var_unit + "</b><br>Hour: %{x}:00<br>"
-                    + "<extra></extra>"
-                ),
-            ),
-            row=1,
-            col=i + 1,
-        )
-
-        fig.update_xaxes(range=[0, 25], row=1, col=i + 1)
-        fig.update_yaxes(range=range_y, row=1, col=i + 1)
-
-    fig.update_xaxes(
-        ticktext=["6", "12", "18"], tickvals=["6", "12", "18"], tickangle=0
-    )
-
-    chart_title = title if title else var + f' ({var_unit})'
 
     # setting the title for the figure
     if show_title:
         fig_title = {
-            'text': chart_title,
-            'y': 1,
+            'text': title if title else var + f' ({var_unit})',
+            'y': 0.85,
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'
@@ -660,12 +662,25 @@ def per_hour_line_chart(data: HourlyContinuousCollection, title: str = None,
         fig_title = None
 
     fig.update_layout(
-        template='plotly_white',
-        dragmode=False,
-        margin=dict(l=20, r=20, t=55, b=20),
-        title=fig_title
-    )
 
+        xaxis=dict(
+            showdividers=False,
+            showline=True,
+            linecolor='black',
+            linewidth=1,
+            ticks='outside',
+            tickson='boundaries',
+            tickwidth=1,
+            ticklen=5),
+
+        yaxis=dict(
+            showline=True,
+            linecolor='black',
+            linewidth=1),
+
+        title=fig_title,
+
+    )
     return fig
 
 
@@ -829,6 +844,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
                 x=x,
                 y=dry_bulb_temp[i],
                 line_color=dbt_color,
+                line_width=4,
                 yaxis='y2',
                 showlegend=False,
                 hovertemplate=(
@@ -847,6 +863,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
                 x=x,
                 y=wet_bulb_temp[i],
                 line_color=wbt_color,
+                line_width=4,
                 yaxis='y2',
                 showlegend=False,
                 hovertemplate=(
