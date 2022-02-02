@@ -551,9 +551,9 @@ def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None,
     return fig
 
 
-def monthly_per_hour_chart(data: HourlyContinuousCollection, title: str = None,
-                           show_title: bool = False,
-                           color: Color = None) -> Figure:
+def diurnal_average_chart_from_hourly(data: HourlyContinuousCollection, title: str = None,
+                                      show_title: bool = False,
+                                      color: Color = None) -> Figure:
     """Create a diurnal average chart from a ladybug hourly continuous data.
 
     Args:
@@ -634,7 +634,7 @@ def monthly_per_hour_chart(data: HourlyContinuousCollection, title: str = None,
                 x=x,
                 y=monthly_values[i],
                 line_color=var_color,
-                line_width=4,
+                line_width=2,
                 showlegend=False,
                 hovertemplate=(
                     "<b>"
@@ -676,7 +676,8 @@ def monthly_per_hour_chart(data: HourlyContinuousCollection, title: str = None,
         yaxis=dict(
             showline=True,
             linecolor='black',
-            linewidth=1),
+            linewidth=1,
+            title=var_unit),
 
         title=fig_title,
 
@@ -685,7 +686,7 @@ def monthly_per_hour_chart(data: HourlyContinuousCollection, title: str = None,
 
 
 def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
-                          colorset: ColorSet = ColorSet.original) -> Figure:
+                          colors: List[Color] = Colorset.original()) -> Figure:
     """Create a diurnal average chart from a ladybug EPW object.
 
     Args:
@@ -699,7 +700,6 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
         A plotly figure.
     """
     # assign colors
-    colors = color_set[colorset.value]
     dbt_color = rgb_to_hex(colors[-1])
     wbt_color = rgb_to_hex(colors[-2])
     glob_hor_rad_color = rgb_to_hex(colors[-3])
@@ -845,7 +845,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
                 x=x,
                 y=dry_bulb_temp[i],
                 line_color=dbt_color,
-                line_width=4,
+                line_width=2,
                 yaxis='y2',
                 showlegend=False,
                 hovertemplate=(
@@ -864,7 +864,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
                 x=x,
                 y=wet_bulb_temp[i],
                 line_color=wbt_color,
-                line_width=4,
+                line_width=2,
                 yaxis='y2',
                 showlegend=False,
                 hovertemplate=(
@@ -893,7 +893,7 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
     if show_title:
         fig_title = {
             'text': title if title else 'Diurnal Average',
-            'y': 0.90,
+            'y': 0.95,
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'
@@ -938,10 +938,11 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
 
         title=fig_title,
         legend=dict(
-            yanchor='top',
-            y=1,
-            xanchor='left',
-            x=0.01
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
         )
 
     )
