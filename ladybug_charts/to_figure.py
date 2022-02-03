@@ -686,7 +686,7 @@ def diurnal_average_chart_from_hourly(data: HourlyContinuousCollection, title: s
 
 
 def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
-                          colors: List[Color] = Colorset.original()) -> Figure:
+                          colors: Union[List[Color], Tuple[Color]] = Colorset.original()) -> Figure:
     """Create a diurnal average chart from a ladybug EPW object.
 
     Args:
@@ -699,7 +699,13 @@ def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
     Returns:
         A plotly figure.
     """
-    # assign colors
+
+    # reset colors if length of colors is less than 5
+    if len(colors) < 5:
+        color_range = ColorRange(colors, domain=[0, 5])
+        num_of_colors: int = len(colors)*2 if len(colors)*2 >= 5 else 5
+        colors: List[Color] = [color_range.color(i) for i in range(num_of_colors)]
+
     dbt_color = rgb_to_hex(colors[-1])
     wbt_color = rgb_to_hex(colors[-2])
     glob_hor_rad_color = rgb_to_hex(colors[-3])
