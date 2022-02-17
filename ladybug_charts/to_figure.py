@@ -18,7 +18,7 @@ from plotly.subplots import make_subplots
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
-    get_monthly_values
+    get_monthly_values, get_monthly
 from ._helper_chart import get_dummy_trace
 from ._psych import _psych_chart
 from .utils import Strategy, StrategyParameters
@@ -1433,5 +1433,103 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
         margin=dict(l=20, r=20, t=33, b=20),
         title=fig_title,
     )
+
+    return fig
+
+
+def bar_chart_with_table(data: List[MonthlyCollection],
+                         min_range: float = None, max_range: float = None,
+                         colors: List[Color] = None,
+                         title: str = None,
+                         show_title: bool = False,
+                         stack: bool = False) -> Figure:
+    """Create a plotly bar chart figure from multiple ladybug monthly or daily data.
+
+    Args:
+        data: A list of ladybug monthly data or a list of ladybug daily data.
+        min_range: Minimum value for the legend. If not set will be calculated
+            from the data. Defaults to None.
+        max_range: Maximum value for the legend. If not set will be calculated
+            from the data. Defaults to None.
+        colors: A list of ladybug color objects. The length of this list needs to match
+            the length of data argument. If not set, random colors will be used.
+            Defaults to None.
+        title: A string to be used as the title of the plot. If not set, the
+            names of data will be used to create a title for the chart. Defaults to None.
+        show_title: A boolean to set whether to show the title of the chart.
+            Defaults to False.
+        stack: A boolean to determine whether to stack the data. Defaults to False which
+            will show data side by side.
+
+    Returns:
+        A plotly figure.
+    """
+    assert len(data) > 0 and all([isinstance(item, MonthlyCollection)
+                                  for item in data]), 'Only a list of ladybug '\
+        f' monthly data is supported. Instead got {type(data)}'
+
+    if colors:
+        assert len(colors) == len(data), 'Length of colors argument needs to match'\
+            f' the length of data argument. Instead got {len(colors)} and {len(data)}'
+
+    # set the range of y-axis if provided
+    if min_range == None and max_range == None:
+        y_range = None
+    elif min_range != None and max_range != None:
+        y_range = [min_range, max_range]
+
+    fig = make_subplots(rows=2, cols=1, vertical_spacing=0.1, specs=[[{"type": "bar"}],
+                                                                     [{"type": "table"}]])
+
+    names = []
+
+    for count, item in enumerate(data):
+        var = item.header.data_type.name
+        var_unit = item.header.unit
+        color = colors[count] if colors else None
+        bar = _monthly_bar(item, var, var_unit, color)
+        fig.add_trace(bar, row=1, col=1)
+        names.append(var)
+
+    # add table
+    table = go.Table(
+        header=dict(values=MONTHS),
+        cells=dict(values=get_monthly(data)))
+
+    fig.add_trace(table, row=2, col=1)
+
+    # setting the title for the figure
+    if show_title:
+        fig_title = {
+            'text': title if title else ' - '.join(names),
+            'y': 1,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        }
+    else:
+        if title:
+            raise ValueError(
+                f'Title is set to "{title}" but show_title is set to False.')
+        fig_title = None
+
+    # move legend upwards as mode data is loaded
+    legend_height = 1.2 if len(data) <= 3 else 1.2 + (len(data)-3)/10
+
+    fig.update_layout(
+        barmode='relative' if stack else 'group',
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=33, b=20),
+        yaxis_nticks=13,
+        title=fig_title,
+        legend={
+            'x': 0,
+            'y': legend_height,
+        }
+    )
+    fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period",
+                     showline=True, linewidth=1, linecolor="black", mirror=True)
+    fig.update_yaxes(showline=True, linewidth=1,
+                     linecolor="black", mirror=True, range=y_range)
 
     return fig
