@@ -2,7 +2,7 @@ from plotly.graph_objects import Figure
 from ladybug_comfort.degreetime import heating_degree_time, cooling_degree_time
 from ladybug.datacollection import HourlyContinuousCollection
 from ladybug.datatype.temperaturetime import HeatingDegreeTime, CoolingDegreeTime
-from ladybug_charts.to_figure import bar_chart
+from ladybug_charts.to_figure import bar_chart, bar_chart_with_table
 from ladybug_charts.utils import Strategy
 from ladybug.color import Color, Colorset
 from ladybug.windrose import WindRose
@@ -131,4 +131,16 @@ def test_sunpath(epw):
     lb_sunpath = Sunpath.from_location(epw.location)
     fig = lb_sunpath.plot(data=epw.dry_bulb_temperature, colorset=Colorset.nuanced(),
                           min_range=0, max_range=50, title='SUNPATH', show_title=True)
+    assert isinstance(fig, Figure)
+
+
+def test_bar_charts_with_table(epw):
+
+    dir = epw.direct_normal_radiation.average_monthly()
+    diff = epw.diffuse_horizontal_radiation.average_monthly()
+    glob = epw.global_horizontal_radiation.average_monthly()
+
+    colors = [Color(255, 79, 56), Color(255, 139, 56), Color(255, 199, 56)]
+    fig = bar_chart_with_table(data=[dir, diff, glob],
+                               colors=colors, stack=True)
     assert isinstance(fig, Figure)
