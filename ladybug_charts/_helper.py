@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import List, Tuple
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, MonthlyPerHourCollection
+    HourlyDiscontinuousCollection, MonthlyPerHourCollection, MonthlyCollection
 from ladybug.color import Color, Colorset
 from ladybug.header import Header
 from ladybug.analysisperiod import AnalysisPeriod
@@ -181,3 +181,14 @@ def get_monthly_values(data: MonthlyPerHourCollection) -> List[List[float]]:
     for i in range(24, 312, 24):
         values.append([data.values[j] for j in range(i-24, i)])
     return values
+
+
+def get_monthly(data: List[MonthlyCollection]) -> List[List[float]]:
+
+    collect = []
+    for i in range(12):
+
+        temp = [round(item[i], 2) for item in data]
+        collect.append(temp)
+
+    return collect
