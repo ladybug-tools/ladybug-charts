@@ -183,12 +183,27 @@ def get_monthly_values(data: MonthlyPerHourCollection) -> List[List[float]]:
     return values
 
 
-def get_monthly(data: List[MonthlyCollection]) -> List[List[float]]:
+def group_monthly(data: List[MonthlyCollection],
+                  colors: List[Color]) -> Tuple[List[List[float]], List[List[str]]]:
+    """Create monthly lists from values in data and colors.
 
-    collect = []
+    Args:
+        data: A list of MonthlyCollection objects.
+        colors: A list of colors.
+
+    Returns:
+        A tuple of two lists:
+
+        -   The is a list of 12 sub-lists. Where each sub-list has the same number of 
+            values as the length of data.
+
+        -   The is a list of 12 sub-lists. Where each sub-list has the same number of 
+            hex codes as the length of data.
+    """
+
+    monthly_values, monthly_colors = [], []
     for i in range(12):
+        monthly_values.append([round(item[i], 2) for item in data])
+        monthly_colors.append([rgb_to_hex(color) for color in colors])
 
-        temp = [round(item[i], 2) for item in data]
-        collect.append(temp)
-
-    return collect
+    return monthly_values, monthly_colors
