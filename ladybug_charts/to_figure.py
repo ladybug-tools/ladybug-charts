@@ -18,7 +18,7 @@ from plotly.subplots import make_subplots
 
 from ._to_dataframe import dataframe, Frequency, MONTHS
 from ._helper import discontinuous_to_continuous, rgb_to_hex, ColorSet, color_set,\
-    get_monthly_values, get_monthly
+    get_monthly_values, group_monthly
 from ._helper_chart import get_dummy_trace
 from ._psych import _psych_chart
 from .utils import Strategy, StrategyParameters
@@ -1446,7 +1446,7 @@ def bar_chart_with_table(data: List[MonthlyCollection],
     """Create a plotly bar chart figure from multiple ladybug monthly or daily data.
 
     Args:
-        data: A list of ladybug monthly data or a list of ladybug daily data.
+        data: A list of ladybug monthly data.
         min_range: Minimum value for the legend. If not set will be calculated
             from the data. Defaults to None.
         max_range: Maximum value for the legend. If not set will be calculated
@@ -1472,6 +1472,9 @@ def bar_chart_with_table(data: List[MonthlyCollection],
         assert len(colors) == len(data), 'Length of colors argument needs to match'\
             f' the length of data argument. Instead got {len(colors)} and {len(data)}'
 
+    colors = colors if colors else [Color(randint(0, 255), randint(0, 255),
+                                          randint(0, 255)) for item in data]
+
     # set the range of y-axis if provided
     if min_range == None and max_range == None:
         y_range = None
@@ -1492,9 +1495,10 @@ def bar_chart_with_table(data: List[MonthlyCollection],
         names.append(var)
 
     # add table
+    values, colors = group_monthly(data, colors)
     table = go.Table(
-        header=dict(values=MONTHS),
-        cells=dict(values=get_monthly(data)))
+        header=dict(values=None, fill_color='#ffffff'),
+        cells=dict(values=values, fill_color=colors))
 
     fig.add_trace(table, row=2, col=1)
 
