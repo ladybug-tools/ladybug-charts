@@ -451,6 +451,7 @@ def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None,
     df = dataframe()
     series = Series(data)
     df[var] = series.values
+    df[var] = df[var].astype(float)
 
     data_max = 5 * ceil(df[var].max() / 5)
     data_min = 5 * floor(df[var].min() / 5)
