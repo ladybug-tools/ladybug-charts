@@ -24,10 +24,8 @@ from ._psych import _psych_chart
 from .utils import Strategy, StrategyParameters
 
 from ladybug.datacollection import HourlyContinuousCollection, \
-    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection,\
-    MonthlyPerHourCollection
+    HourlyDiscontinuousCollection, MonthlyCollection, DailyCollection, BaseCollection
 from ladybug.windrose import WindRose
-from ladybug.analysisperiod import AnalysisPeriod
 from ladybug.color import Color, Colorset, ColorRange
 from ladybug_pandas.series import Series
 from ladybug.sunpath import Sunpath
@@ -44,10 +42,12 @@ from ladybug.epw import EPW
 pio.templates.default = 'plotly_white'
 
 
-def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
-             min_range: float = None, max_range: float = None,
-             colors: List[Color] = None, title: str = None, show_title: bool = False,
-             num_labels: int = None, labels: List[float] = None) -> Figure:
+def heat_map(
+    hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
+    min_range: float = None, max_range: float = None,
+    colors: List[Color] = None, title: str = None, show_title: bool = False,
+    num_labels: int = None, labels: List[float] = None
+) -> Figure:
     """Create a plotly heat map figure from Ladybug Hourly data.
 
     Args:
@@ -83,14 +83,11 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
     df[var] = series.values
     var_unit = df[var].dtype.name.split('(')[-1].split(')')[0]
 
-    if min_range != None and max_range != None:
-        range_z = [min_range, max_range]
-    elif min_range != None and max_range == None:
-        range_z = [min_range, data_range[1]]
-    elif min_range == None and max_range != None:
-        range_z = [data_range[0], max_range]
-    else:
-        range_z = [data_range[0], data_range[1]]
+    range_z = [data_range[0], data_range[1]]
+    if min_range is not None:
+        range_z[0] = min_range
+    if max_range is not None:
+        range_z[1] = max_range
 
     if not colors:
         colors = color_set[ColorSet.original.value]
@@ -112,7 +109,8 @@ def heat_map(hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousC
                 + var
                 + ": %{z} "
                 + var_unit
-                + "</b><br>Month: %{customdata[0]}<br>Day: %{customdata[1]}<br>Hour: %{y}:00<br>"
+                + "</b><br>Month: %{customdata[0]}<br>Day: %{customdata[1]}<br>"
+                + "Hour: %{y}:00<br>"
             ),
             name="",
             colorbar=dict(title=var_unit, nticks=nticks, dtick=dtick, thickness=10),
@@ -179,7 +177,8 @@ def _monthly_bar(data: MonthlyCollection, var: str, var_unit: str,
             + ' in %{customdata[0]}'
             + '<extra></extra>'),
         marker_color=rgb_to_hex(color),
-        name=var + ' ' + var_unit
+        marker_line_color='black',
+        name=var
     )
 
 
@@ -220,25 +219,22 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
               min_range: float = None, max_range: float = None,
               colors: List[Color] = None,
               title: str = None,
-              show_title: bool = False,
+              center_title: bool = False,
               stack: bool = False) -> Figure:
     """Create a plotly bar chart figure from multiple ladybug monthly or daily data.
 
     Args:
-        data: A list of ladybug monthly data or a list of ladybug daily data.
-        min_range: Minimum value for the legend. If not set will be calculated
-            from the data. Defaults to None.
-        max_range: Maximum value for the legend. If not set will be calculated
-            from the data. Defaults to None.
-        colors: A list of ladybug color objects. The length of this list needs to match
-            the length of data argument. If not set, random colors will be used.
-            Defaults to None.
-        title: A string to be used as the title of the plot. If not set, the
-            names of data will be used to create a title for the chart. Defaults to None.
-        show_title: A boolean to set whether to show the title of the chart.
-            Defaults to False.
-        stack: A boolean to determine whether to stack the data. Defaults to False which
-            will show data side by side.
+        data: A list of either ladybug MonthlyCollection data or DailyCollection data.
+        min_range: Minimum value for the legend. If None, it is autocalculated
+            from the data. (Default: None).
+        max_range: Maximum value for the legend. If None, it is autocalculated
+            from the data. (Default: None).
+        colors: A list of ladybug color objects that matches the length of data
+            argument. If None, random colors will be used. (Default: None).
+        title: A string to be used as the title of the plot. (Default: None).
+        center_title: A boolean to set whether to center the title of the
+            chart. (Default: False).
+        stack: A boolean to determine whether to stack the data. (Default: False).
 
     Returns:
         A plotly figure.
@@ -251,65 +247,50 @@ def bar_chart(data: Union[List[MonthlyCollection], List[DailyCollection]],
         assert len(colors) == len(data), 'Length of colors argument needs to match'\
             f' the length of data argument. Instead got {len(colors)} and {len(data)}'
 
-    # set the range of y-axis if provided
-    if min_range == None and max_range == None:
-        range = None
-    elif min_range != None and max_range != None:
-        range = [min_range, max_range]
+    # set the range of y-axis and get the title if provided
+    y_range = None if min_range is None or max_range is None else [min_range, max_range]
+    y_title = '{} ({})'.format(data[0].header.data_type, data[0].header.unit)
 
     fig = go.Figure()
-    names = []
-
     for count, item in enumerate(data):
+        var = item.header.metadata['type'] if 'type' in \
+            item.header.metadata else str(item.header.data_type)
+        var_unit = item.header.unit
+        color = colors[count] if colors else None
+        bar = _monthly_bar(item, var, var_unit, color) \
+            if isinstance(item, MonthlyCollection) \
+            else _daily_bar(item, var, var_unit, color)
+        fig.add_trace(bar)
 
-        if isinstance(item, MonthlyCollection):
-            var = item.header.data_type.name
-            var_unit = item.header.unit
-            color = colors[count] if colors else None
-            bar = _monthly_bar(item, var, var_unit, color)
-            fig.add_trace(bar)
-            names.append(var)
-        else:
-            var = item.header.data_type.name
-            var_unit = item.header.unit
-            color = colors[count] if colors else None
-            bar = _daily_bar(item, var, var_unit, color)
-            fig.add_trace(bar)
-            names.append(var)
-
-    # setting the title for the figure
-    if show_title:
+    # set the title for the figure
+    fig_title = None
+    if title is not None:
         fig_title = {
-            'text': title if title else ' - '.join(names),
+            'text': title,
             'y': 1,
-            'x': 0.5,
-            'xanchor': 'center',
+            'x': 0,
             'yanchor': 'top'
         }
-    else:
-        if title:
-            raise ValueError(
-                f'Title is set to "{title}" but show_title is set to False.')
-        fig_title = None
+        if center_title:
+            fig_title['x'] = 0.5
+            fig_title['xanchor'] = 'center'
 
     # move legend upwards as mode data is loaded
-    legend_height = 1.2 if len(data) <= 3 else 1.2 + (len(data)-3)/10
-
+    leg = {'x': 0, 'y': 1.2} if len(data) <= 3 else {}
     fig.update_layout(
         barmode='relative' if stack else 'group',
         template='plotly_white',
+        plot_bgcolor='white',
         margin=dict(l=20, r=20, t=33, b=20),
         yaxis_nticks=13,
         title=fig_title,
-        legend={
-            'x': 0,
-            'y': legend_height,
-        }
+        legend=leg
     )
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period",
                      showline=True, linewidth=1, linecolor="black", mirror=True)
     fig.update_yaxes(showline=True, linewidth=1,
-                     linecolor="black", mirror=True, range=range)
+                     linecolor="black", mirror=True, range=y_range,
+                     title_text=y_title)
 
     return fig
 
@@ -440,8 +421,8 @@ def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None,
         A plotly figure.
     """
 
-    assert isinstance(data, HourlyContinuousCollection), 'Only ladybug hourly continuous'\
-        f' data is supported. Instead got {type(data)}'
+    assert isinstance(data, HourlyContinuousCollection), \
+        f'Only ladybug hourly continuous data is supported. Instead got {type(data)}'
 
     var = data.header.data_type.name
     var_unit = data.header.unit
@@ -552,9 +533,11 @@ def hourly_line_chart(data: HourlyContinuousCollection, color: Color = None,
     return fig
 
 
-def diurnal_average_chart_from_hourly(data: HourlyContinuousCollection, title: str = None,
-                                      show_title: bool = False,
-                                      color: Color = None) -> Figure:
+def diurnal_average_chart_from_hourly(
+    data: HourlyContinuousCollection, title: str = None,
+    show_title: bool = False,
+    color: Color = None
+) -> Figure:
     """Create a diurnal average chart from a ladybug hourly continuous data.
 
     Args:
@@ -569,8 +552,8 @@ def diurnal_average_chart_from_hourly(data: HourlyContinuousCollection, title: s
         A plotly figure.
     """
 
-    assert isinstance(data, HourlyContinuousCollection), 'Only ladybug hourly continuous'\
-        f' data is supported. Instead got {type(data)}'
+    assert isinstance(data, HourlyContinuousCollection), \
+        f'Only ladybug hourly continuous data is supported. Instead got {type(data)}'
 
     # get monthly per hour average data
     monthly_values = get_monthly_values(data.average_monthly_per_hour())
@@ -582,7 +565,6 @@ def diurnal_average_chart_from_hourly(data: HourlyContinuousCollection, title: s
     var_color = color if color else Color(
         randint(0, 255), randint(0, 255), randint(0, 255))
     var_color = rgb_to_hex(var_color)
-    range_y = [data.min, data.max]
 
     fig = go.Figure()
 
@@ -686,8 +668,10 @@ def diurnal_average_chart_from_hourly(data: HourlyContinuousCollection, title: s
     return fig
 
 
-def diurnal_average_chart(epw: EPW, title: str = None, show_title: bool = False,
-                          colors: Union[List[Color], Tuple[Color]] = Colorset.original()) -> Figure:
+def diurnal_average_chart(
+    epw: EPW, title: str = None, show_title: bool = False,
+    colors: Union[List[Color], Tuple[Color]] = Colorset.original()
+) -> Figure:
     """Create a diurnal average chart from a ladybug EPW object.
 
     Args:
@@ -970,7 +954,9 @@ def _speed_labels(bins, units):
     return labels
 
 
-def wind_rose(wind_rose: WindRose, title: str = None, show_title: bool = False) -> Figure:
+def wind_rose(
+    wind_rose: WindRose, title: str = None, show_title: bool = False
+) -> Figure:
     """Create a windrose plot.
 
     Args:
@@ -1111,12 +1097,14 @@ def wind_rose(wind_rose: WindRose, title: str = None, show_title: bool = False) 
     return fig
 
 
-def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
-                title: str = None, show_title: bool = False, polygon_pmv: PolygonPMV = None,
-                strategies: List[Strategy] = [Strategy.comfort],
-                strategy_parameters: StrategyParameters = StrategyParameters(),
-                solar_data: HourlyContinuousCollection = None,
-                colors: List[Color] = None) -> Figure:
+def psych_chart(
+    psych: PsychrometricChart, data: BaseCollection = None,
+    title: str = None, show_title: bool = False, polygon_pmv: PolygonPMV = None,
+    strategies: List[Strategy] = [Strategy.comfort],
+    strategy_parameters: StrategyParameters = StrategyParameters(),
+    solar_data: HourlyContinuousCollection = None,
+    colors: List[Color] = None
+) -> Figure:
     """Create a psychrometric chart.
 
     Args:
@@ -1146,9 +1134,11 @@ def psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                         strategy_parameters, solar_data, colors)
 
 
-def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
-            colorset: Colorset = Colorset.original(), min_range: float = None,
-            max_range: float = None, title: str = None, show_title: bool = False) -> Figure:
+def sunpath(
+    sunpath: Sunpath, data: HourlyContinuousCollection = None,
+    colorset: Colorset = Colorset.original(), min_range: float = None,
+    max_range: float = None, title: str = None, show_title: bool = False
+) -> Figure:
     """ Plot Sunpath.
 
     Args:
@@ -1195,15 +1185,11 @@ def sunpath(sunpath: Sunpath, data: HourlyContinuousCollection = None,
         data_max = 5 * ceil(solpos[var_name].max() / 5)
         data_min = 5 * floor(solpos[var_name].min() / 5)
 
-        if min_range == None and max_range == None:
-            var_range = [data_min, data_max]
-        elif min_range != None and max_range == None:
-            var_range = [min_range, data_max]
-        elif min_range == None and max_range != None:
-            var_range = [data_min, max_range]
-        else:
-            var_range = [min_range, max_range]
-
+        var_range = [data_min, data_max]
+        if min_range is not None:
+            var_range[0] = min_range
+        if max_range is not None:
+            var_range[1] = max_range
     else:
         solpos = df.loc[df["altitude"] > 0, :]
         chart_title = 'Sunpath' if title is None else title
@@ -1477,13 +1463,11 @@ def bar_chart_with_table(data: List[MonthlyCollection],
                                           randint(0, 255)) for item in data]
 
     # set the range of y-axis if provided
-    if min_range == None and max_range == None:
-        y_range = None
-    elif min_range != None and max_range != None:
+    y_range = None
+    if min_range is not None and max_range is not None:
         y_range = [min_range, max_range]
-
-    fig = make_subplots(rows=2, cols=1, vertical_spacing=0.1, specs=[[{"type": "bar"}],
-                                                                     [{"type": "table"}]])
+    fig_specs = [[{"type": "bar"}], [{"type": "table"}]]
+    fig = make_subplots(rows=2, cols=1, vertical_spacing=0.1, specs=fig_specs)
 
     names = []
 

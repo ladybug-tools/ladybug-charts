@@ -55,7 +55,7 @@ def test_bar_chart_multiple_monthly_data(epw):
 
     fig = bar_chart([hourly_heat.total_monthly(),
                     hourly_cool.total_monthly()],
-                    title='Degree-days', show_title=True,
+                    title='Degree-days', center_title=True,
                     colors=[Color(255, 0, 0), Color(0, 0, 255)], stack=True)
     assert isinstance(fig, Figure)
 
