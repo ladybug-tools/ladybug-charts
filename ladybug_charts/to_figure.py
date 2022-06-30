@@ -174,7 +174,7 @@ def _monthly_bar(data: MonthlyCollection, var: str, var_unit: str,
         hovertemplate=(
             '<br>%{y} '
             + var_unit
-            + ' in %{customdata[0]}'
+            + ' ' + var
             + '<extra></extra>'),
         marker_color=rgb_to_hex(color),
         marker_line_color='black',
