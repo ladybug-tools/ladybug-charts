@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>ladybug_charts.utils module &#8212; ladybug-charts  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ladybug_charts.to_figure module" href="ladybug_charts.to_figure.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          ladybug-charts</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.to_figure.html">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.to_figure.html">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ladybug_charts.to_figure.html" title="Previous Chapter: ladybug_charts.to_figure module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; ladybug_chart...</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/ladybug_charts.utils.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.to_figure.html">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <section id="module-ladybug_charts.utils">
+<span id="ladybug-charts-utils-module"></span><h1>ladybug_charts.utils module<a class="headerlink" href="#module-ladybug_charts.utils" title="Permalink to this headline">¶</a></h1>
+<p>Objects to suport Ladybug charts.</p>
+<dl class="py class">
+<dt id="ladybug_charts.utils.Strategy">
+<em class="property">class </em><code class="sig-prename descclassname">ladybug_charts.utils.</code><code class="sig-name descname">Strategy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ladybug_charts/utils.html#Strategy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.utils.Strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Strategies to apply to the psychrometric chart.</p>
+<dl class="py attribute">
+<dt id="ladybug_charts.utils.Strategy.capture_internal_heat">
+<code class="sig-name descname">capture_internal_heat</code><em class="property"> = 'Capture Internal Heat'</em><a class="headerlink" href="#ladybug_charts.utils.Strategy.capture_internal_heat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ladybug_charts.utils.Strategy.comfort">
+<code class="sig-name descname">comfort</code><em class="property"> = 'Comfort'</em><a class="headerlink" href="#ladybug_charts.utils.Strategy.comfort" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ladybug_charts.utils.Strategy.evaporative_cooling">
+<code class="sig-name descname">evaporative_cooling</code><em class="property"> = 'Evaporative Cooling'</em><a class="headerlink" href="#ladybug_charts.utils.Strategy.evaporative_cooling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ladybug_charts.utils.Strategy.mas_night_ventilation">
+<code class="sig-name descname">mas_night_ventilation</code><em class="property"> = 'Mass + Night Ventilation'</em><a class="headerlink" href="#ladybug_charts.utils.Strategy.mas_night_ventilation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ladybug_charts.utils.Strategy.occupant_use_of_fans">
+<code class="sig-name descname">occupant_use_of_fans</code><em class="property"> = 'Occupant Use of Fans'</em><a class="headerlink" href="#ladybug_charts.utils.Strategy.occupant_use_of_fans" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ladybug_charts.utils.Strategy.passive_solar_heating">
+<code class="sig-name descname">passive_solar_heating</code><em class="property"> = 'Passive Solar Heating'</em><a class="headerlink" href="#ladybug_charts.utils.Strategy.passive_solar_heating" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ladybug_charts.utils.StrategyParameters">
+<em class="property">class </em><code class="sig-prename descclassname">ladybug_charts.utils.</code><code class="sig-name descname">StrategyParameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">day_above_comfort</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12</span></em>, <em class="sig-param"><span class="n">night_below_comfort</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">fan_air_speed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">balance_temperature</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12.8</span></em>, <em class="sig-param"><span class="n">solar_heating_capacity</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">50</span></em>, <em class="sig-param"><span class="n">time_constant</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">8</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ladybug_charts/utils.html#StrategyParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Strategy parameters for psychrometric charts.</p>
+<dl class="py method">
+<dt id="ladybug_charts.utils.StrategyParameters.balance_temperature">
+<em class="property">property </em><code class="sig-name descname">balance_temperature</code><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.balance_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the balance temperature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ladybug_charts.utils.StrategyParameters.day_above_comfort">
+<em class="property">property </em><code class="sig-name descname">day_above_comfort</code><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.day_above_comfort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the day above comfort.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ladybug_charts.utils.StrategyParameters.fan_air_speed">
+<em class="property">property </em><code class="sig-name descname">fan_air_speed</code><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.fan_air_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the fan air speed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ladybug_charts.utils.StrategyParameters.night_below_comfort">
+<em class="property">property </em><code class="sig-name descname">night_below_comfort</code><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.night_below_comfort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the night below comfort.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ladybug_charts.utils.StrategyParameters.solar_heating_capacity">
+<em class="property">property </em><code class="sig-name descname">solar_heating_capacity</code><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.solar_heating_capacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the solar hating capacity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ladybug_charts.utils.StrategyParameters.time_constant">
+<em class="property">property </em><code class="sig-name descname">time_constant</code><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.time_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the time constant.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

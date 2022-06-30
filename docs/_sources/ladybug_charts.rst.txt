@@ -1,0 +1,19 @@
+ladybug\_charts package
+=======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ladybug_charts.to_figure
+   ladybug_charts.utils
+
+Module contents
+---------------
+
+.. automodule:: ladybug_charts
+   :members:
+   :undoc-members:
+   :show-inheritance:
