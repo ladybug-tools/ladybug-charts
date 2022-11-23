@@ -1008,7 +1008,7 @@ def wind_rose(
     else:
         spd_colors = [rgb_to_hex(color) for color in wind_rose.legend_parameters.colors]
 
-    spd_labels = _speed_labels(spd_bins, units="m/s")
+    spd_labels = _speed_labels(spd_bins, units=wind_speed.header.unit)
     dir_bins = np.arange(-22.5 / 2, 370, 22.5)
     dir_labels = (dir_bins[:-1] + dir_bins[1:]) / 2
     total_count = df.shape[0]
