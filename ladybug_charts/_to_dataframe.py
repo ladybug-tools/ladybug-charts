@@ -30,13 +30,22 @@ def dataframe(frequency: Frequency = Frequency.HOURLY) -> pd.DataFrame:
     data_frame = pd.DataFrame()
 
     # add time to create an index
-    times = pd.date_range(
-        "2019-01-01 00:00:00",
-        "2020-01-01",
-        inclusive="left",
-        freq=frequency.value,
-        tz="UTC"
-    )
+    if (pd.__version__.startswith("1")):
+        times = pd.date_range(
+            "2019-01-01 00:00:00",
+            "2020-01-01",
+            closed="left",
+            freq=frequency.value,
+            tz="UTC"
+        )
+    else:
+        times = pd.date_range(
+            "2019-01-01 00:00:00",
+            "2020-01-01",
+            inclusive="left",
+            freq=frequency.value,
+            tz="UTC"
+        )
     data_frame['times'] = times
     data_frame.set_index(
         "times", drop=False, append=False, inplace=True, verify_integrity=False)
