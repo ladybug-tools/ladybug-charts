@@ -19,6 +19,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Setup macOS
+        run: brew install bzip2
+        if: runner.os == 'macOS'
       - name: install python dependencies
         run: |
           python -m pip install --upgrade pip
