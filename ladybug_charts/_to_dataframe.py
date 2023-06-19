@@ -33,7 +33,7 @@ def dataframe(frequency: Frequency = Frequency.HOURLY) -> pd.DataFrame:
     times = pd.date_range(
         "2019-01-01 00:00:00",
         "2020-01-01",
-        closed="left",
+        inclusive="left",
         freq=frequency.value,
         tz="UTC"
     )
