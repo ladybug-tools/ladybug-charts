@@ -28,9 +28,10 @@ def dataframe(frequency: Frequency = Frequency.HOURLY) -> pd.DataFrame:
     """
 
     data_frame = pd.DataFrame()
-
+    
+    
     # add time to create an index
-    if (pd.__version__.startswith("1")):
+    try:
         times = pd.date_range(
             "2019-01-01 00:00:00",
             "2020-01-01",
@@ -38,7 +39,7 @@ def dataframe(frequency: Frequency = Frequency.HOURLY) -> pd.DataFrame:
             freq=frequency.value,
             tz="UTC"
         )
-    else:
+    except TypeError:
         times = pd.date_range(
             "2019-01-01 00:00:00",
             "2020-01-01",
