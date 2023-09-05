@@ -1195,11 +1195,11 @@ def sunpath(
         chart_title = 'Sunpath' if title is None else title
 
     tz = "UTC"
-    if (pd.__version__.startswith("1")):
+    try:
         times = pd.date_range(
             "2019-01-01 00:00:00", "2020-01-01", closed="left", freq="H", tz=tz
         )
-    else:
+    except TypeError:
         times = pd.date_range(
             "2019-01-01 00:00:00", "2020-01-01", inclusive="left", freq="H", tz=tz
         )
