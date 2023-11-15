@@ -46,7 +46,7 @@ def heat_map(
     hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
     min_range: float = None, max_range: float = None,
     colors: List[Color] = None, title: str = None, show_title: bool = False,
-    num_labels: int = None, labels: List[float] = None
+    num_labels: int = None, labels = None
 ) -> Figure:
     """Create a plotly heat map figure from Ladybug Hourly data.
 
@@ -62,7 +62,7 @@ def heat_map(
             of the data will be used. Defaults to None.
         show_title: A boolean to show or hide the title of the chart. Defaults to False.
         num_labels: The number of labels to be used in the legend. Defaults to None.
-        labels: A list of floats to be used as labels for the legend. Defaults to None.
+        labels: An ordinal_dictionary from ladybug legend parameters. Defaults to None.
 
     Returns:
         A plotly figure.
@@ -116,6 +116,11 @@ def heat_map(
             colorbar=dict(title=var_unit, nticks=nticks, dtick=dtick, thickness=10),
         )
     )
+
+    if dtick is not None:
+        ticktext = list(dtick.values())
+        tickval = list(dtick.keys())
+        fig.update_traces(colorbar_tickmode = 'array', colorbar_ticktext = ticktext, colorbar_tickvals = tickval, selector=dict(type='heatmap'))
 
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
     fig.update_yaxes(title_text="Hours of the day")
