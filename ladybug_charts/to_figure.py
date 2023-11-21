@@ -62,7 +62,7 @@ def heat_map(
             of the data will be used. Defaults to None.
         show_title: A boolean to show or hide the title of the chart. Defaults to False.
         num_labels: The number of labels to be used in the legend. Defaults to None.
-        labels: An ordinal_dictionary from ladybug legend parameters. Defaults to None.
+        labels: A list of floats or an ordinal_dictionary from ladybug legend parameters. Defaults to None.
 
     Returns:
         A plotly figure.
@@ -117,7 +117,7 @@ def heat_map(
         )
     )
 
-    if dtick is not None:
+    if isinstance(dtick, dict):
         ticktext = list(dtick.values())
         tickval = list(dtick.keys())
         fig.update_traces(colorbar_tickmode = 'array', colorbar_ticktext = ticktext, colorbar_tickvals = tickval, selector=dict(type='heatmap'))
