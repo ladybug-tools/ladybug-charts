@@ -297,7 +297,13 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 'Comfort': '#009402'
             }
 
-        poly_obj = PolygonPMV(psych_dummy)
+        poly_obj = PolygonPMV(psych_dummy,
+                              polygon_pmv.rad_temperature,
+                              polygon_pmv.air_speed,
+                              polygon_pmv.met_rate,
+                              polygon_pmv.clo_value,
+                              polygon_pmv.external_work,
+                              polygon_pmv.comfort_parameter)
 
         # collecting all the polygons
         polygons, polygon_names, polygon_data = [], [], []
