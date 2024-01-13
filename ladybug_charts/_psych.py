@@ -86,9 +86,10 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     var_range_x = [int(psych.temperature_labels[0]), int(psych.temperature_labels[-1])]
     var_range_y = [0.0, float(psych.hr_labels[-1])]
 
-    # create dummy psych-chart to create mesh
+    # Create a new psychrometric chart instance with a base point at the bottom left
+    # corner of the chart
     base_point = Point2D(var_range_x[0], 0)
-    psych_dummy = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1,
+    psych_display = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1,
                                      legend_parameters=psych.legend_parameters)
 
     fig = go.Figure()
@@ -99,7 +100,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     if not data:
         chart_title = 'Psychrometric Chart - Frequency'
         # Plot colored mesh
-        cords = mesh_to_coordinates(psych_dummy.colored_mesh)
+        cords = mesh_to_coordinates(psych_display.colored_mesh)
         for count, cord in enumerate(cords):
             fig.add_trace(
                 go.Scatter(
@@ -117,12 +118,12 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
             # add another trace just to have hover text
             fig.add_trace(
                 go.Scatter(
-                    x=[psych_dummy.colored_mesh.face_centroids[count].x],
-                    y=[psych_dummy.colored_mesh.face_centroids[count].y],
+                    x=[psych_display.colored_mesh.face_centroids[count].x],
+                    y=[psych_display.colored_mesh.face_centroids[count].y],
                     showlegend=False,
                     mode='markers',
                     opacity=0,
-                    hovertemplate=str(int(psych_dummy.hour_values[count])) + ' hours' +
+                    hovertemplate=str(int(psych_display.hour_values[count])) + ' hours' +
                     '<extra></extra>',
                 )
             )
@@ -151,9 +152,9 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     else:
         var = data.header.data_type.name
         chart_title = title if title else f'Psychrometric Chart - {var}'
-        lp = LegendParameters(colors=psych_dummy.legend_parameters.colors)
+        lp = LegendParameters(colors=psych_display.legend_parameters.colors)
         # add colored data mesh
-        mesh, graphic_container = psych_dummy.data_mesh(data, lp)
+        mesh, graphic_container = psych_display.data_mesh(data, lp)
         cords = mesh_to_coordinates(mesh)
         for count, cord in enumerate(cords):
             fig.add_trace(
@@ -208,7 +209,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     ###########################################################################
 
     # add relative humidity lines
-    for count, polyline in enumerate(psych_dummy.rh_lines):
+    for count, polyline in enumerate(psych_display.rh_lines):
         # get cordinates from vertices of polygons
         x_cords, y_cords = verts_to_coordinates(polyline.vertices, close=False)
         fig.add_trace(
@@ -218,13 +219,13 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 showlegend=False,
                 mode="lines",
                 name="",
-                hovertemplate="RH " + psych_dummy.rh_labels[count] + "%",
+                hovertemplate="RH " + psych_display.rh_labels[count] + "%",
                 line=dict(width=1, color="#85837f"),
             )
         )
 
     # add enthalpy lines
-    for count, line in enumerate(psych_dummy.enthalpy_lines):
+    for count, line in enumerate(psych_display.enthalpy_lines):
         # get cordinates from vertices of polygons
         x_cords, y_cords = verts_to_coordinates(line.vertices, close=False)
         fig.add_trace(
@@ -234,13 +235,13 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 showlegend=False,
                 mode="lines",
                 name="",
-                hovertemplate="Enthalpy " + psych_dummy.enthalpy_labels[count],
+                hovertemplate="Enthalpy " + psych_display.enthalpy_labels[count],
                 line=dict(width=1, color="#85837f"),
             )
         )
 
     # add temperature lines
-    for count, line in enumerate(psych_dummy.temperature_lines):
+    for count, line in enumerate(psych_display.temperature_lines):
         # get cordinates from vertices of polygons
         x_cords, y_cords = verts_to_coordinates(line.vertices, close=False)
         fig.add_trace(
@@ -251,13 +252,13 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 mode="lines",
                 name="",
                 hovertemplate="Temperature " +
-                psych_dummy.temperature_labels[count] + ' C',
+                psych_display.temperature_labels[count] + ' C',
                 line=dict(width=1, color="#85837f"),
             )
         )
 
     # add humidity ratio lines
-    for count, line in enumerate(psych_dummy.hr_lines):
+    for count, line in enumerate(psych_display.hr_lines):
         # get cordinates from vertices of polygons
         x_cords, y_cords = verts_to_coordinates(line.vertices, close=False)
         fig.add_trace(
@@ -267,7 +268,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 showlegend=False,
                 mode="lines",
                 name="",
-                hovertemplate="Humidity Ratio " + psych_dummy.hr_labels[count],
+                hovertemplate="Humidity Ratio " + psych_display.hr_labels[count],
                 line=dict(width=1, color="#85837f"),
             )
         )
@@ -297,7 +298,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 'Comfort': '#009402'
             }
 
-        poly_obj = PolygonPMV(psych_dummy,
+        poly_obj = PolygonPMV(psych_display,
                               polygon_pmv.rad_temperature,
                               polygon_pmv.air_speed,
                               polygon_pmv.met_rate,
@@ -342,7 +343,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     polygons.append(nf_poly)
                     polygon_names.append(poly_name)
                     dat = poly_obj.evaluate_night_flush_polygon(
-                        nf_poly, psych_dummy.temperature,
+                        nf_poly, psych_display.temperature,
                         strategy_parameters.night_below_comfort,
                         strategy_parameters.time_constant, tolerance=0.01)
                     dat = dat[0] if len(
