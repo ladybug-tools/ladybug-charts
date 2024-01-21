@@ -47,7 +47,7 @@ def heat_map(
     hourly_data: Union[HourlyContinuousCollection, HourlyDiscontinuousCollection],
     min_range: float = None, max_range: float = None,
     colors: List[Color] = None, title: str = None, show_title: bool = False,
-    num_labels: int = None, labels: List[float] = None
+    num_labels: int = None, labels = None
 ) -> Figure:
     """Create a plotly heat map figure from Ladybug Hourly data.
 
@@ -63,7 +63,7 @@ def heat_map(
             of the data will be used. Defaults to None.
         show_title: A boolean to show or hide the title of the chart. Defaults to False.
         num_labels: The number of labels to be used in the legend. Defaults to None.
-        labels: A list of floats to be used as labels for the legend. Defaults to None.
+        labels: A list of floats or an ordinal_dictionary from ladybug legend parameters. Defaults to None.
 
     Returns:
         A plotly figure.
@@ -117,6 +117,11 @@ def heat_map(
             colorbar=dict(title=var_unit, nticks=nticks, dtick=dtick, thickness=10),
         )
     )
+
+    if isinstance(dtick, dict):
+        ticktext = list(dtick.values())
+        tickval = list(dtick.keys())
+        fig.update_traces(colorbar_tickmode = 'array', colorbar_ticktext = ticktext, colorbar_tickvals = tickval, selector=dict(type='heatmap'))
 
     fig.update_xaxes(dtick="M1", tickformat="%b", ticklabelmode="period")
     fig.update_yaxes(title_text="Hours of the day")
@@ -974,7 +979,10 @@ def wind_rose(
 
     wind_speed = wind_rose.analysis_data_collection
     wind_dir = wind_rose.direction_data_collection
-
+    dir_count = wind_rose._direction_count # get the direction count from the windrose object
+    north_angle = wind_rose.north # Calculate the rotation factor based on the north angle in degrees
+    rotation_factor = (360 - north_angle)  # Reverse the rotation for a clockwise wind rose
+    
     if isinstance(wind_speed, HourlyDiscontinuousCollection):
         wind_speed = discontinuous_to_continuous(wind_speed)[0]
         wind_dir = discontinuous_to_continuous(wind_dir)[0]
@@ -1010,7 +1018,9 @@ def wind_rose(
         spd_colors = [rgb_to_hex(color) for color in wind_rose.legend_parameters.colors]
 
     spd_labels = _speed_labels(spd_bins, units=wind_speed.header.unit)
-    dir_bins = np.arange(-22.5 / 2, 370, 22.5)
+    step_size = 360 / (dir_count) # Calculate the direction bins based on the count
+    dir_bins = np.arange((-step_size / 2), 360 + (step_size / 2), step_size)
+    #dir_bins = np.arange(-22.5 / 2, 370, 22.5)
     dir_labels = (dir_bins[:-1] + dir_bins[1:]) / 2
     total_count = df.shape[0]
     calm_count = df.query("wind_speed == 0").shape[0]
@@ -1088,7 +1098,7 @@ def wind_rose(
 
     fig.update_layout(
         autosize=True,
-        polar_angularaxis_rotation=90,
+        polar_angularaxis_rotation=90-rotation_factor,
         polar_angularaxis_direction="clockwise",
         dragmode=False,
         margin=dict(l=20, r=20, t=55, b=20),
