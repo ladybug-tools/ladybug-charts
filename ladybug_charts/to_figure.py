@@ -36,7 +36,7 @@ from ladybug.datatype.temperature import WetBulbTemperature
 from ladybug.epw import EPW
 
 # TODO
-# To effectively unit test all of these functions needs to be written with the
+# To effectively unit test all of these functions need to be re-written with the
 # concept of separate code-behind and visualization.
 
 # set white background in all charts
