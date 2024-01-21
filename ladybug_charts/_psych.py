@@ -42,7 +42,8 @@ def strategy_warning(polygon_name: str) -> str:
 
 
 def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
-                 title: str = None, show_title: bool = False, polygon_pmv: PolygonPMV = None,
+                 title: str = None, show_title: bool = False, 
+                 polygon_pmv: PolygonPMV = None,
                  strategies: List[Strategy] = [Strategy.comfort],
                  strategy_parameters: StrategyParameters = StrategyParameters(),
                  solar_data: HourlyContinuousCollection = None,
@@ -75,15 +76,29 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
 
     dbt = psych.temperature
     rh = psych.relative_humidity
+    use_ip = psych.use_ip
 
-    var_range_x = [int(psych.temperature_labels[0]), int(psych.temperature_labels[-1])]
+    if use_ip and data:
+        data = data.to_ip()
+
+    y_dim = 1500 # 1500 is the default value of y_dim in ladybug psychrometric chart
+    y_dim = y_dim * (9 / 5) if use_ip else y_dim
+    t_min, t_max = (-5, 115) if use_ip else (-20, 50)
+
+    temp_line_unit = ' F' if use_ip else ' C'
+    hor_title_unit = ' (°F)' if use_ip else ' (°C)'
+
+    var_range_x = [t_min, t_max]
     var_range_y = [0.0, float(psych.hr_labels[-1])]
 
     # Create a new psychrometric chart instance with a base point at the bottom left
     # corner of the chart
     base_point = Point2D(var_range_x[0], 0)
-    psych_display = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, y_dim=1,
-                                     legend_parameters=psych.legend_parameters)
+    psych_display = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, 
+                                       y_dim=1,use_ip = use_ip,
+                                       min_temperature=t_min, 
+                                       max_temperature=t_max,
+    legend_parameters=psych.legend_parameters)
 
     fig = go.Figure()
 
@@ -100,7 +115,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     x=cord[0],
                     y=cord[1],
                     fill='toself',
-                    fillcolor=rgb_to_hex(psych.container.value_colors[count]),
+                    fillcolor=rgb_to_hex(psych_display.colored_mesh.colors[count]),
                     line=dict(width=0),
                     showlegend=False,
                     mode='lines',
@@ -129,11 +144,11 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
             showlegend=False,
             marker=dict(
                 colorscale=[rgb_to_hex(color)
-                            for color in psych.legend_parameters.colors],
+                            for color in psych_display.legend_parameters.colors],
                 showscale=True,
-                cmin=psych.legend_parameters.min,
-                cmax=psych.legend_parameters.max,
-                colorbar=dict(thickness=10, title=psych.legend_parameters.title),
+                cmin=psych_display.legend_parameters.min,
+                cmax=psych_display.legend_parameters.max,
+                colorbar=dict(thickness=10, title=psych_display.legend_parameters.title),
             ),
         )
         # add the dummy trace to the figure
@@ -245,7 +260,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 mode="lines",
                 name="",
                 hovertemplate="Temperature " +
-                psych_display.temperature_labels[count] + ' C',
+                psych_display.temperature_labels[count] + temp_line_unit,
                 line=dict(width=1, color="#85837f"),
             )
         )
@@ -425,7 +440,8 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
             if isinstance(center_side_dict[top_key], Polyline2D) and \
                     len(center_side_dict[top_key].vertices) == 3:
 
-                # create a center point from the bottom side and a horizontal reference vector
+                # create a center point from the bottom side and a horizontal 
+                # reference vector
                 if isinstance(center_side_dict[bottom_key], LineSegment2D):
                     center_point = center_side_dict[bottom_key].midpoint
                 else:
@@ -451,7 +467,8 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                 angles = [ref_vector.angle_counterclockwise(vec) for vec in vectors]
                 angles_verts_dict = dict(zip(angles, top_verts))
                 anti_clockwise_sorted_top_verts = [angles_verts_dict[angle]
-                                                   for angle in sorted(angles_verts_dict.keys())]
+                                                   for angle in 
+                                                   sorted(angles_verts_dict.keys())]
 
                 # Collect all the vertices that should be in anti clockwise order
                 verts = []
@@ -475,7 +492,8 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
                     y=y_cords,
                     line=dict(
                         width=4,
-                        color=strategy_colors[polygon_names[count]] if not colors else strategy_colors[count]),
+                        color=strategy_colors[polygon_names[count]] if not colors 
+                        else strategy_colors[count]),
                     showlegend=True,
                     name=polygon_names[count] + ': ' +
                     str(round(polygon_comfort[count])) + '% of time',
@@ -511,7 +529,7 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     )
 
     fig.update_xaxes(
-        title_text='Temperature (°C)',
+        title_text=f'Temperature {hor_title_unit}',
         range=var_range_x,
         showline=True,
         linewidth=1,
