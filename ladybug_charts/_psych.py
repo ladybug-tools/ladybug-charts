@@ -73,32 +73,31 @@ def _psych_chart(psych: PsychrometricChart, data: BaseCollection = None,
     Returns:
         A plotly figure.
     """
-
-    dbt = psych.temperature
-    rh = psych.relative_humidity
-    use_ip = psych.use_ip
-
-    if use_ip and data:
+    if psych.use_ip and data:
         data = data.to_ip()
 
-    y_dim = 1500 # 1500 is the default value of y_dim in ladybug psychrometric chart
-    y_dim = y_dim * (9 / 5) if use_ip else y_dim
-    t_min, t_max = (-5, 115) if use_ip else (-20, 50)
+    temp_line_unit = ' F' if psych.use_ip else ' C'
+    hor_title_unit = ' (°F)' if psych.use_ip else ' (°C)'
 
-    temp_line_unit = ' F' if use_ip else ' C'
-    hor_title_unit = ' (°F)' if use_ip else ' (°C)'
+    hr_min, hr_max = (0.0, 0.03) # Here, the upper value comes from the default value
+    # of the maximum humidity ratio on the ladybug PsychrometricChart
+    t_min, t_max = (-5, 115) if psych.use_ip else (-20, 50) # Based on the same setting on
+    # the LB PscychrometricChart component of LBT
 
     var_range_x = [t_min, t_max]
-    var_range_y = [0.0, float(psych.hr_labels[-1])]
+    var_range_y = [hr_min, hr_max]
 
     # Create a new psychrometric chart instance with a base point at the bottom left
     # corner of the chart
-    base_point = Point2D(var_range_x[0], 0)
-    psych_display = PsychrometricChart(dbt, rh, base_point=base_point, x_dim=1, 
-                                       y_dim=1,use_ip = use_ip,
-                                       min_temperature=t_min, 
-                                       max_temperature=t_max,
-    legend_parameters=psych.legend_parameters)
+    psych_display = PsychrometricChart(
+        psych.temperature,
+        psych.relative_humidity,
+        legend_parameters=psych.legend_parameters,
+        base_point=Point2D(var_range_x[0], 0),
+        y_dim=1,
+        min_temperature=t_min,
+        max_temperature=t_max,
+        use_ip = psych.use_ip)
 
     fig = go.Figure()
 
