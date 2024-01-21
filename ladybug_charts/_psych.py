@@ -1,18 +1,10 @@
 """Recreating ladybug psychrometric chart using Plotly."""
 
-
-from ladybug.legend import LegendParameters
-import numpy as np
-import pandas as pd
 import warnings
-
-from math import ceil, floor
-from typing import List
-
-
 import plotly.io as pio
 import plotly.graph_objects as go
 from plotly.graph_objects import Figure
+from typing import List
 
 from ._helper import rgb_to_hex, mesh_to_coordinates, verts_to_coordinates
 from .utils import StrategyParameters, Strategy
@@ -21,11 +13,12 @@ from ladybug.datacollection import BaseCollection, HourlyContinuousCollection
 from ladybug import psychrometrics as psy
 from ladybug.psychchart import PsychrometricChart
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
-from ladybug_geometry.geometry2d.pointvector import Point2D, Vector2D
+from ladybug_geometry.geometry2d.pointvector import Point2D
 from ladybug_geometry.geometry2d.line import LineSegment2D
 from ladybug_geometry.geometry2d.arc import Arc2D
 from ladybug_geometry.geometry2d.polyline import Polyline2D
 from ladybug.color import Color
+from ladybug.legend import LegendParameters
 
 # set white background in all charts
 pio.templates.default = 'plotly_white'
