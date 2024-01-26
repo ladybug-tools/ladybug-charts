@@ -955,13 +955,11 @@ def _speed_labels(bins, units):
     return labels
 
 
-def wind_rose(
-    wind_rose: WindRose, title: str = None, show_title: bool = False
-) -> Figure:
+def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title: bool = False) -> Figure:
     """Create a windrose plot.
 
     Args:
-        wind_rose: A ladybug WindRose object.
+        lb_wind_rose: A ladybug WindRose object.
         title: A title for the plot. Defaults to None.
         show_title: A boolean to show or hide the title. Defaults to False.
 
@@ -969,11 +967,11 @@ def wind_rose(
         A plotly figure.
     """
 
-    assert isinstance(wind_rose, WindRose), 'Ladybug WindRose object is required.'
-    f' Instead got {type(wind_rose)}'
+    assert isinstance(lb_wind_rose, WindRose), 'Ladybug WindRose object is required.'
+    f' Instead got {type(lb_wind_rose)}'
 
-    wind_speed = wind_rose.analysis_data_collection
-    wind_dir = wind_rose.direction_data_collection
+    wind_speed = lb_wind_rose.analysis_data_collection
+    wind_dir = lb_wind_rose.direction_data_collection
 
     if isinstance(wind_speed, HourlyDiscontinuousCollection):
         wind_speed = discontinuous_to_continuous(wind_speed)[0]
@@ -985,10 +983,10 @@ def wind_rose(
     series = Series(wind_dir)
     df['wind_dir'] = series.values
 
-    start_month = wind_rose.analysis_period.st_month
-    end_month = wind_rose.analysis_period.end_month
-    start_hour = wind_rose.analysis_period.st_hour
-    end_hour = wind_rose.analysis_period.end_hour
+    start_month = lb_wind_rose.analysis_period.st_month
+    end_month = lb_wind_rose.analysis_period.end_month
+    start_hour = lb_wind_rose.analysis_period.st_hour
+    end_hour = lb_wind_rose.analysis_period.end_hour
 
     if start_month <= end_month:
         df = df.loc[(df["month"] >= start_month) & (df["month"] <= end_month)]
@@ -1001,13 +999,13 @@ def wind_rose(
 
     spd_bins = [-1, 0.5, 1.5, 3.3, 5.5, 7.9, 10.7, 13.8, 17.1, 20.7, np.inf]
     # Create a color range if the colorset does not have 11 colors
-    if len(wind_rose.legend_parameters.colors) < 11:
+    if len(lb_wind_rose.legend_parameters.colors) < 11:
         domain = [spd_bins[0], spd_bins[-2]+1]
         color_range = ColorRange(
-            colors=wind_rose.legend_parameters.colors, domain=domain)
+            colors=lb_wind_rose.legend_parameters.colors, domain=domain)
         spd_colors = [rgb_to_hex(color_range.color(item)) for item in spd_bins]
     else:
-        spd_colors = [rgb_to_hex(color) for color in wind_rose.legend_parameters.colors]
+        spd_colors = [rgb_to_hex(color) for color in lb_wind_rose.legend_parameters.colors]
 
     spd_labels = _speed_labels(spd_bins, units=wind_speed.header.unit)
     dir_bins = np.arange(-22.5 / 2, 370, 22.5)
