@@ -942,7 +942,7 @@ def diurnal_average_chart(
     return fig
 
 
-def _speed_labels(bins, units):
+def _analysis_data_labels(bins, units):
     """Return labels for a wind speed range."""
     labels = []
     for left, right in zip(bins[:-1], bins[1:]):
@@ -955,7 +955,8 @@ def _speed_labels(bins, units):
     return labels
 
 
-def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title: bool = False) -> Figure:
+def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title: 
+              bool = False) -> Figure:
     """Create a windrose plot.
 
     Args:
@@ -970,16 +971,18 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title: bool = Fals
     assert isinstance(lb_wind_rose, WindRose), 'Ladybug WindRose object is required.'
     f' Instead got {type(lb_wind_rose)}'
 
-    wind_speed = lb_wind_rose.analysis_data_collection
+    # This analysis data can be Wind speed data or any other data maching the 
+    # wind direction data
+    analysis_data = lb_wind_rose.analysis_data_collection
     wind_dir = lb_wind_rose.direction_data_collection
 
-    if isinstance(wind_speed, HourlyDiscontinuousCollection):
-        wind_speed = discontinuous_to_continuous(wind_speed)[0]
+    if isinstance(analysis_data, HourlyDiscontinuousCollection):
+        analysis_data = discontinuous_to_continuous(analysis_data)[0]
         wind_dir = discontinuous_to_continuous(wind_dir)[0]
 
     df = dataframe()
-    series = Series(wind_speed)
-    df['wind_speed'] = series.values
+    series = Series(analysis_data)
+    df['analysis_data'] = series.values
     series = Series(wind_dir)
     df['wind_dir'] = series.values
 
@@ -997,25 +1000,29 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title: bool = Fals
     else:
         df = df.loc[(df["hour"] <= end_hour) | (df["hour"] >= start_hour)]
 
-    spd_bins = [-1, 0.5, 1.5, 3.3, 5.5, 7.9, 10.7, 13.8, 17.1, 20.7, np.inf]
+
+    data_bins = [-1, 0.5, 1.5, 3.3, 5.5, 7.9, 10.7, 13.8, 17.1, 20.7, np.inf]
     # Create a color range if the colorset does not have 11 colors
     if len(lb_wind_rose.legend_parameters.colors) < 11:
-        domain = [spd_bins[0], spd_bins[-2]+1]
-        color_range = ColorRange(
-            colors=lb_wind_rose.legend_parameters.colors, domain=domain)
-        spd_colors = [rgb_to_hex(color_range.color(item)) for item in spd_bins]
+        domain = [data_bins[0], data_bins[-2]+1]
+        color_range = ColorRange(colors=lb_wind_rose.legend_parameters.colors, 
+                                 domain=domain)
+        data_colors = [rgb_to_hex(color_range.color(item)) for item in data_bins]
     else:
-        spd_colors = [rgb_to_hex(color) for color in lb_wind_rose.legend_parameters.colors]
+        data_colors = [rgb_to_hex(color) for color in 
+                       lb_wind_rose.legend_parameters.colors]
 
-    spd_labels = _speed_labels(spd_bins, units=wind_speed.header.unit)
+    data_colors = [rgb_to_hex(color_range.color(item)) for item in data_bins]
+
+    data_labels = _analysis_data_labels(data_bins, units=analysis_data.header.unit)
     dir_bins = np.arange(-22.5 / 2, 370, 22.5)
     dir_labels = (dir_bins[:-1] + dir_bins[1:]) / 2
     total_count = df.shape[0]
-    calm_count = df.query("wind_speed == 0").shape[0]
+    calm_count = df.query("analysis_data == 0").shape[0]
     rose = (
         df.assign(
-            WindSpd_bins=lambda df: pd.cut(
-                df["wind_speed"], bins=spd_bins, labels=spd_labels, right=True
+            analysis_data_bins=lambda df: pd.cut(
+                df["analysis_data"], bins=data_bins, labels=data_labels, right=True
             )
         )
         .assign(
@@ -1024,9 +1031,9 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title: bool = Fals
             )
         )
         .replace({"WindDir_bins": {360: 0}})
-        .groupby(by=["WindSpd_bins", "WindDir_bins"])
+        .groupby(by=["analysis_data_bins", "WindDir_bins"])
         .size()
-        .unstack(level="WindSpd_bins")
+        .unstack(level="analysis_data_bins")
         .fillna(0)
         .assign(calm=lambda df: calm_count / df.shape[0])
         .sort_index(axis=1)
@@ -1039,7 +1046,7 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title: bool = Fals
                 r=rose[col],
                 theta=rose.index.categories,
                 name=col,
-                marker_color=spd_colors[i],
+                marker_color=data_colors[i],
                 hovertemplate="frequency: %{r:.2f}%"
                 + "<br>"
                 + "direction: %{theta:.2f}"
