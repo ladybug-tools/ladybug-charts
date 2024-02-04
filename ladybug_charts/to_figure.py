@@ -947,12 +947,7 @@ def _analysis_data_labels(bins, units):
     """Return labels for a wind speed range."""
     labels = []
     for left, right in zip(bins[:-1], bins[1:]):
-        if left == bins[0]:
-            labels.append("calm")
-        elif np.isinf(right):
-            labels.append(">{} {}".format(left, units))
-        else:
-            labels.append("{} - {} {}".format(left, right, units))
+        labels.append("{} - {} {}".format(left, right, units))
     return labels
 
 
@@ -1021,7 +1016,6 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title:
     dir_bins = np.arange(-22.5 / 2, 370, 22.5)
     dir_labels = (dir_bins[:-1] + dir_bins[1:]) / 2
     total_count = df.shape[0]
-    calm_count = df.query("analysis_data == 0").shape[0]
     rose = (
         df.assign(
             analysis_data_bins=lambda df: pd.cut(
@@ -1038,7 +1032,6 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title:
         .size()
         .unstack(level="analysis_data_bins")
         .fillna(0)
-        .assign(calm=lambda df: calm_count / df.shape[0])
         .sort_index(axis=1)
         .applymap(lambda x: x / total_count * 100)
     )
