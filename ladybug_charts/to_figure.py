@@ -32,6 +32,7 @@ from ladybug.dt import DateTime
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
 from ladybug.psychrometrics import wet_bulb_from_db_rh
 from ladybug.datatype.temperature import WetBulbTemperature
+from ladybug.legend import Legend
 
 from ladybug.epw import EPW
 
@@ -1000,8 +1001,10 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title:
     else:
         df = df.loc[(df["hour"] <= end_hour) | (df["hour"] >= start_hour)]
 
+    # Use legend parameters to create the color range and labels
+    lb_legend = Legend(analysis_data, lb_wind_rose.legend_parameters)
+    data_bins = [round(val,2) for val in lb_legend.segment_numbers] + [np.inf]
 
-    data_bins = [-1, 0.5, 1.5, 3.3, 5.5, 7.9, 10.7, 13.8, 17.1, 20.7, np.inf]
     # Create a color range if the colorset does not have 11 colors
     if len(lb_wind_rose.legend_parameters.colors) < 11:
         domain = [data_bins[0], data_bins[-2]+1]
