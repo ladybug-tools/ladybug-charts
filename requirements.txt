@@ -2,3 +2,4 @@ plotly>=5.10.0
 kaleido==0.0.1rc9
 lbt-ladybug>=0.25.146
 ladybug-pandas==0.4.1
+numpy<2.0.0
