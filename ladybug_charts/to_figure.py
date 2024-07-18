@@ -1010,8 +1010,6 @@ def wind_rose(lb_wind_rose: WindRose, title: str = None, show_title:
         data_colors = [rgb_to_hex(color) for color in 
                        lb_wind_rose.legend_parameters.colors]
 
-    data_colors = [rgb_to_hex(color_range.color(item)) for item in data_bins]
-
     data_labels = _analysis_data_labels(data_bins, units=analysis_data.header.unit)
     dir_bins = np.arange(-22.5 / 2, 370, 22.5)
     dir_labels = (dir_bins[:-1] + dir_bins[1:]) / 2
