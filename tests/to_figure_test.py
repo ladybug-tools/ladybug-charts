@@ -11,7 +11,7 @@ from ladybug.hourlyplot import HourlyPlot
 from ladybug.monthlychart import MonthlyChart
 from ladybug.sunpath import Sunpath
 from ladybug_comfort.chart.polygonpmv import PolygonPMV
-
+from ladybug.legend import LegendParameters
 # heat maps
 
 
@@ -102,6 +102,17 @@ def test_monthly_chart_plot(epw):
 
 def test_wind_rose(epw):
     lb_wind_rose = WindRose(epw.wind_direction, epw.wind_speed)
+    fig = lb_wind_rose.plot()
+    assert isinstance(fig, Figure)
+
+def test_wind_rose_with_less_than_eleven_legend_colors(epw):
+    
+    colors = list(Colorset.original())[:5]
+    lp = LegendParameters(colors=colors, max = 60, segment_count=2)
+
+    lb_wind_rose = WindRose(epw.wind_direction, epw.wind_speed)
+    lb_wind_rose.legend_parameters = lp
+
     fig = lb_wind_rose.plot()
     assert isinstance(fig, Figure)
 
