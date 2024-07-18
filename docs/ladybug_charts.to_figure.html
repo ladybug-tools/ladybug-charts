@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>ladybug_charts.to_figure module &#8212; ladybug-charts  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ladybug_charts.utils module" href="ladybug_charts.utils.html" />
+    <link rel="prev" title="ladybug_charts package" href="ladybug_charts.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          ladybug-charts</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.utils.html">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.utils.html">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ladybug_charts.html" title="Previous Chapter: ladybug_charts package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; ladybug_chart...</span>
+    </a>
+  </li>
+  <li>
+    <a href="ladybug_charts.utils.html" title="Next Chapter: ladybug_charts.utils module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">ladybug_chart... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/ladybug_charts.to_figure.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.utils.html">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <section id="module-ladybug_charts.to_figure">
+<span id="ladybug-charts-to-figure-module"></span><h1>ladybug_charts.to_figure module<a class="headerlink" href="#module-ladybug_charts.to_figure" title="Permalink to this headline">¶</a></h1>
+<p>Create plotly figures from pandas Dataframe.</p>
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.bar_chart">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">bar_chart</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>ladybug.datacollection.MonthlyCollection<span class="p">]</span><span class="p">, </span>List<span class="p">[</span>ladybug.datacollection.DailyCollection<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">min_range</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_range</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colors</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ladybug.color.Color<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">center_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">stack</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#bar_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.bar_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a plotly bar chart figure from multiple ladybug monthly or daily data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A list of either ladybug MonthlyCollection data or DailyCollection data.</p></li>
+<li><p><strong>min_range</strong> – Minimum value for the legend. If None, it is autocalculated
+from the data. (Default: None).</p></li>
+<li><p><strong>max_range</strong> – Maximum value for the legend. If None, it is autocalculated
+from the data. (Default: None).</p></li>
+<li><p><strong>colors</strong> – A list of ladybug color objects that matches the length of data
+argument. If None, random colors will be used. (Default: None).</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. (Default: None).</p></li>
+<li><p><strong>center_title</strong> – A boolean to set whether to center the title of the
+chart. (Default: False).</p></li>
+<li><p><strong>stack</strong> – A boolean to determine whether to stack the data. (Default: False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.bar_chart_with_table">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">bar_chart_with_table</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ladybug.datacollection.MonthlyCollection<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">min_range</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_range</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colors</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ladybug.color.Color<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">stack</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#bar_chart_with_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.bar_chart_with_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a plotly bar chart figure from multiple ladybug monthly or daily data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A list of ladybug monthly data.</p></li>
+<li><p><strong>min_range</strong> – Minimum value for the legend. If not set will be calculated
+from the data. Defaults to None.</p></li>
+<li><p><strong>max_range</strong> – Maximum value for the legend. If not set will be calculated
+from the data. Defaults to None.</p></li>
+<li><p><strong>colors</strong> – A list of ladybug color objects. The length of this list needs to match
+the length of data argument. If not set, random colors will be used.
+Defaults to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the
+names of data will be used to create a title for the chart. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to set whether to show the title of the chart.
+Defaults to False.</p></li>
+<li><p><strong>stack</strong> – A boolean to determine whether to stack the data. Defaults to False which
+will show data side by side.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.daily_bar_chart">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">daily_bar_chart</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">ladybug.datacollection.DailyCollection</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">color</span><span class="p">:</span> <span class="n">ladybug.color.Color</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#daily_bar_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.daily_bar_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a plotly bar chart figure from a ladybug daily data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug DailyCollection object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the name
+of the data will be used. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.diurnal_average_chart">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">diurnal_average_chart</code><span class="sig-paren">(</span><em class="sig-param">epw: ladybug.epw.EPW, title: str = None, show_title: bool = False, colors: Union[List[ladybug.color.Color], Tuple[ladybug.color.Color]] = ((R:75, G:107, B:169, A:255), (R:115, G:147, B:202, A:255), (R:170, G:200, B:247, A:255), (R:193, G:213, B:208, A:255), (R:245, G:239, B:103, A:255), (R:252, G:230, B:74, A:255), (R:239, G:156, B:21, A:255), (R:234, G:123, B:0, A:255), (R:234, G:74, B:0, A:255), (R:234, G:38, B:0, A:255))</em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#diurnal_average_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.diurnal_average_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a diurnal average chart from a ladybug EPW object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epw</strong> – A ladybug EPW object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+<li><p><strong>colorset</strong> – A ColorSet object. Defaults to ColorSet.original.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.diurnal_average_chart_from_hourly">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">diurnal_average_chart_from_hourly</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">ladybug.datacollection.HourlyContinuousCollection</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">color</span><span class="p">:</span> <span class="n">ladybug.color.Color</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#diurnal_average_chart_from_hourly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.diurnal_average_chart_from_hourly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a diurnal average chart from a ladybug hourly continuous data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug HourlyContinuousCollection object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.heat_map">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">heat_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hourly_data</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>ladybug.datacollection.HourlyContinuousCollection<span class="p">, </span>ladybug.datacollection.HourlyDiscontinuousCollection<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">min_range</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_range</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colors</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ladybug.color.Color<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_labels</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#heat_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.heat_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a plotly heat map figure from Ladybug Hourly data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hourly_data</strong> – A Ladybug HourlyContinuousCollection object or a Ladybug
+HourlyDiscontinuousCollection object.</p></li>
+<li><p><strong>min_range</strong> – The minimum value for the legend of the heatmap. If not set, value
+will be calculated based on data. Defaults to None.</p></li>
+<li><p><strong>max_range</strong> – The maximum value for the legend of the heatmap. If not set, value
+will be calculated based on data. Defaults to None.</p></li>
+<li><p><strong>colors</strong> – A list of Ladybug Color objects. Defaults to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the name
+of the data will be used. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title of the chart. Defaults to False.</p></li>
+<li><p><strong>num_labels</strong> – The number of labels to be used in the legend. Defaults to None.</p></li>
+<li><p><strong>labels</strong> – A list of floats to be used as labels for the legend. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.hourly_line_chart">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">hourly_line_chart</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">ladybug.datacollection.HourlyContinuousCollection</span></em>, <em class="sig-param"><span class="n">color</span><span class="p">:</span> <span class="n">ladybug.color.Color</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#hourly_line_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.hourly_line_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a plotly line chart figure from a ladybug hourly continuous data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug HourlyContinuousCollection object.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.monthly_bar_chart">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">monthly_bar_chart</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">ladybug.datacollection.MonthlyCollection</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">color</span><span class="p">:</span> <span class="n">ladybug.color.Color</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#monthly_bar_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.monthly_bar_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a plotly  bar chart figure from a ladybug monthly data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug MonthlyCollection object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the name
+of the data will be used. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to set whether to show the title of the chart.
+Defaults to False.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.psych_chart">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">psych_chart</code><span class="sig-paren">(</span><em class="sig-param">psych: ladybug.psychchart.PsychrometricChart, data: ladybug._datacollectionbase.BaseCollection = None, title: str = None, show_title: bool = False, polygon_pmv: ladybug_comfort.chart.polygonpmv.PolygonPMV = None, strategies: List[ladybug_charts.utils.Strategy] = [&lt;Strategy.comfort: 'Comfort'&gt;], strategy_parameters: ladybug_charts.utils.StrategyParameters = &lt;ladybug_charts.utils.StrategyParameters object&gt;, solar_data: ladybug.datacollection.HourlyContinuousCollection = None, colors: List[ladybug.color.Color] = None</em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#psych_chart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.psych_chart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a psychrometric chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psych</strong> – A ladybug PsychrometricChart object.</p></li>
+<li><p><strong>data</strong> – A ladybug DataCollection object.</p></li>
+<li><p><strong>title</strong> – A title for the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title. Defaults to False.</p></li>
+<li><p><strong>polygon_pmv</strong> – A ladybug PolygonPMV object. If provided, polygons will be drawn.
+Defaults to None.</p></li>
+<li><p><strong>strategies</strong> – A list of strategies to be applied to the chart. Accepts a list of
+Stragegy objects. Defaults to out of the box StrategyParameters object.</p></li>
+<li><p><strong>strategy_parameters</strong> – A StrategyParameters object. Defaults to None.</p></li>
+<li><p><strong>solar_data</strong> – An annual hourly continuous data collection of irradiance
+(or radiation) in W/m2 (or Wh/m2) that aligns with the data
+points on the psychrometric chart. This is only required when
+plotting a “Passive Solar Heating” strategy polygon on the chart.
+The irradiance values should be incident on the orientation of
+the passive solar heated windows. So using global horizontal
+radiation assumes that all windows are skylights (like a
+greenhouse). Defaults to None.</p></li>
+<li><p><strong>colors</strong> – A list of colors to be used for the comfort polygons. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.sunpath">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">sunpath</code><span class="sig-paren">(</span><em class="sig-param">sunpath: ladybug.sunpath.Sunpath</em>, <em class="sig-param">data: ladybug.datacollection.HourlyContinuousCollection = None</em>, <em class="sig-param">colorset: ladybug.color.Colorset = ((R:75</em>, <em class="sig-param">G:107</em>, <em class="sig-param">B:169</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:115</em>, <em class="sig-param">G:147</em>, <em class="sig-param">B:202</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:170</em>, <em class="sig-param">G:200</em>, <em class="sig-param">B:247</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:193</em>, <em class="sig-param">G:213</em>, <em class="sig-param">B:208</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:245</em>, <em class="sig-param">G:239</em>, <em class="sig-param">B:103</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:252</em>, <em class="sig-param">G:230</em>, <em class="sig-param">B:74</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:239</em>, <em class="sig-param">G:156</em>, <em class="sig-param">B:21</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:234</em>, <em class="sig-param">G:123</em>, <em class="sig-param">B:0</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:234</em>, <em class="sig-param">G:74</em>, <em class="sig-param">B:0</em>, <em class="sig-param">A:255)</em>, <em class="sig-param">(R:234</em>, <em class="sig-param">G:38</em>, <em class="sig-param">B:0</em>, <em class="sig-param">A:255))</em>, <em class="sig-param">min_range: float = None</em>, <em class="sig-param">max_range: float = None</em>, <em class="sig-param">title: str = None</em>, <em class="sig-param">show_title: bool = False</em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#sunpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.sunpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot Sunpath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sunpath</strong> – A Ladybug Sunpath object.</p></li>
+<li><p><strong>data</strong> – An HourlyContinuousCollection object to be plotted on the sunpath. Defaults
+to None.</p></li>
+<li><p><strong>colorset</strong> – A Ladybug Colorset object. Defaults to ColorSet.original.</p></li>
+<li><p><strong>min_range</strong> – Minimum value for the colorbar. If not set, the minimum value will be
+set to the minimum value of the data. Defaults to None.</p></li>
+<li><p><strong>max_range</strong> – Maximum value for the colorbar. If not set, the maximum value will be
+set to the maximum value of the data. Defaults to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title of the plot. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly Figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ladybug_charts.to_figure.wind_rose">
+<code class="sig-prename descclassname">ladybug_charts.to_figure.</code><code class="sig-name descname">wind_rose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lb_wind_rose</span><span class="p">:</span> <span class="n">ladybug.windrose.WindRose</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_title</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; plotly.graph_objs._figure.Figure<a class="reference internal" href="_modules/ladybug_charts/to_figure.html#wind_rose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ladybug_charts.to_figure.wind_rose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a windrose plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lb_wind_rose</strong> – A ladybug WindRose object.</p></li>
+<li><p><strong>title</strong> – A title for the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2024, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
