@@ -7,6 +7,9 @@
 Ladybug extension to generate 2D charts.
 
 ## Installation
+
+To install the library use:
+
 ```console
 pip install ladybug-charts
 ```
