@@ -1,0 +1,7 @@
+ladybug\_charts.to\_figure module
+=================================
+
+.. automodule:: ladybug_charts.to_figure
+   :members:
+   :undoc-members:
+   :show-inheritance:

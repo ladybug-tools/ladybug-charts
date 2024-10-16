@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ladybug_charts.utils module &#8212; ladybug-charts  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=45cd8fae" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ladybug_charts.to_figure module" href="ladybug_charts.to_figure.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          ladybug-charts</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.to_figure.html">ladybug_charts.to_figure module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.bar_chart"><code class="docutils literal notranslate"><span class="pre">bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.bar_chart_with_table"><code class="docutils literal notranslate"><span class="pre">bar_chart_with_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.daily_bar_chart"><code class="docutils literal notranslate"><span class="pre">daily_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.diurnal_average_chart"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.diurnal_average_chart_from_hourly"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart_from_hourly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.heat_map"><code class="docutils literal notranslate"><span class="pre">heat_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.hourly_line_chart"><code class="docutils literal notranslate"><span class="pre">hourly_line_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.monthly_bar_chart"><code class="docutils literal notranslate"><span class="pre">monthly_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.psych_chart"><code class="docutils literal notranslate"><span class="pre">psych_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.sunpath"><code class="docutils literal notranslate"><span class="pre">sunpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.to_figure.html#ladybug_charts.to_figure.wind_rose"><code class="docutils literal notranslate"><span class="pre">wind_rose()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.utils.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.capture_internal_heat"><code class="docutils literal notranslate"><span class="pre">capture_internal_heat</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.comfort"><code class="docutils literal notranslate"><span class="pre">comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.evaporative_cooling"><code class="docutils literal notranslate"><span class="pre">evaporative_cooling</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.mas_night_ventilation"><code class="docutils literal notranslate"><span class="pre">mas_night_ventilation</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.occupant_use_of_fans"><code class="docutils literal notranslate"><span class="pre">occupant_use_of_fans</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.passive_solar_heating"><code class="docutils literal notranslate"><span class="pre">passive_solar_heating</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters"><code class="docutils literal notranslate"><span class="pre">StrategyParameters</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.balance_temperature"><code class="docutils literal notranslate"><span class="pre">balance_temperature</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.day_above_comfort"><code class="docutils literal notranslate"><span class="pre">day_above_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.fan_air_speed"><code class="docutils literal notranslate"><span class="pre">fan_air_speed</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.night_below_comfort"><code class="docutils literal notranslate"><span class="pre">night_below_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.solar_heating_capacity"><code class="docutils literal notranslate"><span class="pre">solar_heating_capacity</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.time_constant"><code class="docutils literal notranslate"><span class="pre">time_constant</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.to_figure.html">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.utils.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.capture_internal_heat"><code class="docutils literal notranslate"><span class="pre">capture_internal_heat</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.comfort"><code class="docutils literal notranslate"><span class="pre">comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.evaporative_cooling"><code class="docutils literal notranslate"><span class="pre">evaporative_cooling</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.mas_night_ventilation"><code class="docutils literal notranslate"><span class="pre">mas_night_ventilation</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.occupant_use_of_fans"><code class="docutils literal notranslate"><span class="pre">occupant_use_of_fans</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.passive_solar_heating"><code class="docutils literal notranslate"><span class="pre">passive_solar_heating</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters"><code class="docutils literal notranslate"><span class="pre">StrategyParameters</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.balance_temperature"><code class="docutils literal notranslate"><span class="pre">balance_temperature</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.day_above_comfort"><code class="docutils literal notranslate"><span class="pre">day_above_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.fan_air_speed"><code class="docutils literal notranslate"><span class="pre">fan_air_speed</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.night_below_comfort"><code class="docutils literal notranslate"><span class="pre">night_below_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.solar_heating_capacity"><code class="docutils literal notranslate"><span class="pre">solar_heating_capacity</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.time_constant"><code class="docutils literal notranslate"><span class="pre">time_constant</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ladybug_charts.to_figure.html" title="Previous Chapter: ladybug_charts.to_figure module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; ladybug_chart...</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/ladybug_charts.utils.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.to_figure.html">ladybug_charts.to_figure module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.utils.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.capture_internal_heat"><code class="docutils literal notranslate"><span class="pre">capture_internal_heat</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.comfort"><code class="docutils literal notranslate"><span class="pre">comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.evaporative_cooling"><code class="docutils literal notranslate"><span class="pre">evaporative_cooling</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.mas_night_ventilation"><code class="docutils literal notranslate"><span class="pre">mas_night_ventilation</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.occupant_use_of_fans"><code class="docutils literal notranslate"><span class="pre">occupant_use_of_fans</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.Strategy.passive_solar_heating"><code class="docutils literal notranslate"><span class="pre">passive_solar_heating</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters"><code class="docutils literal notranslate"><span class="pre">StrategyParameters</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.balance_temperature"><code class="docutils literal notranslate"><span class="pre">balance_temperature</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.day_above_comfort"><code class="docutils literal notranslate"><span class="pre">day_above_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.fan_air_speed"><code class="docutils literal notranslate"><span class="pre">fan_air_speed</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.night_below_comfort"><code class="docutils literal notranslate"><span class="pre">night_below_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.solar_heating_capacity"><code class="docutils literal notranslate"><span class="pre">solar_heating_capacity</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ladybug_charts.utils.StrategyParameters.time_constant"><code class="docutils literal notranslate"><span class="pre">time_constant</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <section id="module-ladybug_charts.utils">
+<span id="ladybug-charts-utils-module"></span><h1>ladybug_charts.utils module<a class="headerlink" href="#module-ladybug_charts.utils" title="Link to this heading">¶</a></h1>
+<p>Objects to suport Ladybug charts.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ladybug_charts.utils.Strategy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ladybug_charts.utils.</span></span><span class="sig-name descname"><span class="pre">Strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ladybug_charts/utils.html#Strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.utils.Strategy" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Strategies to apply to the psychrometric chart.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ladybug_charts.utils.Strategy.capture_internal_heat">
+<span class="sig-name descname"><span class="pre">capture_internal_heat</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Capture</span> <span class="pre">Internal</span> <span class="pre">Heat'</span></em><a class="headerlink" href="#ladybug_charts.utils.Strategy.capture_internal_heat" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ladybug_charts.utils.Strategy.comfort">
+<span class="sig-name descname"><span class="pre">comfort</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Comfort'</span></em><a class="headerlink" href="#ladybug_charts.utils.Strategy.comfort" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ladybug_charts.utils.Strategy.evaporative_cooling">
+<span class="sig-name descname"><span class="pre">evaporative_cooling</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Evaporative</span> <span class="pre">Cooling'</span></em><a class="headerlink" href="#ladybug_charts.utils.Strategy.evaporative_cooling" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ladybug_charts.utils.Strategy.mas_night_ventilation">
+<span class="sig-name descname"><span class="pre">mas_night_ventilation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Mass</span> <span class="pre">+</span> <span class="pre">Night</span> <span class="pre">Ventilation'</span></em><a class="headerlink" href="#ladybug_charts.utils.Strategy.mas_night_ventilation" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ladybug_charts.utils.Strategy.occupant_use_of_fans">
+<span class="sig-name descname"><span class="pre">occupant_use_of_fans</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Occupant</span> <span class="pre">Use</span> <span class="pre">of</span> <span class="pre">Fans'</span></em><a class="headerlink" href="#ladybug_charts.utils.Strategy.occupant_use_of_fans" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ladybug_charts.utils.Strategy.passive_solar_heating">
+<span class="sig-name descname"><span class="pre">passive_solar_heating</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Passive</span> <span class="pre">Solar</span> <span class="pre">Heating'</span></em><a class="headerlink" href="#ladybug_charts.utils.Strategy.passive_solar_heating" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ladybug_charts.utils.StrategyParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ladybug_charts.utils.</span></span><span class="sig-name descname"><span class="pre">StrategyParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_above_comfort</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">night_below_comfort</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fan_air_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balance_temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solar_heating_capacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_constant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ladybug_charts/utils.html#StrategyParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Strategy parameters for psychrometric charts.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="ladybug_charts.utils.StrategyParameters.balance_temperature">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">balance_temperature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.balance_temperature" title="Link to this definition">¶</a></dt>
+<dd><p>Get the balance temperature.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ladybug_charts.utils.StrategyParameters.day_above_comfort">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">day_above_comfort</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.day_above_comfort" title="Link to this definition">¶</a></dt>
+<dd><p>Get the day above comfort.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ladybug_charts.utils.StrategyParameters.fan_air_speed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fan_air_speed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.fan_air_speed" title="Link to this definition">¶</a></dt>
+<dd><p>Get the fan air speed.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ladybug_charts.utils.StrategyParameters.night_below_comfort">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">night_below_comfort</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.night_below_comfort" title="Link to this definition">¶</a></dt>
+<dd><p>Get the night below comfort.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ladybug_charts.utils.StrategyParameters.solar_heating_capacity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solar_heating_capacity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.solar_heating_capacity" title="Link to this definition">¶</a></dt>
+<dd><p>Get the solar hating capacity.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ladybug_charts.utils.StrategyParameters.time_constant">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time_constant</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ladybug_charts.utils.StrategyParameters.time_constant" title="Link to this definition">¶</a></dt>
+<dd><p>Get the time constant.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2024, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.0.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

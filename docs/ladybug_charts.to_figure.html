@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ladybug_charts.to_figure module &#8212; ladybug-charts  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=45cd8fae" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ladybug_charts.utils module" href="ladybug_charts.utils.html" />
+    <link rel="prev" title="ladybug_charts package" href="ladybug_charts.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          ladybug-charts</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.to_figure module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.bar_chart"><code class="docutils literal notranslate"><span class="pre">bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.bar_chart_with_table"><code class="docutils literal notranslate"><span class="pre">bar_chart_with_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.daily_bar_chart"><code class="docutils literal notranslate"><span class="pre">daily_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.diurnal_average_chart"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.diurnal_average_chart_from_hourly"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart_from_hourly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.heat_map"><code class="docutils literal notranslate"><span class="pre">heat_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.hourly_line_chart"><code class="docutils literal notranslate"><span class="pre">hourly_line_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.monthly_bar_chart"><code class="docutils literal notranslate"><span class="pre">monthly_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.psych_chart"><code class="docutils literal notranslate"><span class="pre">psych_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.sunpath"><code class="docutils literal notranslate"><span class="pre">sunpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.wind_rose"><code class="docutils literal notranslate"><span class="pre">wind_rose()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.utils.html">ladybug_charts.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.Strategy.capture_internal_heat"><code class="docutils literal notranslate"><span class="pre">capture_internal_heat</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.Strategy.comfort"><code class="docutils literal notranslate"><span class="pre">comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.Strategy.evaporative_cooling"><code class="docutils literal notranslate"><span class="pre">evaporative_cooling</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.Strategy.mas_night_ventilation"><code class="docutils literal notranslate"><span class="pre">mas_night_ventilation</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.Strategy.occupant_use_of_fans"><code class="docutils literal notranslate"><span class="pre">occupant_use_of_fans</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.Strategy.passive_solar_heating"><code class="docutils literal notranslate"><span class="pre">passive_solar_heating</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters"><code class="docutils literal notranslate"><span class="pre">StrategyParameters</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.balance_temperature"><code class="docutils literal notranslate"><span class="pre">balance_temperature</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.day_above_comfort"><code class="docutils literal notranslate"><span class="pre">day_above_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.fan_air_speed"><code class="docutils literal notranslate"><span class="pre">fan_air_speed</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.night_below_comfort"><code class="docutils literal notranslate"><span class="pre">night_below_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.solar_heating_capacity"><code class="docutils literal notranslate"><span class="pre">solar_heating_capacity</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.time_constant"><code class="docutils literal notranslate"><span class="pre">time_constant</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.to_figure module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.bar_chart"><code class="docutils literal notranslate"><span class="pre">bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.bar_chart_with_table"><code class="docutils literal notranslate"><span class="pre">bar_chart_with_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.daily_bar_chart"><code class="docutils literal notranslate"><span class="pre">daily_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.diurnal_average_chart"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.diurnal_average_chart_from_hourly"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart_from_hourly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.heat_map"><code class="docutils literal notranslate"><span class="pre">heat_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.hourly_line_chart"><code class="docutils literal notranslate"><span class="pre">hourly_line_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.monthly_bar_chart"><code class="docutils literal notranslate"><span class="pre">monthly_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.psych_chart"><code class="docutils literal notranslate"><span class="pre">psych_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.sunpath"><code class="docutils literal notranslate"><span class="pre">sunpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.wind_rose"><code class="docutils literal notranslate"><span class="pre">wind_rose()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.utils.html">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="ladybug_charts.html" title="Previous Chapter: ladybug_charts package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; ladybug_chart...</span>
+    </a>
+  </li>
+  <li>
+    <a href="ladybug_charts.utils.html" title="Next Chapter: ladybug_charts.utils module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">ladybug_chart... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/ladybug_charts.to_figure.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ladybug_charts.html">ladybug_charts package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ladybug_charts.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ladybug_charts.to_figure module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.bar_chart"><code class="docutils literal notranslate"><span class="pre">bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.bar_chart_with_table"><code class="docutils literal notranslate"><span class="pre">bar_chart_with_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.daily_bar_chart"><code class="docutils literal notranslate"><span class="pre">daily_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.diurnal_average_chart"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.diurnal_average_chart_from_hourly"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart_from_hourly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.heat_map"><code class="docutils literal notranslate"><span class="pre">heat_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.hourly_line_chart"><code class="docutils literal notranslate"><span class="pre">hourly_line_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.monthly_bar_chart"><code class="docutils literal notranslate"><span class="pre">monthly_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.psych_chart"><code class="docutils literal notranslate"><span class="pre">psych_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.sunpath"><code class="docutils literal notranslate"><span class="pre">sunpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ladybug_charts.to_figure.wind_rose"><code class="docutils literal notranslate"><span class="pre">wind_rose()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ladybug_charts.utils.html">ladybug_charts.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <section id="module-ladybug_charts.to_figure">
+<span id="ladybug-charts-to-figure-module"></span><h1>ladybug_charts.to_figure module<a class="headerlink" href="#module-ladybug_charts.to_figure" title="Link to this heading">¶</a></h1>
+<p>Create plotly figures from pandas Dataframe.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.bar_chart">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">bar_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">MonthlyCollection</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">DailyCollection</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Color</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stack</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#bar_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.bar_chart" title="Link to this definition">¶</a></dt>
+<dd><p>Create a plotly bar chart figure from multiple ladybug monthly or daily data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A list of either ladybug MonthlyCollection data or DailyCollection data.</p></li>
+<li><p><strong>min_range</strong> – Minimum value for the legend. If None, it is autocalculated
+from the data. (Default: None).</p></li>
+<li><p><strong>max_range</strong> – Maximum value for the legend. If None, it is autocalculated
+from the data. (Default: None).</p></li>
+<li><p><strong>colors</strong> – A list of ladybug color objects that matches the length of data
+argument. If None, random colors will be used. (Default: None).</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. (Default: None).</p></li>
+<li><p><strong>center_title</strong> – A boolean to set whether to center the title of the
+chart. (Default: False).</p></li>
+<li><p><strong>stack</strong> – A boolean to determine whether to stack the data. (Default: False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.bar_chart_with_table">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">bar_chart_with_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">MonthlyCollection</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Color</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stack</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#bar_chart_with_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.bar_chart_with_table" title="Link to this definition">¶</a></dt>
+<dd><p>Create a plotly bar chart figure from multiple ladybug monthly or daily data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A list of ladybug monthly data.</p></li>
+<li><p><strong>min_range</strong> – Minimum value for the legend. If not set will be calculated
+from the data. Defaults to None.</p></li>
+<li><p><strong>max_range</strong> – Maximum value for the legend. If not set will be calculated
+from the data. Defaults to None.</p></li>
+<li><p><strong>colors</strong> – A list of ladybug color objects. The length of this list needs to match
+the length of data argument. If not set, random colors will be used.
+Defaults to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the
+names of data will be used to create a title for the chart. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to set whether to show the title of the chart.
+Defaults to False.</p></li>
+<li><p><strong>stack</strong> – A boolean to determine whether to stack the data. Defaults to False which
+will show data side by side.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.daily_bar_chart">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">daily_bar_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DailyCollection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Color</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#daily_bar_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.daily_bar_chart" title="Link to this definition">¶</a></dt>
+<dd><p>Create a plotly bar chart figure from a ladybug daily data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug DailyCollection object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the name
+of the data will be used. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.diurnal_average_chart">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">diurnal_average_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epw:</span> <span class="pre">~ladybug.epw.EPW</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors:</span> <span class="pre">~typing.List[~ladybug.color.Color]</span> <span class="pre">|</span> <span class="pre">~typing.Tuple[~ladybug.color.Color]</span> <span class="pre">=</span> <span class="pre">((R:75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:107</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:169</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:115</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:147</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:202</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:170</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:247</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:193</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:213</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:208</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:245</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:239</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:103</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:252</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:230</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:74</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:239</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:156</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:123</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:74</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:38</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255))</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#diurnal_average_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.diurnal_average_chart" title="Link to this definition">¶</a></dt>
+<dd><p>Create a diurnal average chart from a ladybug EPW object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epw</strong> – A ladybug EPW object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+<li><p><strong>colorset</strong> – A ColorSet object. Defaults to ColorSet.original.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.diurnal_average_chart_from_hourly">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">diurnal_average_chart_from_hourly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HourlyContinuousCollection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Color</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#diurnal_average_chart_from_hourly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.diurnal_average_chart_from_hourly" title="Link to this definition">¶</a></dt>
+<dd><p>Create a diurnal average chart from a ladybug hourly continuous data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug HourlyContinuousCollection object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.heat_map">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">heat_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hourly_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HourlyContinuousCollection</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">HourlyDiscontinuousCollection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Color</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#heat_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.heat_map" title="Link to this definition">¶</a></dt>
+<dd><p>Create a plotly heat map figure from Ladybug Hourly data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hourly_data</strong> – A Ladybug HourlyContinuousCollection object or a Ladybug
+HourlyDiscontinuousCollection object.</p></li>
+<li><p><strong>min_range</strong> – The minimum value for the legend of the heatmap. If not set, value
+will be calculated based on data. Defaults to None.</p></li>
+<li><p><strong>max_range</strong> – The maximum value for the legend of the heatmap. If not set, value
+will be calculated based on data. Defaults to None.</p></li>
+<li><p><strong>colors</strong> – A list of Ladybug Color objects. Defaults to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the name
+of the data will be used. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title of the chart. Defaults to False.</p></li>
+<li><p><strong>num_labels</strong> – The number of labels to be used in the legend. Defaults to None.</p></li>
+<li><p><strong>labels</strong> – A list of floats to be used as labels for the legend. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.hourly_line_chart">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">hourly_line_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HourlyContinuousCollection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Color</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#hourly_line_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.hourly_line_chart" title="Link to this definition">¶</a></dt>
+<dd><p>Create a plotly line chart figure from a ladybug hourly continuous data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug HourlyContinuousCollection object.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to determine whether to show the title of the plot.
+Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.monthly_bar_chart">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">monthly_bar_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MonthlyCollection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Color</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#monthly_bar_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.monthly_bar_chart" title="Link to this definition">¶</a></dt>
+<dd><p>Create a plotly  bar chart figure from a ladybug monthly data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – A ladybug MonthlyCollection object.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. If not set, the name
+of the data will be used. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to set whether to show the title of the chart.
+Defaults to False.</p></li>
+<li><p><strong>color</strong> – A Ladybug color object. If not set, a random color will be used. Defaults
+to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.psych_chart">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">psych_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">psych:</span> <span class="pre">~ladybug.psychchart.PsychrometricChart,</span> <span class="pre">data:</span> <span class="pre">~ladybug._datacollectionbase.BaseCollection</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">title:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">show_title:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">polygon_pmv:</span> <span class="pre">~ladybug_comfort.chart.polygonpmv.PolygonPMV</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">strategies:</span> <span class="pre">~typing.List[~ladybug_charts.utils.Strategy]</span> <span class="pre">=</span> <span class="pre">[Strategy.comfort],</span> <span class="pre">strategy_parameters:</span> <span class="pre">~ladybug_charts.utils.StrategyParameters</span> <span class="pre">=</span> <span class="pre">&lt;ladybug_charts.utils.StrategyParameters</span> <span class="pre">object&gt;,</span> <span class="pre">solar_data:</span> <span class="pre">~ladybug.datacollection.HourlyContinuousCollection</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">colors:</span> <span class="pre">~typing.List[~ladybug.color.Color]</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#psych_chart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.psych_chart" title="Link to this definition">¶</a></dt>
+<dd><p>Create a psychrometric chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psych</strong> – A ladybug PsychrometricChart object.</p></li>
+<li><p><strong>data</strong> – A ladybug DataCollection object.</p></li>
+<li><p><strong>title</strong> – A title for the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title. Defaults to False.</p></li>
+<li><p><strong>polygon_pmv</strong> – A ladybug PolygonPMV object. If provided, polygons will be drawn.
+Defaults to None.</p></li>
+<li><p><strong>strategies</strong> – A list of strategies to be applied to the chart. Accepts a list of
+Stragegy objects. Defaults to out of the box StrategyParameters object.</p></li>
+<li><p><strong>strategy_parameters</strong> – A StrategyParameters object. Defaults to None.</p></li>
+<li><p><strong>solar_data</strong> – An annual hourly continuous data collection of irradiance
+(or radiation) in W/m2 (or Wh/m2) that aligns with the data
+points on the psychrometric chart. This is only required when
+plotting a “Passive Solar Heating” strategy polygon on the chart.
+The irradiance values should be incident on the orientation of
+the passive solar heated windows. So using global horizontal
+radiation assumes that all windows are skylights (like a
+greenhouse). Defaults to None.</p></li>
+<li><p><strong>colors</strong> – A list of colors to be used for the comfort polygons. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.sunpath">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">sunpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sunpath:</span> <span class="pre">~ladybug.sunpath.Sunpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data:</span> <span class="pre">~ladybug.datacollection.HourlyContinuousCollection</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorset:</span> <span class="pre">~ladybug.color.Colorset</span> <span class="pre">=</span> <span class="pre">((R:75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:107</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:169</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:115</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:147</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:202</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:170</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:247</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:193</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:213</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:208</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:245</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:239</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:103</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:252</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:230</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:74</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:239</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:156</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:21</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:123</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:74</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">(R:234</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G:38</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B:0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A:255))</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_range:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_range:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#sunpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.sunpath" title="Link to this definition">¶</a></dt>
+<dd><p>Plot Sunpath.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sunpath</strong> – A Ladybug Sunpath object.</p></li>
+<li><p><strong>data</strong> – An HourlyContinuousCollection object to be plotted on the sunpath. Defaults
+to None.</p></li>
+<li><p><strong>colorset</strong> – A Ladybug Colorset object. Defaults to ColorSet.original.</p></li>
+<li><p><strong>min_range</strong> – Minimum value for the colorbar. If not set, the minimum value will be
+set to the minimum value of the data. Defaults to None.</p></li>
+<li><p><strong>max_range</strong> – Maximum value for the colorbar. If not set, the maximum value will be
+set to the maximum value of the data. Defaults to None.</p></li>
+<li><p><strong>title</strong> – A string to be used as the title of the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title of the plot. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly Figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ladybug_charts.to_figure.wind_rose">
+<span class="sig-prename descclassname"><span class="pre">ladybug_charts.to_figure.</span></span><span class="sig-name descname"><span class="pre">wind_rose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lb_wind_rose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">WindRose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="reference internal" href="_modules/ladybug_charts/to_figure.html#wind_rose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ladybug_charts.to_figure.wind_rose" title="Link to this definition">¶</a></dt>
+<dd><p>Create a windrose plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lb_wind_rose</strong> – A ladybug WindRose object.</p></li>
+<li><p><strong>title</strong> – A title for the plot. Defaults to None.</p></li>
+<li><p><strong>show_title</strong> – A boolean to show or hide the title. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A plotly figure.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2024, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.0.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

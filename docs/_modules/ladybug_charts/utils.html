@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ladybug_charts.utils &#8212; ladybug-charts  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css?v=0bf093e7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45cd8fae" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          ladybug-charts</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug_charts.html">ladybug_charts package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ladybug_charts.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../ladybug_charts.to_figure.html">ladybug_charts.to_figure module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.bar_chart"><code class="docutils literal notranslate"><span class="pre">bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.bar_chart_with_table"><code class="docutils literal notranslate"><span class="pre">bar_chart_with_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.daily_bar_chart"><code class="docutils literal notranslate"><span class="pre">daily_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.diurnal_average_chart"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.diurnal_average_chart_from_hourly"><code class="docutils literal notranslate"><span class="pre">diurnal_average_chart_from_hourly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.heat_map"><code class="docutils literal notranslate"><span class="pre">heat_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.hourly_line_chart"><code class="docutils literal notranslate"><span class="pre">hourly_line_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.monthly_bar_chart"><code class="docutils literal notranslate"><span class="pre">monthly_bar_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.psych_chart"><code class="docutils literal notranslate"><span class="pre">psych_chart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.sunpath"><code class="docutils literal notranslate"><span class="pre">sunpath()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.to_figure.html#ladybug_charts.to_figure.wind_rose"><code class="docutils literal notranslate"><span class="pre">wind_rose()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../ladybug_charts.utils.html">ladybug_charts.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy.capture_internal_heat"><code class="docutils literal notranslate"><span class="pre">capture_internal_heat</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy.comfort"><code class="docutils literal notranslate"><span class="pre">comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy.evaporative_cooling"><code class="docutils literal notranslate"><span class="pre">evaporative_cooling</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy.mas_night_ventilation"><code class="docutils literal notranslate"><span class="pre">mas_night_ventilation</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy.occupant_use_of_fans"><code class="docutils literal notranslate"><span class="pre">occupant_use_of_fans</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy.passive_solar_heating"><code class="docutils literal notranslate"><span class="pre">passive_solar_heating</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters"><code class="docutils literal notranslate"><span class="pre">StrategyParameters</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.balance_temperature"><code class="docutils literal notranslate"><span class="pre">balance_temperature</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.day_above_comfort"><code class="docutils literal notranslate"><span class="pre">day_above_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.fan_air_speed"><code class="docutils literal notranslate"><span class="pre">fan_air_speed</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.night_below_comfort"><code class="docutils literal notranslate"><span class="pre">night_below_comfort</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.solar_heating_capacity"><code class="docutils literal notranslate"><span class="pre">solar_heating_capacity</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters.time_constant"><code class="docutils literal notranslate"><span class="pre">time_constant</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../ladybug_charts.html#module-ladybug_charts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug_charts.html">ladybug_charts package</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ladybug_charts.html">ladybug_charts package</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="body col-md-8 content" role="main">
+      
+  <h1>Source code for ladybug_charts.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Objects to suport Ladybug charts.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+
+<div class="viewcode-block" id="Strategy">
+<a class="viewcode-back" href="../../ladybug_charts.utils.html#ladybug_charts.utils.Strategy">[docs]</a>
+<span class="k">class</span> <span class="nc">Strategy</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Strategies to apply to the psychrometric chart.&quot;&quot;&quot;</span>
+    <span class="n">comfort</span> <span class="o">=</span> <span class="s1">&#39;Comfort&#39;</span>
+    <span class="n">evaporative_cooling</span> <span class="o">=</span> <span class="s1">&#39;Evaporative Cooling&#39;</span>
+    <span class="n">mas_night_ventilation</span> <span class="o">=</span> <span class="s1">&#39;Mass + Night Ventilation&#39;</span>
+    <span class="n">occupant_use_of_fans</span> <span class="o">=</span> <span class="s1">&#39;Occupant Use of Fans&#39;</span>
+    <span class="n">capture_internal_heat</span> <span class="o">=</span> <span class="s1">&#39;Capture Internal Heat&#39;</span>
+    <span class="n">passive_solar_heating</span> <span class="o">=</span> <span class="s1">&#39;Passive Solar Heating&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="StrategyParameters">
+<a class="viewcode-back" href="../../ladybug_charts.utils.html#ladybug_charts.utils.StrategyParameters">[docs]</a>
+<span class="k">class</span> <span class="nc">StrategyParameters</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Strategy parameters for psychrometric charts.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">day_above_comfort</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+                 <span class="n">night_below_comfort</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">fan_air_speed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">balance_temperature</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">12.8</span><span class="p">,</span>
+                 <span class="n">solar_heating_capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+                 <span class="n">time_constant</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_day_above_comfort</span> <span class="o">=</span> <span class="n">day_above_comfort</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_night_below_comfort</span> <span class="o">=</span> <span class="n">night_below_comfort</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fan_air_speed</span> <span class="o">=</span> <span class="n">fan_air_speed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_balance_temperature</span> <span class="o">=</span> <span class="n">balance_temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solar_heating_capacity</span> <span class="o">=</span> <span class="n">solar_heating_capacity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_constant</span> <span class="o">=</span> <span class="n">time_constant</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">day_above_comfort</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the day above comfort.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_day_above_comfort</span>
+
+    <span class="nd">@day_above_comfort</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">day_above_comfort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the day above comfort.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_day_above_comfort</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">night_below_comfort</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the night below comfort.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_night_below_comfort</span>
+
+    <span class="nd">@night_below_comfort</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">night_below_comfort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the night below comfort.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_night_below_comfort</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fan_air_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the fan air speed.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fan_air_speed</span>
+
+    <span class="nd">@fan_air_speed</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">fan_air_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the fan air speed.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fan_air_speed</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">balance_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the balance temperature.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_balance_temperature</span>
+
+    <span class="nd">@balance_temperature</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">balance_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the balance temperature.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_balance_temperature</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">solar_heating_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the solar hating capacity.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solar_heating_capacity</span>
+
+    <span class="nd">@solar_heating_capacity</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">solar_heating_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the solar hating capacity.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solar_heating_capacity</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the time constant.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_constant</span>
+
+    <span class="nd">@time_constant</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">time_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the time constant.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_constant</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;StrategyParameters(day_above_comfort=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">day_above_comfort</span><span class="si">}</span><span class="s1">,&#39;</span>\
+            <span class="sa">f</span><span class="s1">&#39; night_below_comfort=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">night_below_comfort</span><span class="si">}</span><span class="s1">,&#39;</span> \
+            <span class="sa">f</span><span class="s1">&#39; fan_air_speed=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fan_air_speed</span><span class="si">}</span><span class="s1">,&#39;</span>\
+            <span class="sa">f</span><span class="s1">&#39; balance_temperature=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">balance_temperature</span><span class="si">}</span><span class="s1">,&#39;</span>\
+            <span class="sa">f</span><span class="s1">&#39; solar_heating_capacity=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">solar_heating_capacity</span><span class="si">}</span><span class="s1">,&#39;</span> \
+            <span class="sa">f</span><span class="s1">&#39; time_constant=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_constant</span><span class="si">}</span><span class="s1">)&#39;</span></div>
+
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2024, Ladybug Tools.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 8.0.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
